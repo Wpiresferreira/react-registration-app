@@ -1,5 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
-import Top from "../components/Top";
+import Top from "./components/Top";
 
 const Layout = () => {
   return (

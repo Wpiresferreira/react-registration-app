@@ -1,4 +1,6 @@
-export const users = [
+export const users = 
+
+[
     {
         firstName : "Wagner",
         lastName: "Ferreira",

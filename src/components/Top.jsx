@@ -1,15 +1,27 @@
 import { Link } from "react-router-dom";
+import logo from "../images/Logo.svg"
+
+
 
 export default function Top() {
   return (
     <div className="flex flex-col justify-between w-[100vw] text-center bg-gray-300">
-    <div className="flex justify-around">
-        <div className="h-[100px] leading-[100px]">LOGO</div>
-        <div className="grow h-[100px] leading-[100px]">Bow Valley Registration</div>
-        <div className=" h-[100px] leading-[100px]">Login / Logout</div>
+      <div className="flex justify-around">
+        <div className="p-5 h-[100px] leading-[100px]">
+          <img src={logo}></img>
         </div>
-        
-          <nav >
+        <div className="grow h-[100px] leading-[100px]">
+          Bow Valley Registration
+        </div>
+        <div className=" h-[100px] leading-[100px]">
+          <Link to="/login">Login</Link>
+        </div>
+        <div className=" h-[100px] leading-[100px]">
+          <Link to="/signin">Signin</Link>
+        </div>
+      </div>
+
+      <nav>
         <ul className="flex w-[100vw]">
           <li className="p-4 grow text-center bg-red-50">
             <div></div>
@@ -32,7 +44,6 @@ export default function Top() {
           <li className="p-4 grow text-center bg-red-50">
             <div></div>
           </li>
-          
         </ul>
       </nav>
     </div>
