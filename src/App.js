@@ -1,5 +1,5 @@
 import './App.css';
-import ReactDOM from "react-dom/client";
+// import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from './Layout';
 import Home from './pages/Home';
@@ -13,12 +13,11 @@ import Signin from './pages/Signin';
 
 export default function App() {
 
-  const myProperty = "Wagner"
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout property={myProperty}/>}>
-          <Route index element={<Home property={myProperty}/>} />
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
           <Route path="programs" element={<Programs />} />
           <Route path="login" element={<Login />} />
           <Route path="signin" element={<Signin />} />
@@ -31,5 +30,5 @@ export default function App() {
   );
 }
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(<App />);
+// const root = ReactDOM.createRoot(document.getElementById('root'));
+// root.render(<App />);

@@ -8,10 +8,10 @@ export default function Top() {
     <div className="flex flex-col justify-between w-[100vw] text-center bg-gray-300">
       <div className="flex justify-around">
         <div className="p-5 h-[100px] leading-[100px]">
-          <img src={logo}></img>
+          <img src={logo} alt="logo"></img>
         </div>
         <div className="grow h-[100px] leading-[100px]">
-          Bow Valley Registration
+          Bow Valley Course Registration
         </div>
         <div className=" h-[100px] leading-[100px]">
           <Link to="/login">Login</Link>
