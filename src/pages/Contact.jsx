@@ -4,22 +4,27 @@ import { users } from "../data/data";
 import { getMessages } from "../data/util";
 
 const Contact = () => {
-  // alert(messagesSample);
-  // const[loggedUser, setLoggedUser] = useState(users[`1`])
-  const loggedUser = users[1];
+  const [loggedUser, setLoggedUser] = useState(users[1]);
+
+  const handleChangeUser = () => {
+    if (loggedUser === users[0]) {
+      setLoggedUser(users[1]);
+    } else {
+      setLoggedUser(users[0]);
+    }
+  };
   const [allMessages, setAllMessages] = useState(
-    JSON.parse(localStorage.getItem("messages")) ?
-    JSON.parse(localStorage.getItem("messages")) :
-    getMessages()
+    JSON.parse(localStorage.getItem("messages"))
+      ? JSON.parse(localStorage.getItem("messages"))
+      : getMessages()
   );
 
-    // if(JSON.parse(localStorage.getItem("messages"))){
-    //   setAllMessages(JSON.parse(localStorage.getItem("messages")))
-    // }else{
-    //   setAllMessages(messagesSample)
-    // } 
-    localStorage.setItem("messages", JSON.stringify(allMessages));
- 
+  // if(JSON.parse(localStorage.getItem("messages"))){
+  //   setAllMessages(JSON.parse(localStorage.getItem("messages")))
+  // }else{
+  //   setAllMessages(messagesSample)
+  // }
+  localStorage.setItem("messages", JSON.stringify(allMessages));
 
   //variable to control state (unread ou archivied messages)
   const [selectedTab, setSelectedTab] = useState("Unread");
@@ -37,8 +42,8 @@ const Contact = () => {
       ...allMessages,
       {
         messageId: uuidv4(),
-        firstName : loggedUser.firstName,
-        lastName : loggedUser.lastName,
+        firstName: loggedUser.firstName,
+        lastName: loggedUser.lastName,
         userId: loggedUser.userId,
         title: subject,
         message: bodyMessage,
@@ -68,8 +73,10 @@ const Contact = () => {
 
   return loggedUser == null ? (
     <div>No user Logged</div>
-  ) : loggedUser.isAdmin ? (
+  ) :
+  loggedUser.isAdmin ? (
     <div className="flex flex-col items-center">
+    <button onClick={handleChangeUser}>Change User</button>
       <div className="flex flex-col w-[80vw] mt-4">
         <div className="flex">
           <button
@@ -139,14 +146,21 @@ const Contact = () => {
     </div>
   ) : (
     <div className="flex flex-col items-center mt-4">
-      <form
+    <button onClick={handleChangeUser}>Change User</button>
+    <form
         className={`${
           loggedUser.isAdmin ? "hidden" : null
         } flex flex-col rounded-xl max-w-[800px] min-w-[600px] max-h-[600px] min-h-[400px] bg-sky-200`}
       >
         <div className="my-5 text-2xl self-center">Contact us</div>
-        <p className="m-4"> <b>From: </b>{loggedUser.lastName + ", " + loggedUser.firstName} </p><label className="mx-4 my-2">
-          <b>Title</b><br></br>
+        <p className="m-4">
+          {" "}
+          <b>From: </b>
+          {loggedUser.lastName + ", " + loggedUser.firstName}{" "}
+        </p>
+        <label className="mx-4 my-2">
+          <b>Title</b>
+          <br></br>
           <input
             value={subject}
             className="mx-4 my-2 w-[95%]"
@@ -154,7 +168,8 @@ const Contact = () => {
           ></input>
         </label>
         <div className="mx-4 my-2">
-          <b>Message:</b><br></br>
+          <b>Message:</b>
+          <br></br>
         </div>
         <textarea
           value={bodyMessage}
