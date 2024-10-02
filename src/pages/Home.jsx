@@ -1,6 +1,6 @@
-const Home = (props) => {
+const Home = () => {
     return (
-      <h1>Home Page {props.property}</h1>
+      <h1>Dashboard: Displays information such as first name, student/admin</h1>
     )
   };
   

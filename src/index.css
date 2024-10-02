@@ -2,6 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color1: #09195E;
+  --color2: #48A1F8;
+  --color3: #EA3342;
+  --color4: #EF8D33;
+}
+
+*{
+
+  font-family: "Poppins", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  color: var(--color1);
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
