@@ -1,23 +1,19 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { users } from "../data/data";
-import { getMessages } from "../data/util";
+import { getMessages, getQtArchivedMessages, getQtUnreadMessages } from "../data/util";
 
 const Contact = () => {
   const [loggedUser, setLoggedUser] = useState(users[1]);
 
   const handleChangeUser = () => {
-    if (loggedUser === users[0]) {
+    if (loggedUser === users[30]) {
       setLoggedUser(users[1]);
     } else {
-      setLoggedUser(users[0]);
+      setLoggedUser(users[30]);
     }
   };
-  const [allMessages, setAllMessages] = useState(
-    JSON.parse(localStorage.getItem("messages"))
-      ? JSON.parse(localStorage.getItem("messages"))
-      : getMessages()
-  );
+  const [allMessages, setAllMessages] = useState(getMessages());
 
   // if(JSON.parse(localStorage.getItem("messages"))){
   //   setAllMessages(JSON.parse(localStorage.getItem("messages")))
@@ -48,7 +44,7 @@ const Contact = () => {
         title: subject,
         message: bodyMessage,
         wasRead: false,
-        date: new Date(),
+        date: (new Date()).toLocaleString(),
       },
     ]);
 
@@ -73,10 +69,9 @@ const Contact = () => {
 
   return loggedUser == null ? (
     <div>No user Logged</div>
-  ) :
-  loggedUser.isAdmin ? (
+  ) : loggedUser.isAdmin ? (
     <div className="flex flex-col items-center">
-    <button onClick={handleChangeUser}>Change User</button>
+      <button onClick={handleChangeUser}>Change User</button>
       <div className="flex flex-col w-[80vw] mt-4">
         <div className="flex">
           <button
@@ -85,12 +80,7 @@ const Contact = () => {
               selectedTab === "Unread" ? "bg-sky-400  font-bold" : "bg-sky-200"
             } grow h-12 rounded-t-2xl`}
           >
-            Unread Messages (
-            {allMessages.reduce(
-              (acum, message) => (acum = !message.wasRead ? acum + 1 : acum),
-              0
-            )}
-            )
+            Unread Messages ({getQtUnreadMessages()})
           </button>
           <button
             onClick={handleOnClickTab}
@@ -98,12 +88,7 @@ const Contact = () => {
               selectedTab === "Archived" ? "bg-sky-400 font-bold" : "bg-sky-200"
             } grow h-12 rounded-t-2xl`}
           >
-            Archived Messages (
-            {allMessages.reduce(
-              (acum, message) => (acum = message.wasRead ? acum + 1 : acum),
-              0
-            )}
-            )
+            Archived Messages ({getQtArchivedMessages()})
           </button>
         </div>
         <div className="bg-sky-400">
@@ -146,8 +131,8 @@ const Contact = () => {
     </div>
   ) : (
     <div className="flex flex-col items-center mt-4">
-    <button onClick={handleChangeUser}>Change User</button>
-    <form
+      <button onClick={handleChangeUser}>Change User</button>
+      <form
         className={`${
           loggedUser.isAdmin ? "hidden" : null
         } flex flex-col rounded-xl max-w-[800px] min-w-[600px] max-h-[600px] min-h-[400px] bg-sky-200`}
