@@ -1,8 +1,12 @@
+import { v4 as uuidv4 } from "uuid";
 import { users } from "./data";
 
 export function getLoggedUser(sessionId) {
-  alert(users.filter((user) => user.userId === sessionId)[0]);
-  return users.filter((user) => user.userId === sessionId)[0];
+  let sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
+    (session) => session.sessionId === sessionId
+  );
+
+  return users.filter((user) => user.userId === sessionUserId[0].userId)[0];
 }
 
 export function getMessages() {
@@ -32,4 +36,49 @@ export function getQtArchivedMessages() {
     (acum, message) => (acum = message.wasRead ? acum + 1 : acum),
     0
   );
+}
+
+export function doLogin(username, password) {
+  let loggedUser = users.filter(
+    (user) => user.username === username && user.password === password
+  );
+  console.log(loggedUser.length);
+  if (loggedUser.length > 0) {
+    const newSessionId = uuidv4();
+    console.log("newSessionId");
+    console.log(newSessionId);
+    sessionStorage.setItem(
+      "sessionId",
+      JSON.stringify({ sessionId: newSessionId })
+    );
+
+    if (localStorage.getItem("sessions")) {
+      let sessions = [
+        ...JSON.parse(localStorage.getItem("sessions")),
+        {
+          sessionId: newSessionId,
+          userId: loggedUser[0].userId,
+          startSession: new Date(),
+        },
+      ];
+      console.log("newSessionId");
+      console.log(newSessionId);
+      localStorage.setItem("sessions", JSON.stringify(sessions));
+    } else {
+      let sessions = [
+        {
+          sessionId: newSessionId,
+          userId: loggedUser[0].userId,
+          startSession: new Date(),
+        },
+      ];
+
+      console.log("newSessionId");
+      console.log(newSessionId);
+      localStorage.setItem("sessions", JSON.stringify(sessions));
+    }
+    return true;
+  } else {
+    return false;
+  }
 }

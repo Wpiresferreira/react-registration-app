@@ -10,8 +10,11 @@ import Students from './pages/Students';
 import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Profile from './pages/Profile';
+import Logout from './pages/Logout';
 import { users, messagesSample } from './data/data';
 import { useEffect } from 'react';
+import Test from './pages/Test';
+
 
 
 export default function App() {
@@ -28,6 +31,7 @@ export default function App() {
 
   },[])
 
+  
   return (
     <BrowserRouter>
       <Routes>
@@ -40,6 +44,8 @@ export default function App() {
           <Route path="students" element={<Students />} />
           <Route path="contact" element={<Contact />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="test" element={<Test />} />
+          <Route path="logout" element={<Logout />} />
         </Route>
       </Routes>
     </BrowserRouter>

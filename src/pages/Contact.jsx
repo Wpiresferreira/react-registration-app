@@ -1,28 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { users } from "../data/data";
-import { getMessages, getQtArchivedMessages, getQtUnreadMessages } from "../data/util";
+import { getLoggedUser, getMessages, getQtArchivedMessages, getQtUnreadMessages } from "../data/util";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
-  const [loggedUser, setLoggedUser] = useState(users[1]);
-
-  const handleChangeUser = () => {
-    if (loggedUser === users[30]) {
-      setLoggedUser(users[1]);
-    } else {
-      setLoggedUser(users[30]);
+  const navigate = useNavigate();
+  const [loggedUser, setLoggedUser] = useState("");
+  useEffect(() => {
+    if (!sessionStorage.getItem("sessionId")) {
+      return;
     }
-  };
+    setLoggedUser(
+      getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
+    );
+  }, [loggedUser, navigate]);
   const [allMessages, setAllMessages] = useState(getMessages());
 
-  // if(JSON.parse(localStorage.getItem("messages"))){
-  //   setAllMessages(JSON.parse(localStorage.getItem("messages")))
-  // }else{
-  //   setAllMessages(messagesSample)
-  // }
   localStorage.setItem("messages", JSON.stringify(allMessages));
 
-  //variable to control state (unread ou archivied messages)
+  //variable to control state (unread ou archivied messages TAB)
   const [selectedTab, setSelectedTab] = useState("Unread");
 
   const handleOnClickTab = (e) => {
@@ -71,7 +67,7 @@ const Contact = () => {
     <div>No user Logged</div>
   ) : loggedUser.isAdmin ? (
     <div className="flex flex-col items-center">
-      <button onClick={handleChangeUser}>Change User</button>
+      {/* <button onClick={handleChangeUser}>Change User</button> */}
       <div className="flex flex-col w-[80vw] mt-4">
         <div className="flex">
           <button
@@ -131,7 +127,7 @@ const Contact = () => {
     </div>
   ) : (
     <div className="flex flex-col items-center mt-4">
-      <button onClick={handleChangeUser}>Change User</button>
+      {/* <button onClick={handleChangeUser}>Change User</button> */}
       <form
         className={`${
           loggedUser.isAdmin ? "hidden" : null
@@ -159,7 +155,7 @@ const Contact = () => {
         <textarea
           value={bodyMessage}
           onChange={(e) => setBodyMessage(e.target.value)}
-          className="mx-4 my-2 h-52 rounded-xl"
+          className="mx-4 my-2 p-2 h-52 rounded-xl"
         ></textarea>
         <button className="m-4" type="submit" onClick={handleSubmit}>
           Submit
