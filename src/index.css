@@ -16,6 +16,9 @@
   font-style: normal;
   color: var(--color1);
 }
+input:focus {
+  outline: none;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
