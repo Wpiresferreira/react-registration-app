@@ -12,7 +12,7 @@ const Home = () => {
     setLoggedUser(
       getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
     );
-  }, [loggedUser, navigate]);
+  }, [navigate]);
 
   return !loggedUser ? (
     <div className="flex mt-12 justify-center">

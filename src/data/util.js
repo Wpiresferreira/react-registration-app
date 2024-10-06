@@ -5,8 +5,9 @@ export function getLoggedUser(sessionId) {
   let sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
     (session) => session.sessionId === sessionId
   );
+  let allUsers = JSON.parse(localStorage.getItem("users"))
 
-  return users.filter((user) => user.userId === sessionUserId[0].userId)[0];
+  return allUsers.filter((user) => user.userId === sessionUserId[0].userId)[0];
 }
 
 export function getMessages() {
@@ -39,14 +40,12 @@ export function getQtArchivedMessages() {
 }
 
 export function doLogin(username, password) {
-  let loggedUser = users.filter(
+  let allUsers = JSON.parse(localStorage.getItem("users"))
+  let loggedUser = allUsers.filter(
     (user) => user.username === username && user.password === password
   );
-  console.log(loggedUser.length);
   if (loggedUser.length > 0) {
     const newSessionId = uuidv4();
-    console.log("newSessionId");
-    console.log(newSessionId);
     sessionStorage.setItem(
       "sessionId",
       JSON.stringify({ sessionId: newSessionId })
@@ -61,8 +60,6 @@ export function doLogin(username, password) {
           startSession: new Date(),
         },
       ];
-      console.log("newSessionId");
-      console.log(newSessionId);
       localStorage.setItem("sessions", JSON.stringify(sessions));
     } else {
       let sessions = [
@@ -81,4 +78,38 @@ export function doLogin(username, password) {
   } else {
     return false;
   }
+}
+
+export function doSignup(
+  firstName,
+  lastName,
+  email,
+  phone,
+  birthday,
+  department,
+  program,
+  username,
+  password,
+  isAdmin
+) {
+//ToDo Validate all fields
+
+  let newUser = {
+    userId: uuidv4(),
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phone: phone,
+    birthday: birthday,
+    department: department,
+    program: program,
+    username: username,
+    password: password,
+    isAdmin: isAdmin,
+  };
+
+  let users = [...JSON.parse(localStorage.getItem("users")), newUser];
+  localStorage.setItem("users", JSON.stringify(users));
+
+  return true;
 }
