@@ -23,6 +23,17 @@ export function getMessages() {
   return result;
 }
 
+export function sendMessage(newMessage) {
+
+  const allMessages = getMessages()
+  const newAllMessages = [...allMessages, newMessage]
+  localStorage.setItem("messages", JSON.stringify(newAllMessages));
+}
+
+export function updateAllMessages(messages) {
+  localStorage.setItem("messages", JSON.stringify(messages));
+}
+
 export function getQtUnreadMessages() {
   const result = JSON.parse(localStorage.getItem("messages"));
   return result.reduce(
