@@ -13,10 +13,8 @@ const Contact = () => {
     setLoggedUser(
       getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
     );
-  }, [loggedUser, navigate]);
+  }, [navigate]);
   const [allMessages, setAllMessages] = useState(getMessages());
-
-  localStorage.setItem("messages", JSON.stringify(allMessages));
 
   //variable to control state (unread ou archivied messages TAB)
   const [selectedTab, setSelectedTab] = useState("Unread");
@@ -41,11 +39,11 @@ const Contact = () => {
         message: bodyMessage,
         wasRead: false,
         date: (new Date()).toLocaleString(),
-      },
+      }
     ]);
 
+    alert(allMessages[allMessages.length-1].message);
     localStorage.setItem("messages", JSON.stringify(allMessages));
-    alert("Message Sent");
     setBodyMessage("");
     setSubject("");
   };
