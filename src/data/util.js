@@ -11,10 +11,12 @@ export function getLoggedUser(sessionId) {
 }
 
 export function getMessages() {
+
+  let allUsers = JSON.parse(localStorage.getItem("users"))
   let result;
   result = JSON.parse(localStorage.getItem("messages"));
   for (let i = 0; i < result.length; i++) {
-    let userMsg = users.filter((user) => {
+    let userMsg = allUsers.filter((user) => {
       return user.userId === result[i].userId;
     });
     result[i].firstName = userMsg[0].firstName;
