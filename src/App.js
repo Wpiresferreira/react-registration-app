@@ -1,6 +1,8 @@
-import './App.css';
+import { users, messagesSample } from './data/data';
+import { useEffect } from 'react';
 // import ReactDOM from "react-dom/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import './App.css';
 import Layout from './Layout';
 import Home from './pages/Home';
 import Programs from './pages/Programs';
@@ -8,12 +10,11 @@ import Registration from './pages/Registration';
 import Contact from './pages/Contact';
 import Students from './pages/Students';
 import Login from './pages/Login';
-import Signup from './pages/Signup';
+import SignUp from './pages/SignUp.jsx';
 import Profile from './pages/Profile';
 import Logout from './pages/Logout';
-import { users, messagesSample } from './data/data';
-import { useEffect } from 'react';
 import Test from './pages/Test';
+import Courses from './pages/Courses.jsx';
 
 
 
@@ -38,8 +39,10 @@ export default function App() {
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="programs" element={<Programs />} />
+          <Route path="courses" element={<Courses />} />
+          <Route path="/courses/:programCode" element={<Courses />} />
           <Route path="login" element={<Login />} />
-          <Route path="signup" element={<Signup />} />
+          <Route path="signup" element={<SignUp />} />
           <Route path="registration" element={<Registration />} />
           <Route path="students" element={<Students />} />
           <Route path="contact" element={<Contact />} />

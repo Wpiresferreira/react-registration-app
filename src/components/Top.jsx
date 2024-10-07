@@ -7,11 +7,7 @@ import { getLoggedUser } from "../data/util";
 export default function Top() {
   const navigate = useNavigate();
 
-  //Control State of the session
-  //Non logged = null
-  //Student Logged = student
-  //Admin Logged = admin
-
+  // Control State of the session
   const [roleLoggedUser, setRoleLoggedUser] = useState(null);
 
   useEffect(() => {
@@ -32,11 +28,10 @@ export default function Top() {
     }
   }, [navigate, roleLoggedUser]);
 
-  function handleLogoff(){
-    sessionStorage.clear()
-    navigate("/logout")
-    setRoleLoggedUser(null)
-
+  function handleLogoff() {
+    sessionStorage.clear();
+    navigate("/logout");
+    setRoleLoggedUser(null);
   }
 
   return (
@@ -47,21 +42,21 @@ export default function Top() {
             className="ml-7 h-[80%] w-[80%] object-contain"
             src={logo}
             alt="logo"
-          ></img>
+          />
         </div>
         <div className="flex md:hidden h-24 w-24">
           <img
             className="h-[100%] w-[100%] object-contain"
             src={logoMobile}
             alt="logo"
-          ></img>
+          />
         </div>
         <div className="grow h-[100px] leading-[100px] text-ellipsis text-2xl font-bold">
           Course Registration
         </div>
 
         <button
-          onClick={() => navigate("/signup")}
+          onClick={() => navigate("/signup")} // Redirect to SignUp page
           className={`${
             roleLoggedUser ? "hidden" : null
           } text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
@@ -92,15 +87,15 @@ export default function Top() {
 
       <nav>
         <ul className="flex w-[100vw]">
-          <li className=" relative inline-block grow  text-white text-center bg-[var(--color1)]">
+          <li className="relative inline-block grow text-white text-center bg-[var(--color1)]">
             <div></div>
           </li>
-          <li className=" relative inline-block grow  text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]">
+          <li className="relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]">
             <Link className="block py-3" to="/">
               Home
             </Link>
           </li>
-          <li className=" relative inline-block grow  text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]">
+          <li className="relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]">
             <Link className="block py-3" to="/programs">
               Programs
             </Link>
@@ -108,7 +103,7 @@ export default function Top() {
           <li
             className={`${
               roleLoggedUser !== "student" ? "hidden" : null
-            } relative inline-block grow  text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
+            } relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
           >
             <Link className="block py-3" to="/registration">
               Registration
@@ -117,7 +112,7 @@ export default function Top() {
           <li
             className={`${
               roleLoggedUser === "admin" ? null : "hidden"
-            } relative inline-block grow  text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
+            } relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
           >
             <Link className="block py-3" to="/students">
               Students
@@ -126,13 +121,13 @@ export default function Top() {
           <li
             className={`${
               !roleLoggedUser ? "hidden" : null
-            } relative inline-block grow  text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
+            } relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
           >
             <Link className="block py-3" to="/contact">
               Contact
             </Link>
           </li>
-          <li className=" relative inline-block grow  text-white text-center bg-[var(--color1)]">
+          <li className="relative inline-block grow text-white text-center bg-[var(--color1)]">
             <div></div>
           </li>
         </ul>
