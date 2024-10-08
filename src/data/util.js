@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { users } from "./data";
+import { users } from "./data"; // Importing user data from the data.js file
 
 export function getLoggedUser(sessionId) {
   let sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
@@ -91,6 +91,14 @@ export function doLogin(username, password) {
   }
 }
 
+// Add new user to localStorage
+export function addUserToLocalStorage(newUser) {
+  if (localStorage.getItem("users")) {
+    let users = [...JSON.parse(localStorage.getItem("users")), newUser];
+    localStorage.setItem("users", JSON.stringify(users));
+  } else {
+    localStorage.setItem("users", JSON.stringify([newUser]));
+  }
 export function doSignup(
   firstName,
   lastName,

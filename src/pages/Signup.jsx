@@ -1,165 +1,232 @@
-import { useState } from "react";
-import { doSignup } from "../data/util";
+
+import React, { useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { users } from "../data/data"; // Adjust the path if needed
 import { useNavigate } from "react-router-dom";
+import programs from "../data/programs"; // Import the programs data
+import { addUserToLocalStorage } from "../data/util"; // Import the utility function
 
-export default function Signup() {
-  const navigate = useNavigate();
-
+const SignUp = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [birthday, setBirthday] = useState("");
-  const department = "SD Department";
-  const [program, setProgram] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [birthday, setBirthday] = useState("");
+  const [selectedProgram, setSelectedProgram] = useState(programs[0].programCode); // Default to first program code
+  const [error, setError] = useState(null);
 
-  function handleSubmit() {
-    if (
-      doSignup(
-        firstName,
-        lastName,
-        email,
-        phone,
-        birthday,
-        department,
-        program,
-        username,
-        password,
-        false
-      )
-    ) {
-      alert("New user created sucessfully");
-      navigate("/login");
-    } else {
-      alert("Error");
+  const navigate = useNavigate();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Check if the username or email is already taken
+    const existingUser = users.find(
+      (user) => user.username === username || user.email === email
+    );
+
+    if (existingUser) {
+      setError("Username or Email already exists.");
+      return;
     }
-  }
+
+    // Generate Student ID
+    const studentId = uuidv4();
+
+    // Find the selected program details
+    const programDetails = programs.find(program => program.programCode === selectedProgram);
+
+    // Create a new student object
+    const newStudent = {
+      userId: studentId, // Student ID as userId
+      firstName,
+      lastName,
+      email,
+      phone,
+      birthday,
+      department: "SD Department", // Fixed department
+      program: programDetails.programName, // Program selected by the user
+      username,
+      password,
+      isAdmin: false, // Default to non-admin students
+    };
+
+    // Add the new student to the users array
+    users.push(newStudent);
+
+    // Store the new student in localStorage using the utility function
+    addUserToLocalStorage(newStudent);
+
+    // Redirect to Welcome page (or you can choose to redirect to Login)
+    alert("The user was added.");
+    navigate("/login");
+  };
 
   return (
-    <>
-      <div>
-        <h1>Signup Page Details:</h1>
-        <h1>When signing up, students must provide:</h1>
-        <h1>
-          1. First Name, Last Name, Email, Phone, Birthday, Department (only SD
-          department will be available), Program, Username, and Password.
-        </h1>
-        <h1>
-          2. After signing up, the system generates a Student ID and redirects
-          the student to either a login page or a welcome page (you can choose).
-        </h1>
-      </div>
-      <div className="w-[600px] min-h-[300px] rounded-2xl items-center m-6 flex flex-col justify-around bg-[var(--color2)]">
-        <div>Signup</div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+    <div style={styles.container}>
+      <h2 style={styles.title}>Student Sign Up</h2>
+      <form onSubmit={handleSubmit} style={styles.form}>
+        {error && <p style={styles.error}>{error}</p>}
+
+        <div style={styles.formGroup}>
+          <label>First Name:</label>
           <input
+            type="text"
+            placeholder="First Name"
             value={firstName}
             onChange={(e) => setFirstName(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="text"
-          ></input>
-          <label className="pl-3 text-sm absolute">First Name</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Last Name:</label>
           <input
+            type="text"
+            placeholder="Last Name"
             value={lastName}
             onChange={(e) => setLastName(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="text"
-          ></input>
-          <label className="pl-3 text-sm absolute">Last Name</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Email:</label>
           <input
+            type="email"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="email"
-          ></input>
-          <label className="pl-3 text-sm absolute">email</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Phone:</label>
           <input
+            type="tel"
+            placeholder="Phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="text"
-          ></input>
-          <label className="pl-3 text-sm absolute">Phone</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Birthday:</label>
           <input
+            type="date"
             value={birthday}
             onChange={(e) => setBirthday(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="date"
-          ></input>
-          <label className="pl-3 text-sm absolute">Birthday</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Program:</label>
+          <select
+            value={selectedProgram}
+            onChange={(e) => setSelectedProgram(e.target.value)}
+            required
+            style={styles.input}
+          >
+            {programs.map((program) => (
+              <option key={program.programCode} value={program.programCode}>
+                {program.programName}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div style={styles.formGroup}>
+          <label>Username:</label>
           <input
-            value={program}
-            onChange={(e) => setProgram(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
             type="text"
-          ></input>
-          <label className="pl-3 text-sm absolute">Program</label>
-        </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
-          <input
+            placeholder="Username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="text"
-          ></input>
-          <label className="pl-3 text-sm absolute">Username</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Password:</label>
           <input
+            type="password"
+            placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="password"
-          ></input>
-          <label className="pl-3 text-sm absolute">Password</label>
+            required
+            style={styles.input}
+          />
         </div>
-        <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
+
+        <div style={styles.formGroup}>
+          <label>Department:</label>
           <input
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-            type="password"
-          ></input>
-          <label className="pl-3 text-sm absolute">Retype Password</label>
+            type="text"
+            value="SD Department"
+            readOnly
+            style={styles.input}
+          />
         </div>
-        <div>
-          <button
-            className="h-10 w-24 rounded-2xl bg-[var(--color1)] hover:bg-[var(--color2)] text-white border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)]"
-            onClick={handleSubmit}
-          >
-            Signup
-          </button>
-        </div>
-      </div>
-    </>
+
+        <button type="submit" style={styles.button}>
+          Sign Up
+        </button>
+      </form>
+    </div>
   );
-}
-// export default function Signup() {
-//   return (
-//     <div>
-//       <h1>Signup Page Details:</h1>
-//       <h1>When signing up, students must provide:</h1>
-//       <h1>
-//         1. First Name, Last Name, Email, Phone, Birthday, Department (only SD
-//         department will be available), Program, Username, and Password.
-//       </h1>
-//       <h1>
-//         2. After signing up, the system generates a Student ID and redirects the
-//         student to either a login page or a welcome page (you can choose).
-//       </h1>
-//     </div>
-//   );
-// }
+};
+
+// Basic inline styling
+const styles = {
+  container: {
+    maxWidth: "400px",
+    margin: "50px auto",
+    padding: "20px",
+    border: "1px solid #ccc",
+    borderRadius: "10px",
+    backgroundColor: "#f9f9f9",
+  },
+  title: {
+    textAlign: "center",
+    marginBottom: "20px",
+  },
+  form: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  formGroup: {
+    marginBottom: "15px",
+  },
+  input: {
+    width: "100%",
+    padding: "10px",
+    borderRadius: "5px",
+    border: "1px solid #ccc",
+  },
+  button: {
+    padding: "10px",
+    backgroundColor: "#4CAF50",
+    color: "white",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    textAlign: "center",
+  },
+  error: {
+    color: "red",
+    marginBottom: "15px",
+  },
+};
+
+export default SignUp;
