@@ -14,7 +14,7 @@ import SignUp from './pages/SignUp.jsx';
 import Profile from './pages/Profile';
 import Logout from './pages/Logout';
 import Test from './pages/Test';
-import Courses from './pages/Courses.jsx';
+import Courses from './pages/Courses';
 
 
 

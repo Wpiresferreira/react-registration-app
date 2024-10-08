@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { users } from "../data/data"; // Adjust the path if needed
 import { useNavigate } from "react-router-dom";
 import programs from "../data/programs"; // Import the programs data
+import { addUserToLocalStorage } from "../data/util"; // Import the utility function
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -54,13 +55,11 @@ const SignUp = () => {
     // Add the new student to the users array
     users.push(newStudent);
 
-    // Store the student in localStorage
-    let storedUsers = JSON.parse(localStorage.getItem("users")) || [];
-    storedUsers.push(newStudent);
-    localStorage.setItem("users", JSON.stringify(storedUsers));
+    // Store the new student in localStorage using the utility function
+    addUserToLocalStorage(newStudent);
 
     // Redirect to Welcome page (or you can choose to redirect to Login)
-    alert("The user was added.")
+    alert("The user was added.");
     navigate("/login");
   };
 
