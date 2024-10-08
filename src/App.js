@@ -49,6 +49,7 @@ export default function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="test" element={<Test />} />
           <Route path="logout" element={<Logout />} />
+          <Route path="*" element={<Test />} />
         </Route>
       </Routes>
     </BrowserRouter>

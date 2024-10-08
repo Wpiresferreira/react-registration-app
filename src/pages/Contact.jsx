@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { getLoggedUser, getMessages, getQtArchivedMessages, getQtUnreadMessages } from "../data/util";
+import {
+  getLoggedUser,
+  getMessages,
+  getQtArchivedMessages,
+  getQtUnreadMessages,
+  sendMessage,
+  updateAllMessages,
+} from "../data/util";
 import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
   const navigate = useNavigate();
+
   const [loggedUser, setLoggedUser] = useState("");
   useEffect(() => {
     if (!sessionStorage.getItem("sessionId")) {
@@ -13,10 +21,11 @@ const Contact = () => {
     setLoggedUser(
       getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
     );
-  }, [loggedUser, navigate]);
-  const [allMessages, setAllMessages] = useState(getMessages());
-
-  localStorage.setItem("messages", JSON.stringify(allMessages));
+  }, [navigate]);
+  const [allMessages, setAllMessages] = useState();
+  useEffect(() => {
+    setAllMessages(getMessages());
+  }, []);
 
   //variable to control state (unread ou archivied messages TAB)
   const [selectedTab, setSelectedTab] = useState("Unread");
@@ -30,9 +39,8 @@ const Contact = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setAllMessages([
-      ...allMessages,
-      {
+
+    sendMessage({
         messageId: uuidv4(),
         firstName: loggedUser.firstName,
         lastName: loggedUser.lastName,
@@ -40,12 +48,9 @@ const Contact = () => {
         title: subject,
         message: bodyMessage,
         wasRead: false,
-        date: (new Date()).toLocaleString(),
-      },
-    ]);
-
-    localStorage.setItem("messages", JSON.stringify(allMessages));
-    alert("Message Sent");
+        date: new Date().toLocaleString(),
+      })
+      
     setBodyMessage("");
     setSubject("");
   };
@@ -60,7 +65,7 @@ const Contact = () => {
       }
     }
     setAllMessages(tempListMessages);
-    localStorage.setItem("messages", JSON.stringify(tempListMessages));
+    updateAllMessages(tempListMessages);
   };
 
   return loggedUser == null ? (

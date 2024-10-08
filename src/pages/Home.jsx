@@ -26,6 +26,7 @@ const Home = () => {
     }
   }, []);
 
+
   return !loggedUser ? (
     <div className="flex mt-12 justify-center">
       <div className="h-[50vh] w-[80vw]">
