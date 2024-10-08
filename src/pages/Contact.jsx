@@ -8,10 +8,8 @@ import {
   sendMessage,
   updateAllMessages,
 } from "../data/util";
-import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
-  const navigate = useNavigate();
 
   const [loggedUser, setLoggedUser] = useState("");
   useEffect(() => {
@@ -21,7 +19,7 @@ const Contact = () => {
     setLoggedUser(
       getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
     );
-  }, [navigate]);
+  }, []);
   const [allMessages, setAllMessages] = useState();
   useEffect(() => {
     setAllMessages(getMessages());

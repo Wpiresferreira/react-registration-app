@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { users } from "./data";
+import { departments } from "./data";
 
 export function getLoggedUser(sessionId) {
   let sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
@@ -125,4 +125,8 @@ export function doSignup(
   localStorage.setItem("users", JSON.stringify(users));
 
   return true;
+}
+
+export function getDepartmentById(departmentId){
+  return departments.filter((d) => d.departmentId === departmentId)[0].departmentName
 }

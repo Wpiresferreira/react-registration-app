@@ -2652,26 +2652,129 @@ export const departments = [
 ];
 
 export const terms = [
-{ "termid":"c6e7bc73-320f-4753-afab-91ab8f857a3e", "termseason":"Fall", "termyear":2022},
-{ "termid":"e439ea93-1ea7-44b9-b4c0-acce42269190", "termseason":"Winter", "termyear":2023},
-{ "termid":"512e62f5-f688-43b5-8111-fb0047938fa6", "termseason":"Spring/Summer", "termyear":2023},
-{ "termid":"bfdfebd6-a49f-4860-ba75-9f221a44a262", "termseason":"Fall", "termyear":2023},
-{ "termid":"e0e8f4f6-b90c-4386-8c1d-7711306717d4", "termseason":"Winter", "termyear":2024},
-{ "termid":"e115ad56-88ad-49cf-b0c4-08f2139f8d65", "termseason":"Spring/Summer", "termyear":2024},
-{ "termid":"a3e07860-e635-410b-b21e-0634a34ee5e5", "termseason":"Fall", "termyear":2024},
-{ "termid":"df9115e4-bb2a-4d9c-92e2-cdcb4d8e8f80", "termseason":"Winter", "termyear":2025},
-{ "termid":"42f80041-cfe0-477b-a227-54f3182ebd3e", "termseason":"Spring/Summer", "termyear":2025},
-{ "termid":"ba464e16-6b9c-4c74-b150-a4723fce3d68", "termseason":"Fall", "termyear":2025},
-{ "termid":"ced2f8ce-58c7-47bf-bf38-dc2896f526f7", "termseason":"Winter", "termyear":2026},
-{ "termid":"5939af8c-6ca6-4ae7-b185-c0c5e9167fe5", "termseason":"Spring/Summer", "termyear":2026},
-{ "termid":"c87f9ec1-02b2-4393-8883-9c0c6f9c3897", "termseason":"Fall", "termyear":2026},
-{ "termid":"8f2a3116-dd37-4f41-8420-ced35775767b", "termseason":"Winter", "termyear":2027},
-{ "termid":"ba7042b2-591b-4062-b291-5b2185d44ad5", "termseason":"Spring/Summer", "termyear":2027}
-
-]
+  {
+    termId: "c6e7bc73-320f-4753-afab-91ab8f857a3e",
+    termSeason: "Fall",
+    termYear: 2022,
+  },
+  {
+    termId: "e439ea93-1ea7-44b9-b4c0-acce42269190",
+    termSeason: "Winter",
+    termYear: 2023,
+  },
+  {
+    termId: "512e62f5-f688-43b5-8111-fb0047938fa6",
+    termSeason: "Spring/Summer",
+    termYear: 2023,
+  },
+  {
+    termId: "bfdfebd6-a49f-4860-ba75-9f221a44a262",
+    termSeason: "Fall",
+    termYear: 2023,
+  },
+  {
+    termId: "e0e8f4f6-b90c-4386-8c1d-7711306717d4",
+    termSeason: "Winter",
+    termYear: 2024,
+  },
+  {
+    termId: "e115ad56-88ad-49cf-b0c4-08f2139f8d65",
+    termSeason: "Spring/Summer",
+    termYear: 2024,
+  },
+  {
+    termId: "a3e07860-e635-410b-b21e-0634a34ee5e5",
+    termSeason: "Fall",
+    termYear: 2024,
+  },
+  {
+    termId: "df9115e4-bb2a-4d9c-92e2-cdcb4d8e8f80",
+    termSeason: "Winter",
+    termYear: 2025,
+  },
+  {
+    termId: "42f80041-cfe0-477b-a227-54f3182ebd3e",
+    termSeason: "Spring/Summer",
+    termYear: 2025,
+  },
+  {
+    termId: "ba464e16-6b9c-4c74-b150-a4723fce3d68",
+    termSeason: "Fall",
+    termYear: 2025,
+  },
+  {
+    termId: "ced2f8ce-58c7-47bf-bf38-dc2896f526f7",
+    termSeason: "Winter",
+    termYear: 2026,
+  },
+  {
+    termId: "5939af8c-6ca6-4ae7-b185-c0c5e9167fe5",
+    termSeason: "Spring/Summer",
+    termYear: 2026,
+  },
+  {
+    termId: "c87f9ec1-02b2-4393-8883-9c0c6f9c3897",
+    termSeason: "Fall",
+    termYear: 2026,
+  },
+  {
+    termId: "8f2a3116-dd37-4f41-8420-ced35775767b",
+    termSeason: "Winter",
+    termYear: 2027,
+  },
+  {
+    termId: "ba7042b2-591b-4062-b291-5b2185d44ad5",
+    termSeason: "Spring/Summer",
+    termYear: 2027,
+  },
+];
 export const programs = [
   {
-    programId: "",
+    programId: "e33a810d-c693-4ba4-86ff-e72a8c1d9839",
     departmentId: "60d29ec4-ed46-4bff-b986-edbdf3fb4fb3",
+    terms: "4",
+    startDate: "09-01-2024",
+    endDate: "04-30-2026",
+    tuitionCan: 16199,
+    tuitionInt: 39507,
+    description: "Software Development Diploma",
+    startRegister: "10-01-2023",
+    endRegister: "09-30-2024",
+  },
+  {
+    programId: "3576895b-b2b8-4f0a-af66-7f591c323a8e",
+    departmentId: "60d29ec4-ed46-4bff-b986-edbdf3fb4fb3",
+    terms: "4",
+    startDate: "09-01-2025",
+    endDate: "04-30-2027",
+    tuitionCan: 17324,
+    tuitionInt: null,
+    description: "Software Development - Apprenticeship Style",
+    startRegister: "10-01-2024",
+    endRegister: "06-30-2025",
+  },
+  {
+    programId: "7b56e895-a660-4030-92bd-8e03ddcdb3c7",
+    departmentId: "60d29ec4-ed46-4bff-b986-edbdf3fb4fb3",
+    terms: "2",
+    startDate: "09-01-2025",
+    endDate: "04-30-2026",
+    tuitionCan: 8702,
+    tuitionInt: 21512,
+    description: "Software Development Post-Diploma Certificate",
+    startRegister: "10-01-2024",
+    endRegister: "06-30-2025",
+  },
+  {
+    programId: "fee8b15a-8933-4548-8f3b-c8584f51eafe",
+    departmentId: "60d29ec4-ed46-4bff-b986-edbdf3fb4fb3",
+    terms: "4",
+    startDate: "01-01-2025",
+    endDate: "04-30-2027",
+    tuitionCan: 16199,
+    tuitionInt: 39507,
+    description: "Software Development Diploma",
+    startRegister: "2024-01-01",
+    endRegister: "2024-12-31",
   },
 ];
