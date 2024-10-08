@@ -19,19 +19,7 @@ const Home = () => {
     setLoggedUser(
       getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
     );
-  //   setFirstName(loggedUser.firstName);
-  //   setLastName(loggedUser.lastName);
-  //   setEmail(loggedUser.email);
-  // setBirthday(loggedUser.birthday);
-  // setDepartment(loggedUser.department);
-  // setPhone(loggedUser.phone);
-  // setProgram(loggedUser.program);
-  // setUsername(loggedUser.username);
-  // setPassword(loggedUser.password);
-  // setNewPassword(loggedUser.newPassword);
-  }, [
-    
-  ]);
+  }, []);
 
   function handleSave() {}
 
