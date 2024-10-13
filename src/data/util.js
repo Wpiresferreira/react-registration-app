@@ -5,7 +5,7 @@ export function getLoggedUser(sessionId) {
   let sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
     (session) => session.sessionId === sessionId
   );
-  let allUsers = JSON.parse(localStorage.getItem("users"))
+  let allUsers = JSON.parse(localStorage.getItem("users"));
 
   return allUsers.filter((user) => user.userId === sessionUserId[0].userId)[0];
 }
@@ -22,11 +22,67 @@ export function getMessages() {
   }
   return result;
 }
+export function getEnrolments() {
+  let result;
+  result = JSON.parse(localStorage.getItem("enrolments"));
+  return result;
+}
+
+export function getCourses(program) {
+  let result;
+  result = JSON.parse(localStorage.getItem("courses")).filter(
+    (course) => course.programCode === program
+  );
+  return result;
+}
+
+export function getRemainingCourses(loggedUser) {
+
+  const myCourses = getMyCoursesCode(loggedUser.userId)
+  console.log(JSON.parse(localStorage.getItem("courses")).filter(
+    (course) => course.programCode === loggedUser.program))
+  let result;
+  result = JSON.parse(localStorage.getItem("courses")).filter(
+    (course) => course.programCode === loggedUser.program
+    && !myCourses.includes(course.courseCode)
+  );
+  return result;
+}
+export function getStudentCoursesCode(userId) {
+  const enrolments = JSON.parse(localStorage.getItem("enrolments"));
+  const filteredEnrolments = enrolments.filter(
+    (enrolment) => enrolment.userId === userId
+  );
+  const userCourseCodes = filteredEnrolments.reduce(
+    (acum, current) => acum.includes(current.courseCode),
+    []
+  );
+  return userCourseCodes;
+}
+
+export function getStudentTerms(userId) {
+  const enrolments = JSON.parse(localStorage.getItem("enrolments"));
+  const filteredEnrolments = enrolments.filter(
+    (enrolment) => enrolment.userId === userId
+  );
+  const userTermsId = Array.from(
+    filteredEnrolments.reduce((set, e) => set.add(e.termId), new Set())
+  );
+
+  const userTerms = JSON.parse(localStorage.getItem("terms")).filter((term) =>
+    userTermsId.includes(term.termId)
+  );
+  return userTerms;
+}
+export function getTerms() {
+  let result;
+  result = JSON.parse(localStorage.getItem("terms"));
+  return result;
+}
 
 export function sendMessage(newMessage) {
-
-  const allMessages = getMessages()
-  const newAllMessages = [...allMessages, newMessage]
+  const allMessages = getMessages();
+  const newAllMessages = [...allMessages, newMessage];
   localStorage.setItem("messages", JSON.stringify(newAllMessages));
 }
 
@@ -51,7 +107,7 @@ export function getQtArchivedMessages() {
 }
 
 export function doLogin(username, password) {
-  let allUsers = JSON.parse(localStorage.getItem("users"))
+  let allUsers = JSON.parse(localStorage.getItem("users"));
   let loggedUser = allUsers.filter(
     (user) => user.username === username && user.password === password
   );
@@ -123,7 +179,6 @@ export function addUserToLocalStorage(
   } else {
     localStorage.setItem("users", JSON.stringify([newUser]));
   }
-    console.log(newUser);
 }
 export function doSignup(
   firstName,
@@ -137,7 +192,7 @@ export function doSignup(
   password,
   isAdmin
 ) {
-//ToDo Validate all fields
+  //ToDo Validate all fields
 
   let newUser = {
     userId: uuidv4(),
@@ -158,3 +213,118 @@ export function doSignup(
 
   return true;
 }
+
+export function getMyTermsId(userId) {
+  const result = [];
+
+  const myEnrolments = JSON.parse(localStorage.getItem("enrolments")).filter(
+    (enrolment) => enrolment.userId === userId
+  );
+
+  for (let i = 0; i < myEnrolments.length; i++) {
+    if (!result.includes(myEnrolments[i].termId)) {
+      result.push(myEnrolments[i].termId);
+    }
+  }
+  return result;
+}
+
+export function getTermDescription(termId) {
+  const term = JSON.parse(localStorage.getItem("terms")).filter(
+    (term) => term.termId === termId
+  );
+  return term[0].termSeason + " / " + term[0].termYear;
+}
+
+export function getMyCoursesByTerm(userId, termId) {
+  const result = [];
+  const allMyEnrolments = JSON.parse(localStorage.getItem("enrolments")).filter(
+    (enrolment) => enrolment.userId === userId && enrolment.termId === termId
+  );
+
+  for (let i = 0; i < allMyEnrolments.length; i++) {
+    result.push(
+      JSON.parse(localStorage.getItem("courses")).filter(
+        (course) => course.courseCode === allMyEnrolments[i].courseCode
+      )[0]
+    );
+  }
+  return result;
+}
+
+export function getMyCoursesCodeByTerm(userId, termId) {
+  const result = [];
+  const allMyEnrolments = JSON.parse(localStorage.getItem("enrolments")).filter(
+    (enrolment) => enrolment.userId === userId && enrolment.termId === termId
+  );
+
+  for (let i = 0; i < allMyEnrolments.length; i++) {
+    result.push(allMyEnrolments[i].courseCode);
+  }
+
+  return result;
+}
+
+export function getMyCoursesCode(userId) {
+  const result = [];
+  const allMyEnrolments = JSON.parse(localStorage.getItem("enrolments")).filter(
+    (enrolment) => enrolment.userId === userId
+  );
+
+  for (let i = 0; i < allMyEnrolments.length; i++) {
+    result.push(allMyEnrolments[i].courseCode);
+  }
+
+  return result;
+}
+
+export function dropCourse(userId, selectedCourses) {
+  const allEnrolments = JSON.parse(localStorage.getItem("enrolments"));
+  const tempAllEnrolments = [...allEnrolments];
+
+for (let i=0; i< selectedCourses.length;i++){
+
+  const indexTemp = allEnrolments.indexOf(
+    allEnrolments.filter(
+      (e) => e.userId === userId && e.courseCode === selectedCourses[i].courseCode
+    )[0]
+  );
+  
+  tempAllEnrolments.splice(indexTemp, 1);
+  
+}
+
+for (let i = 0 ; i<getMyTermsId(userId).length;i++){
+  if (tempAllEnrolments.filter((enrolment)=> enrolment.userId === userId &&
+  enrolment.termId === getMyTermsId(userId)[i]).length===1){
+    alert ('You must be enrolled at least 2 courses per term')
+    return
+  }
+}
+  localStorage.setItem("enrolments", JSON.stringify(tempAllEnrolments));
+}
+export function enrollCourse(userId, termId, courseCode) {
+  const allEnrolments = JSON.parse(localStorage.getItem("enrolments"));
+
+  allEnrolments.push({
+    userId: userId,
+    termId: termId,
+    courseCode: courseCode,
+  });
+
+  localStorage.setItem("enrolments", JSON.stringify(allEnrolments));
+}
+
+
+export function getProgramDescription (programCode){
+console.log(programCode)
+
+  return !programCode? null: JSON.parse(localStorage.getItem("programs"))
+  .filter((program)=>program.programCode === programCode)[0].programName
+}
+
+export function getUserByUserId (userId){
+  
+    return JSON.parse(localStorage.getItem("users"))
+    .filter((user)=>user.userId === userId)
+  }
