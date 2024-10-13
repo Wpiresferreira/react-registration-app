@@ -92,13 +92,39 @@ export function doLogin(username, password) {
 }
 
 // Add new user to localStorage
-export function addUserToLocalStorage(newUser) {
+export function addUserToLocalStorage(
+  firstName,
+  lastName,
+  email,
+  phone,
+  birthday,
+  department,
+  program,
+  username,
+  password,
+  isAdmin
+) {
+  let newUser = {
+    userId: uuidv4(),
+    firstName: firstName,
+    lastName: lastName,
+    email: email,
+    phone: phone,
+    birthday: birthday,
+    department: department,
+    program: program,
+    username: username,
+    password: password,
+    isAdmin: isAdmin,
+  };
   if (localStorage.getItem("users")) {
     let users = [...JSON.parse(localStorage.getItem("users")), newUser];
     localStorage.setItem("users", JSON.stringify(users));
   } else {
     localStorage.setItem("users", JSON.stringify([newUser]));
   }
+    console.log(newUser);
+}
 export function doSignup(
   firstName,
   lastName,

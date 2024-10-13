@@ -10,7 +10,7 @@ import Registration from './pages/Registration';
 import Contact from './pages/Contact';
 import Students from './pages/Students';
 import Login from './pages/Login';
-import SignUp from './pages/SignUp.jsx';
+import SignUp from './pages/Signup.jsx';
 import Profile from './pages/Profile';
 import Logout from './pages/Logout';
 import Test from './pages/Test';
