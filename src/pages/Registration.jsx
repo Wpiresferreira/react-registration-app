@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLoggedUser, getProgramDescription, getUserByUserId } from "../data/util";
+import { getLoggedUser, getProgramDescription } from "../data/util";
 import MyCourses from "../components/MyCourses";
 import AddCourses from "../components/AddCourses";
 
@@ -15,7 +15,6 @@ export default function Registration() {
       return;
     }
     const tempLoggedUserId = getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
-    const tempLoggedUser = getUserByUserId(tempLoggedUserId)
     
     setLoggedUser(
       tempLoggedUserId
@@ -34,6 +33,8 @@ export default function Registration() {
   const handleOnClickTab = (e) => {
     setSetectedTab(e.target.innerText);
   };
+
+  if(!loggedUser) return null
 
   return (
     <>
