@@ -45,7 +45,7 @@ const Home = () => {
       </div>
     </div>
   ) :  (
-    <div className="w-[50vw] h-[60vh] flex flex-col  items-center shadow-balanced mt-10 mx-auto">
+    <div className="w-[50vw] h-[55vh] flex flex-col  items-center shadow-balanced mt-10 mx-auto">
       <div className="w-[50vw] bg-blue-100 ">
 
     <h1 className="flex flex-col items-center text-2xl text-blue-900 font-semibold  mb-4 mt-6">Dashboard</h1>
