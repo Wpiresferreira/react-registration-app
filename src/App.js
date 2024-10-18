@@ -1,6 +1,6 @@
 import { users, messagesSample } from './data/data';
 import { terms } from './data/terms';
-import {courses} from './data/courses1'
+import {courses} from './data/courses1';
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
@@ -11,13 +11,9 @@ import Registration from './pages/Registration';
 import Contact from './pages/Contact';
 import Students from './pages/Students';
 import Login from './pages/Login';
-<<<<<<< HEAD
-import SignUp from './pages/Signup.jsx';
-=======
 import SignUp from './pages/Signup';
->>>>>>> a6f14a94b558f1118fbee3a08d140963c02530f5
 import Profile from './pages/Profile';
-import Logout from './pages/Logout';
+import Logout from './pages/Logout';  
 import Test from './pages/Test';
 import Courses from './pages/Courses';
 import { enrolments } from './data/enrolments';

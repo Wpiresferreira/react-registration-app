@@ -12,6 +12,7 @@ const Program = () => {
     return storedPrograms ? JSON.parse(storedPrograms) : programsData;
   });
   const [formVisible, setFormVisible] = useState(false);
+  const [programListVisible, setProgramListVisibility] = useState(true);
   const [editMode, setEditMode] = useState(false);
   const [programForm, setProgramForm] = useState({
     programCode: '',
@@ -43,6 +44,7 @@ const Program = () => {
 
   const handleAddProgram = () => {
     setFormVisible(true);
+    setProgramListVisibility(false);
     setEditMode(false);
     setProgramForm({
       programCode: '',
@@ -60,6 +62,7 @@ const Program = () => {
     const programToEdit = programs.find(p => p.programCode === programCode);
     setProgramForm({ ...programToEdit });
     setFormVisible(true);
+    setProgramListVisibility(false); // Hide program list when editing
     setEditMode(true);
   };
 
@@ -84,6 +87,12 @@ const Program = () => {
       alert('Program added successfully!');
     }
     setFormVisible(false);
+    setProgramListVisibility(true); // Show program list after submission
+  };
+
+  const handleCancel = () => {
+    setFormVisible(false);
+    setProgramListVisibility(true); // Show program list when canceling
   };
 
   const handleChange = (e) => {
@@ -155,18 +164,93 @@ const Program = () => {
               required
             />
           </div>
-          {/* Additional inputs for duration, fees, etc. */}
-          <button
-            type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
-          >
-            {editMode ? 'Update Program' : 'Add Program'}
-          </button>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Duration</label>
+            <input
+              type="number"
+              name="duration"
+              value={programForm.duration}
+              onChange={handleChange}
+              disabled={editMode} // Program duration shouldn't be editable during edit
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Term</label>
+            <input
+              type='text'
+              name="term"
+              value={programForm.term}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+            <input
+              type='date'
+              name="startDate"
+              value={programForm.startDate}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">End Date</label>
+            <input
+              type='date'
+              name="endDate"
+              value={programForm.endDate}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">Domestic Fee (CAD)</label>
+            <input
+              type="number"
+              name="fees.domestic"
+              value={programForm.fees.domestic}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+              required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">International Fee (CAD)</label>
+            <input
+              type="number"
+              name="fees.international"
+              value={programForm.fees.international}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
+            />
+          </div>
+
+          <div className="flex justify-between">
+            <button
+              type="submit"
+              className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            >
+              {editMode ? 'Update Program' : 'Add Program'}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancel}
+              className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+            >
+              Cancel
+            </button>
+          </div>
         </form>
       )}
 
-      <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {programs.map((program) => (
+<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {programListVisible &&  (programs.map((program) => (
           <li
             key={program.programCode}
             onClick={() => handleProgramClick(program.programCode)}
@@ -180,7 +264,8 @@ const Program = () => {
             <p className="text-gray-700"><strong>Start Date:</strong> {program.startDate}</p>
             <p className="text-gray-700"><strong>End Date:</strong> {program.endDate}</p>
             <p className="font-bold text-gray-800 mb-4">
-              <strong>Fees:</strong> Domestic: {program.fees.domestic.toLocaleString()} / International: {program.fees.international.toLocaleString()}
+              <strong>Fees (in CAD):</strong> Domestic: {Number(program.fees.domestic).toLocaleString()}
+              {typeof program.fees.international === 'number' ? `/ International: ${Number(program.fees.international).toLocaleString()}` : `/ International: ${program.fees.international.toLocaleString()}`}
             </p>
 
             {isAdmin && (
@@ -206,14 +291,12 @@ const Program = () => {
               </div>
             )}
           </li>
-        ))}
+        )))}
       </ul>
-
-      <footer className="mt-8 text-center text-gray-600">
-        <p className="text-sm">&copy; {new Date().getFullYear()} Bow Valley College. All rights reserved.</p>
-      </footer>
     </div>
   );
 };
 
 export default Program;
+
+
