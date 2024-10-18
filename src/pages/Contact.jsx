@@ -12,8 +12,10 @@ import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
   const navigate = useNavigate();
-
   const [loggedUser, setLoggedUser] = useState("");
+  const [alertMessage, setAlertMessage] = useState();
+  const [showAlertMessage, setShowAlertMessage] = useState(false);
+
   useEffect(() => {
     if (!sessionStorage.getItem("sessionId")) {
       return;
@@ -23,6 +25,7 @@ const Contact = () => {
     );
   }, [navigate]);
   const [allMessages, setAllMessages] = useState();
+
   useEffect(() => {
     setAllMessages(getMessages());
   }, []);
@@ -40,7 +43,20 @@ const Contact = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    sendMessage({
+    //Check and validate inputs
+    if (subject.length < 1) {
+      setAlertMessage("Invalid Title");
+      setShowAlertMessage(true);
+      return;
+    }
+    if (bodyMessage.length < 1) {
+      setAlertMessage("Invalid Message");
+      setShowAlertMessage(true);
+      return;
+    }
+
+    if (
+      sendMessage({
         messageId: uuidv4(),
         firstName: loggedUser.firstName,
         lastName: loggedUser.lastName,
@@ -50,7 +66,9 @@ const Contact = () => {
         wasRead: false,
         date: new Date().toLocaleString(),
       })
-      
+    ) {
+    }
+
     setBodyMessage("");
     setSubject("");
   };
@@ -66,6 +84,10 @@ const Contact = () => {
     }
     setAllMessages(tempListMessages);
     updateAllMessages(tempListMessages);
+  };
+
+  const closeAlertMessage = () => {
+    setShowAlertMessage(false);
   };
 
   return loggedUser == null ? (
@@ -132,6 +154,19 @@ const Contact = () => {
     </div>
   ) : (
     <div className="flex flex-col items-center mt-4">
+      <div
+        className={` rounded-2xl ${
+          showAlertMessage ? null : "hidden"
+        } flex flex-col justify-around items-center w-[50vw] h-[50vh] absolute bg-red-300`}
+      >
+        <div>{alertMessage}</div>
+        <button
+          onClick={closeAlertMessage}
+          className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
+        >
+          Close
+        </button>
+      </div>
       {/* <button onClick={handleChangeUser}>Change User</button> */}
       <form
         className={`${

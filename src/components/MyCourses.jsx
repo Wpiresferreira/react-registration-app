@@ -3,15 +3,21 @@ import {
   dropCourse,
   getMyCoursesByTerm,
   getMyTermsId,
+  getQtCoursesRegistered,
   getTermDescription,
 } from "../data/util";
 
 export default function MyCourses({ loggedUser }) {
   const [myTermsId, setMyTermsId] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [qtMyCourses, setQtMyCourses] = useState();
 
   useEffect(() => {
-    setMyTermsId(getMyTermsId(loggedUser.userId));
+    if (!loggedUser) {
+      return;
+    }
+    setMyTermsId(getMyTermsId(loggedUser.userId).sort());
+    setQtMyCourses(getQtCoursesRegistered(loggedUser));
   }, [selectedCourses, loggedUser]);
 
   const handleOnClickCourse = (e) => {
@@ -27,38 +33,7 @@ export default function MyCourses({ loggedUser }) {
   };
 
   const buttonDropClick = (e) => {
-    // for (let i = 0; i < getMyTermsId(loggedUser.userId); i++) {
-    //   let count = getMyCoursesByTerm(
-    //     loggedUser.userId,
-    //     getMyTermsId(loggedUser.userId)
-    //   )[i].length;
-    //   for (
-    //     let j;
-    //     j <
-    //     getMyCoursesByTerm(loggedUser.userId, getMyTermsId(loggedUser.userId))
-    //       .length;
-    //     j++
-    //   ) {
-    //     for (let k = 0; k < selectedCourses.length; k++) {
-    //       if (
-    //         selectedCourses[k].includes(
-    //           getMyCoursesByTerm(
-    //             loggedUser.userId,
-    //             getMyTermsId(loggedUser.userId)
-    //           )[k]
-    //         )
-    //       ) {
-    //         count--;
-    //       }
-    //     }
-    //   }
-    //   if (count < 2 && count != 0) {
-    //     alert("You cannot course less than 2 courses per term");
-    //     return;
-    //   }
-    // }
-      dropCourse(loggedUser.userId, selectedCourses);
-
+    dropCourse(loggedUser.userId, selectedCourses);
 
     setSelectedCourses([]);
   };
@@ -68,10 +43,13 @@ export default function MyCourses({ loggedUser }) {
   }
   return (
     <div className=" flex flex-col bg-sky-400">
+      <div className="p-4 font-bold">
+        Total Courses registered {qtMyCourses ? qtMyCourses : null}
+      </div>
       {myTermsId.map((termId, index) => (
         <div key={termId} className="font-bold p-2">
           {getTermDescription(termId)}
-          <div className="flex">
+          <div className="flex flex-wrap flex-[0_0_18%]">
             {getMyCoursesByTerm(loggedUser.userId, termId).map(
               (course, index) => (
                 <div
@@ -106,7 +84,7 @@ export default function MyCourses({ loggedUser }) {
         onClick={buttonDropClick}
         className={` self-end text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
       >
-        Drop Selected Courses
+        Drop Courses
       </button>
     </div>
   );
