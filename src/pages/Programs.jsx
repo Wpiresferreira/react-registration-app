@@ -33,7 +33,7 @@ const Program = () => {
 
   return (
     <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-extrabold text-center mb-8 text-gray-800">Available Programs</h1>
+      <h1 className="text-4xl font-extrabold text-center mb-8 text-blue-1000">Available Programs</h1>
 
       {isAdmin && (
         <div className="text-center mb-4">
@@ -51,9 +51,9 @@ const Program = () => {
           <li 
             key={program.programCode} 
             onClick={() => handleProgramClick(program.programCode)} 
-            className="bg-white border border-gray-300 rounded-lg p-6 shadow-2xl hover:shadow-xl transition-shadow duration-300 transform cursor-pointer"
+            className="bg-white border border-gray-300 rounded-lg p-6 shadow-2xl hover:shadow-xl transition-shadow duration-300 transform hover:bg-gradient-to-tl hover:from-blue-100 hover:to-blue-150 cursor-pointer"
           >
-            <h2 className="text-2xl font-semibold text-gray-800 mb-2">{program.programName}</h2>
+            <h2 className="text-2xl font-bold text-blue-1000 mb-2">{program.programName}</h2>
             <p className="text-gray-700 italic">{program.description}</p>
             <p className="text-gray-700"><strong>Program Code:</strong> {program.programCode}</p>
             <p className="text-gray-700"><strong>Duration:</strong> {program.duration} Terms</p>

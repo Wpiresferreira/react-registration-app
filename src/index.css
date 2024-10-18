@@ -4,7 +4,7 @@
 
 :root {
   --color1: #09195E;
-  --color2: #48A1F8;
+  --color2: #034f93;
   --color3: #EA3342;
   --color4: #EF8D33;
 }
@@ -12,7 +12,7 @@
 *{
 
   font-family: "Poppins", sans-serif;
-  font-weight: 400;
+  font-weight: 500;
   font-style: normal;
   color: var(--color1);
 }
@@ -31,4 +31,8 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.shadow-balanced {
+  box-shadow: 1px 0 30px rgba(1, 38, 111, 0.3); /* Adjust as needed */
 }
