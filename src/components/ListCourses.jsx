@@ -21,7 +21,7 @@ export default function ListCourses({ studentObj }) {
           Back
         </button>
       </div>
-      <div className="flex flex-col w-[90vw] bg-[--color2] min-h-[50vh] rounded-2xl ">
+      <div className="flex flex-col w-[90vw] bg-sky-200 min-h-[50vh] rounded-2xl ">
         <div className="m-3 p-3 font-bold">{!studentObj ? null : "Student : " +
         studentObj.firstName +" "+
         studentObj.lastName }</div>

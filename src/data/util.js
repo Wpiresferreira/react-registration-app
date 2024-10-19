@@ -356,11 +356,14 @@ export function enrollCourse(userId, termId, courseCode) {
 }
 
 export function getProgramDescription(programCode) {
-  return !programCode
+   
+  return !programCode || (JSON.parse(localStorage.getItem("programs")).filter(
+    (program) => program.programCode === programCode
+  )).length ===0
     ? null
-    : JSON.parse(localStorage.getItem("programs")).filter(
-        (program) => program.programCode === programCode
-      )[0].programName;
+    : (JSON.parse(localStorage.getItem("programs")).filter(
+      (program) => program.programCode === programCode
+    ))[0].programName;
 }
 
 export function getUserByUserId(userId) {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
-import programs from "../data/programs"; // Import the programs data
+import { getAllprograms } from "../data/util";
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -11,7 +11,7 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [birthday, setBirthday] = useState("");
-  const [selectedProgram, setSelectedProgram] = useState(programs[0].programCode); // Default to first program code
+  const [selectedProgram, setSelectedProgram] = useState(getAllprograms()[0].programCode); // Default to first program code
   const [error, setError] = useState(null);
 
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const SignUp = () => {
     const studentId = uuidv4();
 
     // Find the selected program details
-    const programDetails = programs.find(program => program.programCode === selectedProgram);
+    const programDetails = getAllprograms().find(program => program.programCode === selectedProgram);
 
     // Create a new student object
     const newStudent = {
@@ -146,7 +146,7 @@ const SignUp = () => {
             required
             style={styles.input}
           >
-            {programs.map((program) => (
+            {getAllprograms().map((program) => (
               <option key={program.programCode} value={program.programCode}>
                 {program.programName}
               </option>
