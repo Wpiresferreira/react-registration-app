@@ -5,9 +5,9 @@ import Footer from "./components/Footer";
 const Layout = () => {
   return (
     <main className="grid grid-rows-[auto_1fr_auto] min-h-[100vh]">
-      <Top></Top>
-      <Outlet />
-      <Footer></Footer>
+      <Top/>
+      <Outlet/>
+      <Footer/>
     </main>
   );
 };
