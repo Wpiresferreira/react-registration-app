@@ -3,6 +3,7 @@ import {
   enrollCourse,
   getMyCoursesCode,
   getMyCoursesCodeByTerm,
+  getQtRemainingCourses,
   getRemainingCourses,
   getTerms,
 } from "../data/util";
@@ -12,11 +13,12 @@ export default function AddCourses({ loggedUser }) {
   const [selectedTerm, setSelectedTerm] = useState(terms[0]);
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [coursesInBasket, setCoursesInBasket] = useState([]);
+  const [qtRemainingCourses, setQtRemainingCourses] = useState(getQtRemainingCourses(loggedUser))
   const allCourses = getRemainingCourses(loggedUser);
 
   useEffect(() => {
-    // setMyTermsId(getMyTermsId(loggedUser.userId));
-  }, [coursesInBasket, loggedUser]);
+    setQtRemainingCourses(getQtRemainingCourses(loggedUser))
+  }, [coursesInBasket, loggedUser, selectedCourses]);
 
   const handleOnChangeSelection = (e) => {
     const tempSelectedTerm = terms.filter(
@@ -74,6 +76,8 @@ export default function AddCourses({ loggedUser }) {
 
   return (
     <div className=" flex flex-col bg-sky-400">
+      <div className="p-4 font-bold">Total Remaing Courses {qtRemainingCourses}</div>
+
       <div>
         <label htmlFor="terms">Choose a Term:</label>
 

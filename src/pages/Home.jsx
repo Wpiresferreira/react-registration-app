@@ -30,33 +30,42 @@ const Home = () => {
   return !loggedUser ? (
     <div className="flex mt-12 justify-center">
       <div className="h-[50vh] w-[80vw]">
-        <div className="text-center p-10 text-3xl font-bold">
+        <div className=" text-center p-10 text-3xl font-bold">
           Welcome to Bow Valley Course Registration Page!
         </div>
-        <div>Here you can:</div>
-        <ul>
-          <li className="p-4 ml-4">Meet our Programs and Courses</li>
-          <li className="p-4 ml-4">Sign Up for a program</li>
-          <li className="p-4 ml-4">
+        <div className="mb-5 text-xl">Here you can:</div>
+        <ul className="shadow-balanced list-disc list-inside mb-6 space-y-4 text-lg">
+          <li className="p-4 ml-4 font-semibold">Meet our Programs and Courses</li>
+          <li className="p-4 ml-4 font-semibold">Sign Up for a program</li>
+          <li className="p-4 ml-4 font-semibold">
             Once you are registered in a Program, you are able to register for courses.
           </li>
         </ul>
         <div className="p-4 mr-4 text-right">Enjoy it!</div>
       </div>
     </div>
-  ) : (
-    <div className="flex flex-col justify-start items-start p-8">
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-      <h2 className="text-xl mb-2">Welcome, {loggedUser.firstName}!</h2>
-      <p className="mb-2">User Details:</p>
-      <ul className="list-disc pl-5">
-        <li>Full Name: {loggedUser.firstName} {loggedUser.lastName}</li>
-        <li>Email: {loggedUser.email}</li>
-        <li>Phone: {loggedUser.phone}</li>
-        <li>Birthday: {loggedUser.birthday}</li>
-        <li>Department: {loggedUser.department}</li>
-        <li>Program: {loggedUser.program}</li>
-        <li>Username: {loggedUser.username}</li>
+  ) :  (
+    <div className="w-[50vw] h-[55vh] flex flex-col  items-center shadow-balanced mt-10 mx-auto">
+      <div className="w-[50vw] bg-blue-100 ">
+
+    <h1 className="flex flex-col items-center text-2xl text-blue-900 font-semibold  mb-4 mt-6">Dashboard</h1>
+      <h2 className="flex flex-col items-center text-xl  text-blue-900 mb-8">Welcome, {loggedUser.firstName}!</h2>
+    
+      </div>
+      
+      <ul className=" flex flex-col justify-center items-left list-none   pt-10 ">
+        <li className=" mb-2">Full Name: {loggedUser.firstName} {loggedUser.lastName}</li>
+        <li className="mb-2">Email: {loggedUser.email}</li>
+        <li className="mb-2">Phone: {loggedUser.phone}</li>
+        <li className="mb-2">Birthday: {loggedUser.birthday}</li>
+        {/* Conditionally render Department and Program */}
+        {!loggedUser.isAdmin && (
+          <>
+            <li className="mb-2">Department: {loggedUser.department}</li>
+            <li className="mb-2">Program: {loggedUser.program}</li>
+          </>
+        )}
+        <li className="mb-2">Username: {loggedUser.username}</li>
       </ul>
     </div>
   );
