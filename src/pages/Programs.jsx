@@ -249,13 +249,6 @@ const Program = () => {
         </form>
       )}
 
-<ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {programListVisible &&  (programs.map((program) => (
-          <li
-            key={program.programCode}
-            onClick={() => handleProgramClick(program.programCode)}
-            className="bg-white border border-gray-300 rounded-lg p-6 shadow-2xl hover:shadow-xl transition-shadow duration-300 transform cursor-pointer"
-
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {programs.map((program) => (
           <li 
@@ -299,7 +292,7 @@ const Program = () => {
               </div>
             )}
           </li>
-        )))}
+        ))}
       </ul>
     </div>
   );
