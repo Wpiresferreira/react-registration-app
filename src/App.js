@@ -16,10 +16,11 @@ import Login from './pages/Login';
 import SignUp from './pages/Signup';
 import Profile from './pages/Profile';
 import Logout from './pages/Logout';  
-import Test from './pages/Test';
+import Test from './pages/NotFound';
 import Courses from './pages/Courses';
 import { enrolments } from './data/enrolments';
 import programs from './data/programs1';
+import NotFound from './pages/NotFound';
 
 
 
@@ -70,7 +71,7 @@ export default function App() {
           <Route path="logout" element={<Logout />} />
           <Route path="students-details" element={<StudentsDetails />} />
           <Route path="/students-details/:studentId" element={<StudentsDetails />} />
-          <Route path="*" element={<Test />} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </BrowserRouter>

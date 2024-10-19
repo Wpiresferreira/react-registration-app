@@ -1,12 +1,12 @@
 import { useNavigate } from "react-router-dom";
 
-export default function Logout() {
+export default function NotFound() {
   const navigate = useNavigate();
 
   return (
     <div className="flex flex-col items-center">
       <div className="w-[600px] h-[300px] rounded-2xl items-center m-6 flex flex-col justify-around bg-sky-200">
-        <div>Your session was closed</div>
+        <div>Page not found!</div>
         <div>
           <button
             onClick={() => navigate("/signup")} // Redirect to SignUp page
