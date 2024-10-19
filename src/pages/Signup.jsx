@@ -1,10 +1,7 @@
-
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { users } from "../data/data"; // Adjust the path if needed
 import { useNavigate } from "react-router-dom";
 import programs from "../data/programs"; // Import the programs data
-import { addUserToLocalStorage } from "../data/util"; // Import the utility function
 
 const SignUp = () => {
   const [firstName, setFirstName] = useState("");
@@ -19,8 +16,22 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
+  const loadUsersFromLocalStorage = () => {
+    // Retrieve users from localStorage
+    const savedUsers = localStorage.getItem("users");
+    return savedUsers ? JSON.parse(savedUsers) : [];
+  };
+
+  const saveUsersToLocalStorage = (users) => {
+    // Save updated users list to localStorage
+    localStorage.setItem("users", JSON.stringify(users));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Load existing users from localStorage
+    const users = loadUsersFromLocalStorage();
 
     // Check if the username or email is already taken
     const existingUser = users.find(
@@ -53,14 +64,12 @@ const SignUp = () => {
       isAdmin: false, // Default to non-admin students
     };
 
-    // Add the new student to the users array
-    users.push(newStudent);
+    // Add the new student to the users array and save it to localStorage
+    const updatedUsers = [...users, newStudent];
+    saveUsersToLocalStorage(updatedUsers);
 
-    // Store the new student in localStorage using the utility function
-    addUserToLocalStorage(newStudent);
-
-    // Redirect to Welcome page (or you can choose to redirect to Login)
-    alert("The user was added.");
+    // Redirect to Login page after successful sign-up
+    alert("User registered successfully!");
     navigate("/login");
   };
 
