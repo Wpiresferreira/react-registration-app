@@ -1,4 +1,4 @@
-const programs = [
+const programsData = [
   {
     programCode: "SDD-001",
     programName: "Software Development - Diploma",
@@ -40,4 +40,4 @@ const programs = [
   }
 ];
 
-export default programs;
+export default programsData;
