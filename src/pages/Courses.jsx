@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { getLoggedUser } from "../data/util";
 import courses from "../data/courses"; // Ensure this path is correct
-import { users } from '../data/data'; // Ensure this path is correct
+// import { users } from '../data/data'; // Ensure this path is correct
 
 const Courses = () => {
   const { programCode } = useParams();
@@ -9,7 +10,11 @@ const Courses = () => {
   const programCourses = courses[programCode];
 
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
-  const [coursesData, setCoursesData] = useState(courses); // Local state to manage course deletion
+  const [coursesData, setCoursesData] = useState(() => {
+    // Initialize courses data from local storage
+    const storedCourses = localStorage.getItem('coursesData');
+    return storedCourses ? JSON.parse(storedCourses) : courses;
+  }); // Local state to manage course deletion
   const [isAdmin, setIsAdmin] = useState(false); // State for admin check
   const [isAddingCourse, setIsAddingCourse] = useState(false); // State for showing the add course form
   const [newCourse, setNewCourse] = useState({ // State for new course details
@@ -19,17 +24,23 @@ const Courses = () => {
     startDate: '',
     endDate: '',
   });
+  const [isEditingCourse, setIsEditingCourse] = useState(false); // State for showing the edit course form
+  const [courseToEdit, setCourseToEdit] = useState(null); // State to hold the course being edited
 
   useEffect(() => {
-    const loggedInUsername = sessionStorage.getItem("username"); // Dynamically fetch logged-in username from session storage
-    const loggedInUser = users.find((user) => user.username === loggedInUsername); // Fetch user from data
-    if (loggedInUser) {
-      setIsAdmin(loggedInUser.isAdmin || false);
-      console.log("Admin Status:", loggedInUser.isAdmin); // Debugging line
-    } else {
-      console.log("User not found in data."); // Debugging line
+    const sessionId = JSON.parse(
+      sessionStorage.getItem("sessionId")
+    )?.sessionId;
+    if (sessionId) {
+      const loggedInUser = getLoggedUser(sessionId);
+      setIsAdmin(loggedInUser?.isAdmin || false);
     }
   }, []);
+
+  // Update local storage whenever coursesData changes
+  useEffect(() => {
+    localStorage.setItem('coursesData', JSON.stringify(coursesData));
+  }, [coursesData]);
 
   if (!programCourses) {
     return <div className="text-red-500 text-center">Program not found!</div>;
@@ -78,6 +89,18 @@ const Courses = () => {
     setIsAddingCourse(true);
   };
 
+  const handleEditCourse = (course) => {
+    setCourseToEdit(course); // Set the course to be edited
+    setNewCourse({
+      courseCode: course.courseCode,
+      name: course.name,
+      description: course.description,
+      startDate: course.startDate, // Autofill start date
+      endDate: course.endDate, // Autofill end date
+  });
+    setIsEditingCourse(true); // Show the edit course form
+  };
+
   const handleSubmit = (term) => {
     // Check that all fields are filled
     if (
@@ -87,27 +110,42 @@ const Courses = () => {
       newCourse.startDate &&
       newCourse.endDate
     ) {
-      // Create new course object
-      const courseToAdd = {
-        courseCode: newCourse.courseCode,
-        name: newCourse.name,
-        description: newCourse.description,
-        startDate: newCourse.startDate,
-        endDate: newCourse.endDate,
-      };
-
-      // Update courses data
       const updatedCourses = { ...coursesData };
-      updatedCourses[programCode].terms[term].push(courseToAdd);
+      if (isEditingCourse) {
+        // Update existing course
+        const termCourses = updatedCourses[programCode].terms[term];
+        const courseIndex = termCourses.findIndex(c => c.courseCode === newCourse.courseCode);
+        if (courseIndex !== -1) {
+          termCourses[courseIndex] = newCourse; // Update the course details
+        }
+      } else {
+        // Create new course object
+        const courseToAdd = {
+          courseCode: newCourse.courseCode,
+          name: newCourse.name,
+          description: newCourse.description,
+          startDate: newCourse.startDate,
+          endDate: newCourse.endDate,
+        };
+
+        // Add new course
+        updatedCourses[programCode].terms[term].push(courseToAdd);
+      }
 
       // Update state
       setCoursesData(updatedCourses);
       // Reset the form and hide it
-      setNewCourse({ courseCode: '', name: '', description: '', startDate: '', endDate: '' });
-      setIsAddingCourse(false);
+      resetForm();
     } else {
-      alert("All fields are required to add a course.");
+      alert("All fields are required to add/edit a course.");
     }
+  };
+
+  const resetForm = () => {
+    setNewCourse({ courseCode: '', name: '', description: '', startDate: '', endDate: '' });
+    setIsAddingCourse(false);
+    setIsEditingCourse(false);
+    setCourseToEdit(null);
   };
 
   const handleChange = (e) => {
@@ -124,7 +162,7 @@ const Courses = () => {
       <div className="flex items-center mb-4">
         <button
           onClick={() => navigate(-1)}
-          className="bg-gray-800 text-white hover:bg-gray-400 transition-colors duration-300 px-4 py-2 rounded"
+          className="bg-gray-800 text-white hover:bg-gray-600 transition-colors duration-300 px-4 py-2 rounded"
         >
           Back
         </button>
@@ -145,10 +183,10 @@ const Courses = () => {
         />
       </div>
 
-      {isAddingCourse ? (
+      {isAddingCourse || isEditingCourse ? (
         <div className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg mb-6">
           <h2 className="text-2xl font-semibold text-blue-600 mb-4">
-            Add New Course
+            {isEditingCourse ? "Edit Course" : "Add New Course"}
           </h2>
           <form
             onSubmit={(e) => {
@@ -210,67 +248,63 @@ const Courses = () => {
                 required
               />
             </div>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800">
-              Add Course
+            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300">
+              {isEditingCourse ? "Update Course" : "Add Course"}
             </button>
             <button
               type="button"
-              onClick={() => setIsAddingCourse(false)}
-              className="ml-4 bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-600"
+              onClick={resetForm}
+              className="ml-2 bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-800 transition-colors duration-300"
             >
               Cancel
             </button>
           </form>
         </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredCourses.map(({ term, courses }, index) =>
-            courses.length > 0 ? (
-              <div
-                key={term}
-                className="bg-white border border-gray-300 rounded-lg p-6 shadow-lg"
+      ) : null}
+
+      {/* Courses List */}
+      {filteredCourses.length > 0 ? (
+        filteredCourses.map(({ term, courses }, index) => (
+          <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow-lg">
+            <h2 className="text-2xl font-semibold text-blue-600 mb-2">{term}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {courses.map((course) => (
+                <div key={course.courseCode} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
+                  <h3 className="font-bold text-lg">{course.name} ({course.courseCode})</h3>
+                  <p className="text-gray-600">{course.description}</p>
+                  <p className="text-gray-600">Start Date: {new Date(course.startDate).toLocaleDateString()}</p>
+                  <p className="text-gray-600">End Date: {new Date(course.endDate).toLocaleDateString()}</p>
+                  {isAdmin && (
+                    <div className="mt-4">
+                      <button
+                        onClick={() => handleDeleteCourse(term, course.courseCode)}
+                        className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-800 transition-colors duration-300 mr-2"
+                      >
+                        Delete
+                      </button>
+                      <button
+                        onClick={() => handleEditCourse(course)}
+                        className="bg-yellow-600 text-white px-3 py-1 rounded hover:bg-yellow-800 transition-colors duration-300"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+            {isAdmin && (
+              <button
+                onClick={() => handleAddCourse(term)}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition-colors duration-300 mt-4"
               >
-                <h2 className="text-2xl font-semibold text-blue-600 mb-4">
-                  {term}
-                </h2>
-                <ul>
-                  {courses.map((course) => (
-                    <li
-                      key={course.courseCode}
-                      className={`mb-4 p-4 rounded-lg shadow-md transition-all duration-300 transform cursor-pointer ${
-                        index % 2 === 0
-                          ? "bg-blue-50 hover:bg-blue-100"
-                          : "bg-green-50 hover:bg-green-100"
-                      }`}
-                    >
-                      <h3 className="text-xl font-bold">{course.name}</h3>
-                      <p className="text-gray-600">{course.description}</p>
-                      <p className="text-gray-500">
-                        {course.startDate} - {course.endDate}
-                      </p>
-                      {isAdmin && (
-                        <button
-                          onClick={() => handleDeleteCourse(term, course.courseCode)}
-                          className="mt-2 bg-red-600 text-white px-2 py-1 rounded hover:bg-red-800"
-                        >
-                          Delete Course
-                        </button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-                {isAdmin && (
-                  <button
-                    onClick={() => handleAddCourse(term)}
-                    className="mt-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800"
-                  >
-                    Add Course
-                  </button>
-                )}
-              </div>
-            ) : null
-          )}
-        </div>
+                Add Course
+              </button>
+            )}
+          </div>
+        ))
+      ) : (
+        <div className="text-gray-600 text-center">No courses available for this program.</div>
       )}
     </div>
   );
