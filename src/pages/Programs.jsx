@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import programsData from "../data/programs";
 import { getLoggedUser } from "../data/util";
+import courses from "../data/courses";
 
 const Program = () => {
   const navigate = useNavigate();
+  const [selectedProgramDuration, setSelectedProgramDuration] = useState(null); //used to display terms in courses component
   const [isAdmin, setIsAdmin] = useState(false);
   const [programs, setPrograms] = useState(() => {
     const storedPrograms = localStorage.getItem("programs");
@@ -24,6 +26,28 @@ const Program = () => {
     term: "",
   });
   const [searchTerm, setSearchTerm] = useState("");
+  const [courses, setCourses] = useState({
+    "": {
+      programName: "",
+      terms: {
+        "": [
+          {
+            courseCode: "",
+            name: "",
+            startDate: "",
+            endDate: "",
+            description: ""
+          }]}
+  }});
+  const [selectedProgram, setSelectedProgram] = useState(null);
+  
+
+  useEffect(() => {
+    const storedCourses = localStorage.getItem("courses");
+    if (storedCourses) {
+      setCourses(JSON.parse(storedCourses));
+    }
+  }, []);
 
   useEffect(() => {
     const sessionId = JSON.parse(
@@ -49,6 +73,7 @@ const Program = () => {
 
   const handleProgramClick = (programCode) => {
     navigate(`/courses/${programCode}`);
+    setSelectedProgram(programs.find(program => program.programCode === programCode));
   };
 
   const handleAddProgram = () => {
@@ -83,28 +108,31 @@ const Program = () => {
     e.preventDefault();
 
     if (editMode) {
-      const updatedPrograms = programsData.map((p) =>
-        p.programCode === programForm.programCode ? { ...programForm } : p
-      );
+        const updatedPrograms = programs.map((p) =>
+            p.programCode === programForm.programCode ? { ...programForm } : p
+        );
 
-      setPrograms(updatedPrograms);
-      // setCourses(updatedCourses);
-      alert("Program and courses updated successfully!");
+        setPrograms(updatedPrograms);
+        alert("Program updated successfully!");
     } else {
-      setPrograms([...programsData, { ...programForm }]);
-      // setCourses({
-      //   ...courses,
-      //   [programForm.programCode]: {
-      //     programName: programForm.programName,
-      //     terms: courses
-      //   }
-      // });
-      alert("Program and courses added successfully!");
+        // Initialize terms and courses based on duration
+        const terms = Array.from({ length: programForm.duration }, (_, index) => ({
+            term: `Term ${index + 1}`,
+            courses: [] // Add course objects if you have a specific structure for courses
+        }));
+
+        const newProgram = {
+            ...programForm,
+            terms, // Assign initialized terms
+        };
+
+        setPrograms([...programs, newProgram]);
+        alert("Program and courses added successfully!");
     }
 
     setFormVisible(false);
     setProgramListVisibility(true);
-  };
+};
 
   const handleCancel = () => {
     setFormVisible(false);
@@ -332,6 +360,12 @@ const Program = () => {
               </p>
               <p className="text-gray-700">
                 <strong>End Date:</strong> {program.endDate}
+              </p>
+              <p className="text-gray-700">
+                <strong>Domestic Fees (CAD): </strong> {Number(program.fees.domestic).toLocaleString()}
+              </p>
+              <p className="text-gray-700">
+                <strong>International Fees (CAD): </strong> {Number(program.fees.international).toLocaleString()}
               </p>
 
               {isAdmin && (
