@@ -126,6 +126,7 @@ const Courses = () => {
           description: newCourse.description,
           startDate: newCourse.startDate,
           endDate: newCourse.endDate,
+          availability: "Fall/Winter/Spring/Summer",
         };
 
         // Add new course
@@ -150,9 +151,12 @@ const Courses = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    
     setNewCourse((prevCourse) => ({
       ...prevCourse,
       [name]: value,
+      availability: "Fall/Winter/Spring/Summer",
+      
     }));
   };
 

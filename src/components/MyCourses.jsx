@@ -50,7 +50,8 @@ export default function MyCourses({ loggedUser }) {
         <div key={termId} className="font-bold p-2">
           {getTermDescription(termId)}
           <div className="flex flex-wrap flex-[0_0_18%]">
-            {getMyCoursesByTerm(loggedUser.userId, termId).map(
+            {!getMyCoursesByTerm(loggedUser, termId)?null:
+            getMyCoursesByTerm(loggedUser, termId).map(
               (course, index) => (
                 <div
                   key={course.courseCode}
@@ -72,7 +73,7 @@ export default function MyCourses({ loggedUser }) {
                     className="text-center text-sm"
                     id={course.courseCode + "_courseDescription"}
                   >
-                    {course.courseDescription}
+                    {course.name}
                   </div>
                 </div>
               )

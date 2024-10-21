@@ -4,8 +4,8 @@ const programs = [
     programName: "Software Development - Diploma",
     duration: 4, // Number of terms
     term: "Winter/2024",
-    startDate: "September 5, 2025",
-    endDate: "June 15, 2027",
+    startDate: "2025-09-13",
+    endDate: "2027-06-15",
     domesticFee: "$9,254",
     internationalFee: "$27,735",
     description:
@@ -16,8 +16,8 @@ const programs = [
     programName: "Software Development - Post-Diploma",
     duration: 2, // Number of terms
     term: "Winter/2024",
-    startDate: "September 5, 2025",
-    endDate: "June 15, 2026",
+    startDate: "2025-09-13",
+    endDate: "2026-06-15",
     domesticFee: "$7,895",
     internationalFee: "$23,675",
     description:
@@ -28,8 +28,8 @@ const programs = [
     programName: "Software Development - Apprenticeship Style",
     duration: 6, // Number of terms
     term: "Winter/2024",
-    startDate: "September 5, 2025",
-    endDate: "June 15, 2028",
+    startDate: "2025-09-13",
+    endDate: "2028-06-15",
     domesticFee: "$17,324",
     internationalFee: "$40,874",
     description:

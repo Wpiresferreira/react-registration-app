@@ -1,296 +1,456 @@
-const courses= {
-    "SDD-001": {
-      programName: "Software Development - Diploma",
-      terms: {
-        "Term 1": [
-          {
-            courseCode: "SDD-101",
-            name: "Introduction to Programming",
-            startDate: "September 5, 2025",
-            endDate: "November 30, 2025",
-            description: "Learn the basics of programming."
-          },
-          {
-            courseCode: "SDD-102",
-            name: "Database Fundamentals",
-            startDate: "September 5, 2025",
-            endDate: "November 30, 2025",
-            description: "Introduction to database design and management."
-          },
-          {
-            courseCode: "SDD-103",
-            name: "Web Development Basics",
-            startDate: "September 5, 2025",
-            endDate: "November 30, 2025",
-            description: "Foundations of web development using HTML, CSS, and JavaScript."
-          }
-        ],
-        "Term 2": [
-          {
-            courseCode: "SDD-201",
-            name: "Object-Oriented Programming",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Understanding OOP principles using C#."
-          },
-          {
-            courseCode: "SDD-202",
-            name: "Web Design Principles",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Learn how to design user-friendly web interfaces."
-          },
-          {
-            courseCode: "SDD-203",
-            name: "Data Structures",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "An overview of data structures and algorithms."
-          }
-        ],
-        "Term 3": [
-          {
-            courseCode: "SDD-301",
-            name: "Full Stack Development",
-            startDate: "September 5, 2026",
-            endDate: "November 30, 2026",
-            description: "Building applications from front to back."
-          },
-          {
-            courseCode: "SDD-302",
-            name: "Software Testing",
-            startDate: "September 5, 2026",
-            endDate: "November 30, 2026",
-            description: "Learn techniques for software testing and quality assurance."
-          },
-          {
-            courseCode: "SDD-303",
-            name: "Project Management",
-            startDate: "September 5, 2026",
-            endDate: "November 30, 2026",
-            description: "Managing software development projects effectively."
-          }
-        ],
-        "Term 4": [
-          {
-            courseCode: "SDD-401",
-            name: "Capstone Project",
-            startDate: "January 10, 2027",
-            endDate: "April 20, 2027",
-            description: "A comprehensive project to demonstrate your skills."
-          },
-          {
-            courseCode: "SDD-402",
-            name: "Advanced Database Management",
-            startDate: "January 10, 2027",
-            endDate: "April 20, 2027",
-            description: "In-depth study of database systems."
-          },
-          {
-            courseCode: "SDD-403",
-            name: "Ethics in Technology",
-            startDate: "January 10, 2027",
-            endDate: "April 20, 2027",
-            description: "Understanding ethical issues in technology."
-          }
-        ]
-      }
+const courses = {
+  "SDD-001": {
+    programName: "Software Development - Diploma",
+    terms: {
+      "Term 1": [
+        {
+          courseCode: "MATH1901",
+          name: "Math for the Computer Industry",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description:
+            "This course provides learners with the practical knowledge and skills in the use of mathematics in relation to computers. Alternate number bases, set theory, logic, and Boolean algebra are the foundation of this course. In addition, learners use basic statistical concepts to understand challenges in information technology.",
+          credits: "3",
+          availability: "Fall/Winter/Spring/Summer",
+          "pre-requisite": "",
+        },
+        {
+          courseCode: "MGMT1103",
+          name: "Essential Skills for Teams Collaboration",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description:
+          "This course prepares learners with practical skills in effective communications and collaborative teamwork that are applied in multiple different scenarios. Learners will also be actively engaging in team roles within project management methodologies while developing key soft skills for ongoing growth. to database design and management.",
+          credits: "3",
+          availability: "Fall/Winter",
+          "pre-requisite": "",
+        },
+        {
+          courseCode: "SODV1101",
+          name: "Programming Fundamentals",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description:
+          "Computer programming is central to software development. Learners analyze basic software and technology problems and develop a good programming style and logical thinking to write structured instruction that addresses those problems. Learners demonstrate their structured coding skills by writing correct code with clarity and quality. They use extensively the structured control flow, repetition, block structure, and subroutines in this course.",
+          credits: "3",
+          availability: "Fall/Winter",
+          "pre-requisite": "",
+        },
+        {
+          courseCode: "TECH1101",
+          name: "Web and Internet Fundamentals",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description:
+          "Learners use HyperText Markup Language (HTML), Cascading Style Sheets (CSS), and JavaScript — a mix of programming and layout that powers the visuals and interactions on the web in this course. They also use the elements of a web page and describe how the HTML code is interpreted by a web browser to display the page's visual components. They are able to style a wide range of design elements and enhance the visual components. Further, they apply CSS properties to create completely responsive and aesthetically pleasing web pages. Learners explore the dynamics of JavaScript, the web's most popular, extensively used, and incredibly powerful language as well to develop interactive client-side functionality. of web development using HTML, CSS, and JavaScript.",
+          credits: "3",
+          availability: "Fall/Winter",
+          "pre-requisite": "",
+        },
+        {
+          courseCode: "TECH1102",
+          name: "Internet of Things",
+          term: "1",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description:
+          "This course focuses on the pervasiveness of the internet. Learners explore the internet of things through the construction of simple interfaces between computers and the devices they control. Through the creation of these interfaces, learners gain insight into the elements of computer architecture, networking, and the programs that control device function within that network.",
+          credits: "3",
+          availability: "Fall/Winter",
+          "pre-requisite": "",
+        },
+      ],
+      "Term 2": [
+        {
+          courseCode: "DATA1201",
+          name: "Introduction to Relational Databases",
+          startDate: "2026-01-08",
+          endDate: "2026-04-10",
+          description:
+          "In this course, the learner plans, creates and manages a relational database at a fundamental level. The emphasis of this course is on data manipulation and extraction.Prerequisite: SODV1101",
+          credits: "3",
+          availability: "Winter/Spring",
+          "pre-requisite": "SODV1101",
+        },
+        {
+          courseCode: "DESN2301",
+          name: "User Experience Design",
+          startDate: "2026-01-08",
+          endDate: "2026-04-10",
+          description:
+          "This course introduces the principles of broad user experience design and hands-on creation of digital interfaces. Design principles, processes, skills and best practice approaches are applied in the construction of solutions to hypothetical design & industry relevant scenarios. Learners will start with learning concepts & examples, followed by taking a multi-disciplinary approach to integrating those concepts with their skills based on performance criteria. Learners will do this within production teams in a standard design sprint model. The course covers persona development and interface design.",
+          credits: "3",
+          availability: "Winter/Spring",
+          "pre-requisite": "",
+        },
+        {
+          courseCode: "SODV1201",
+          name: "Introduction to Web Programming",
+          startDate: "2026-01-08",
+          endDate: "2026-04-10",
+          description:
+            "This course provides learners with foundational web programming knowledge and skills. Learners focus on basic to advanced JavaScript programming to build dynamic web application and use it as a backend scripting language with one of the modern JavaScript library node.js. Also, learners explore the concept of web application architecture and other JavaScript libraries like jQuery and Node.js Packages throughout the course, and build a basic full stack application.",
+          credits: "3",
+          availability: "Winter/Spring",
+          "pre-requisite": "SODV1101, TECH1101",
+        },
+        {
+          courseCode: "SODV1202",
+          name: "Introduction to Object Oriented\nProgramming",
+          startDate: "2026-01-08",
+          endDate: "2026-04-10",
+          description:
+          "In this course, learners apply principles of design, logic and structure in the creation of application programs using object-oriented programming language, existing classes and user-defined classes. Learners use current, evidence-based practices such as automated unit tests and documentation to deliver working software. Prerequisites: SODV1101, MATH1901",
+          credits: "3",
+          availability: "Winter/Spring",
+          "pre-requisite": "SODV1101, MATH1901",
+        },
+        {
+          courseCode: "TECH1201",
+          name: "Networking Essentials",
+          startDate: "2026-01-08",
+          endDate: "2026-04-10",
+          description:
+          "Network systems interconnect computer related resources, services and users. This course provides the learners with a foundation in networking concepts and technologies, with emphasis on terminology, protocols, error detection/correction and network security. Through course activities, learners develop skills to plan and implement small networks across a range of applications.",
+          credits: "3",
+          availability: "Winter/Spring",
+          "pre-requisite": "",
+        },
+      ],
+      "Term 3": [
+        {
+          courseCode: "DATA2201",
+          name: "Relational Databases",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "In this course learners use Structured Query Language (SQL) on commercial relational databases. Using SQL and SQL procedural language, learners create and manage a relational database, addressing data integrity and security. In addition, learners explore the relationship between database administration and software development. Prerequisite: DATA1201",
+          credits: "3",
+          availability: "Fall",
+          "pre-requisite": "DATA1201",
+        },
+        {
+          courseCode: "MGMT1104",
+          name: "Project Management in Software\nDevelopment",
+          description:
+          "This course introduces the fundamental principles necessary for successful management of software projects. Project planning, management and execution along with control techniques will be discussed and the application of computers in project management will be studied. Learners will also explore the different project management methodologies in place to manage projects of different scope.",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          credits: "3",
+          availability: "Fall",
+          "pre-requisite": "MGMT1103",
+        },
+        {
+          courseCode: "SODV2101",
+          name: "Rapid Application Development",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "This course introduces programming techniques supported by a visual rapid application development environment including forms, controls, user-defined classes and objects. Learners examine the framework provided by the platform that supports visual programming to build graphical user interface (GUI) application. The skills in this course can be applied to building data driven applications. Prerequisites: SODV1202, DATA1201",
+          credits: "3",
+          availability: "Fall",
+          "pre-requisite": "SODV1202, DATA1201",
+        },
+        {
+          courseCode: "SODV2201",
+          name: "Web Programming",
+          credits: "3",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "This course gives learners the opportunity to enhance and enrich their skills in web programming. Learners develop web applications using three-tier architecture, session management, object-oriented techniques and advanced database interactions. In addition, the course explores concepts such as advanced cascading style sheet (CSS). Learners develop rich interactive web applications with authentication and security. Prerequisites: SODV1201, SODV1202, DATA1201",
+          availability: "Fall",
+          "pre-requisite": "SODV1201, SODV1202,\nDATA1201",
+        },
+        {
+          courseCode: "SODV2202",
+          name: "Object Oriented Programming",
+          credits: "3",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+            "In this course, learners explore object-oriented design concepts and techniques. This course introduces techniques such as threads and event handling that potentially lead to the creation of sophisticated applications. The knowledge and skills in this course apply to the areas like database manipulation and network connectivity. Prerequisites: DATA1201, SODV1202",
+            availability: "Fall",
+            "pre-requisite": "DATA1201, SODV1202",
+        },
+      ],
+      "Term 4": [
+        {
+          courseCode: "SODV2203",
+          name: "Introduction to Game and Simulation\nProgramming",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "Building on programming skills obtained in previous courses, the learner will learn techniques and gain experience developing with tools used for game and simulation programming. The learner will develop two-dimensional and three-dimensional graphics environments to be used for presenting data and creating virtual spaces. The use of game and simulation applications in various fields such as health, entertainment, environmental studies, and education will be explored. Prerequisite: SODV2202",
+          credits: "3",
+          availability: "Winter",
+          "pre-requisite": "SODV2202",
+        },
+        {
+          courseCode: "SODV3203",
+          name: "Mobile Application Development",
+          description:
+          "Learners approach application development with a mobile-first and mobile-only lens, expanding avenues to reach users. The course focuses on common industry tools and mobile features of programming languages and frameworks that enable mobile business application construction.",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          credits: "3",
+          availability: "Winter",
+          "pre-requisite": "",
+        },
+        {
+          courseCode: "SODV2401",
+          name: "Algorithms and Data Structures",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "This course introduces learners to fundamental abstract data types and common techniques, algorithms, and data structures used in their implementation. Learners also explore common search and sort algorithms as well as basic algorithm efficiency analysis. Learners are also exposed to common technical interview questions and strategies to solve them. Prerequisites: SODV1202",
+          credits: "3",
+          availability: "Winter",
+          "pre-requisite": "SODV1202",
+        },
+        {
+          courseCode: "SODV2999",
+          name: "Software Development Diploma Capstone\nProject",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "Learners strengthen their skills and their knowledge of software development by creating a portfolio piece to prepare for entry into the industry. Research, client communication, and documentation skills are practiced and refined. Advanced elements of software design and development are put into practice. This course will center on a capstone project that incorporates all program learning. Prerequisites: DESN2301, MGMT1104, SODV2101 and SODV2201",
+          credits: "3",
+          availability: "Winter",
+          "pre-requisite": "DESN2301, MGMT1104,\nSODV2101, SODV2201",
+        },
+        {
+          courseCode: "TECH2102",
+          name: "Enterprise Computing",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description:
+          "Learners will learn about the protocols and applications that make possible the simultaneous and seamless interaction of millions of computers through the internet and enterprise networks. In order to design and implement enterprise class applications, the learner will undertake an in depth study of the concepts of enterprise computing. To understand the practical aspect of enterprise computing, the learner will build a working example of a dynamic, secure web enterprise application. Topics that will be covered include Service Oriented Architecture (SOA) and Service Component Architecture (SCA). Prerequisite: TECH1201, SODV2201",
+          credits: "3",
+          availability: "Winter",
+          "pre-requisite": "TECH1201, SODV2201",
+        },
+      ],
     },
-    "SDP-001": {
-      programName: "Software Development - Post-Diploma",
-      terms: {
-        "Term 1": [
-          {
-            courseCode: "SDP-101",
-            name: "Advanced Web Development",
-            startDate: "September 5, 2025",
-            endDate: "December 15, 2025",
-            description: "Advanced techniques in web application development."
-          },
-          {
-            courseCode: "SDP-102",
-            name: "Cloud Computing",
-            startDate: "September 5, 2025",
-            endDate: "December 15, 2025",
-            description: "Introduction to cloud technologies and services."
-          },
-          {
-            courseCode: "SDP-103",
-            name: "Agile Methodologies",
-            startDate: "September 5, 2025",
-            endDate: "December 15, 2025",
-            description: "Understanding Agile project management principles."
-          }
-        ],
-        "Term 2": [
-          {
-            courseCode: "SDP-201",
-            name: "Mobile App Development",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Creating mobile applications for iOS and Android."
-          },
-          {
-            courseCode: "SDP-202",
-            name: "Data Analytics",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Introduction to data analytics and visualization."
-          },
-          {
-            courseCode: "SDP-203",
-            name: "Portfolio Development",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Build a portfolio showcasing your projects."
-          }
-        ]
-      }
+  },
+  "SDP-001": {
+    programName: "Software Development - Post-Diploma",
+    terms: {
+      "Term 1": [
+        {
+          courseCode: "SDP-101",
+          name: "Advanced Web Development",
+          startDate: "09-05-2025",
+          endDate: "December 15, 2025",
+          description: "Advanced techniques in web application development.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDP-102",
+          name: "Cloud Computing",
+          startDate: "09-05-2025",
+          endDate: "December 15, 2025",
+          description: "Introduction to cloud technologies and services.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDP-103",
+          name: "Agile Methodologies",
+          startDate: "09-05-2025",
+          endDate: "December 15, 2025",
+          description: "Understanding Agile project management principles.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
+      "Term 2": [
+        {
+          courseCode: "SDP-201",
+          name: "Mobile App Development",
+          startDate: "2026-01-10",
+          endDate: "2026-04-10",
+          description: "Creating mobile applications for iOS and Android.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDP-202",
+          name: "Data Analytics",
+          startDate: "2026-01-10",
+          endDate: "2026-04-10",
+          description: "Introduction to data analytics and visualization.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDP-203",
+          name: "Portfolio Development",
+          startDate: "2026-01-10",
+          endDate: "2026-04-10",
+          description: "Build a portfolio showcasing your projects.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
     },
-    "SDA-001": {
-      programName: "Software Development - Apprenticeship Style",
-      terms: {
-        "Term 1": [
-          {
-            courseCode: "SDA-101",
-            name: "Introduction to Software Development",
-            startDate: "September 5, 2025",
-            endDate: "November 30, 2025",
-            description: "Foundational course in software development."
-          },
-          {
-            courseCode: "SDA-102",
-            name: "Workplace Readiness",
-            startDate: "September 5, 2025",
-            endDate: "November 30, 2025",
-            description: "Preparing students for the workplace environment."
-          },
-          {
-            courseCode: "SDA-103",
-            name: "Basic Programming Concepts",
-            startDate: "September 5, 2025",
-            endDate: "November 30, 2025",
-            description: "Understanding basic programming languages."
-          }
-        ],
-        "Term 2": [
-          {
-            courseCode: "SDA-201",
-            name: "Web Technologies",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Learning the latest web technologies."
-          },
-          {
-            courseCode: "SDA-202",
-            name: "Software Development Tools",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Introduction to tools used in software development."
-          },
-          {
-            courseCode: "SDA-203",
-            name: "Introduction to Algorithms",
-            startDate: "January 10, 2026",
-            endDate: "April 20, 2026",
-            description: "Basic algorithms and their applications."
-          }
-        ],
-        "Term 3": [
-          {
-            courseCode: "SDA-301",
-            name: "Advanced Programming",
-            startDate: "September 5, 2026",
-            endDate: "November 30, 2026",
-            description: "Deep dive into advanced programming techniques."
-          },
-          {
-            courseCode: "SDA-302",
-            name: "User Experience Design",
-            startDate: "September 5, 2026",
-            endDate: "November 30, 2026",
-            description: "Principles of creating a great user experience."
-          },
-          {
-            courseCode: "SDA-303",
-            name: "Software Deployment",
-            startDate: "September 5, 2026",
-            endDate: "November 30, 2026",
-            description: "Understanding how to deploy software applications."
-          }
-        ],
-        "Term 4": [
-          {
-            courseCode: "SDA-401",
-            name: "Internship",
-            startDate: "January 10, 2027",
-            endDate: "June 15, 2027",
-            description: "Real-world experience through an internship."
-          },
-          {
-            courseCode: "SDA-402",
-            name: "Advanced Web Applications",
-            startDate: "January 10, 2027",
-            endDate: "June 15, 2027",
-            description: "Creating complex web applications."
-          },
-          {
-            courseCode: "SDA-403",
-            name: "Professional Development",
-            startDate: "January 10, 2027",
-            endDate: "June 15, 2027",
-            description: "Skills for career advancement in the tech industry."
-          }
-        ],
-        "Term 5": [
-          {
-            courseCode: "SDA-501",
-            name: "Data Management",
-            startDate: "September 5, 2027",
-            endDate: "November 30, 2027",
-            description: "Principles of managing data and databases."
-          },
-          {
-            courseCode: "SDA-502",
-            name: "Software Maintenance",
-            startDate: "September 5, 2027",
-            endDate: "November 30, 2027",
-            description: "Understanding software maintenance and updates."
-          },
-          {
-            courseCode: "SDA-503",
-            name: "Emerging Technologies",
-            startDate: "September 5, 2027",
-            endDate: "November 30, 2027",
-            description: "Overview of emerging technologies in the industry."
-          }
-        ],
-        "Term 6": [
-          {
-            courseCode: "SDA-601",
-            name: "Final Project",
-            startDate: "January 10, 2028",
-            endDate: "June 15, 2028",
-            description: "Capstone project demonstrating all acquired skills."
-          },
-          {
-            courseCode: "SDA-602",
-            name: "Team Collaboration",
-            startDate: "January 10, 2028",
-            endDate: "June 15, 2028",
-            description: "Working effectively in a team environment."
-          },
-          {
-            courseCode: "SDA-603",
-            name: "Career Planning",
-            startDate: "January 10, 2028",
-            endDate: "June 15, 2028",
-            description: "Planning for a successful career in technology."
-          }
-        ]
-      }
-    }
-  };
-  
-  export default courses;
-  
+  },
+  "SDA-001": {
+    programName: "Software Development - Apprenticeship Style",
+    terms: {
+      "Term 1": [
+        {
+          courseCode: "SDA-101",
+          name: "Introduction to Software Development",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description: "Foundational course in software development.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-102",
+          name: "Workplace Readiness",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description: "Preparing students for the workplace environment.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-103",
+          name: "Basic Programming Concepts",
+          startDate: "2025-09-05",
+          endDate: "2025-11-30",
+          description: "Understanding basic programming languages.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
+      "Term 2": [
+        {
+          courseCode: "SDA-201",
+          name: "Web Technologies",
+          startDate: "2026-01-10",
+          endDate: "2026-04-10",
+          description: "Learning the latest web technologies.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-202",
+          name: "Software Development Tools",
+          startDate: "2026-01-10",
+          endDate: "2026-04-10",
+          description: "Introduction to tools used in software development.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-203",
+          name: "Introduction to Algorithms",
+          startDate: "2026-01-10",
+          endDate: "2026-04-10",
+          description: "Basic algorithms and their applications.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
+      "Term 3": [
+        {
+          courseCode: "SDA-301",
+          name: "Advanced Programming",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description: "Deep dive into advanced programming techniques.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-302",
+          name: "User Experience Design",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description: "Principles of creating a great user experience.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-303",
+          name: "Software Deployment",
+          startDate: "2026-09-05",
+          endDate: "2026-11-30",
+          description: "Understanding how to deploy software applications.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
+      "Term 4": [
+        {
+          courseCode: "SDA-401",
+          name: "Internship",
+          startDate: "2027-01-10",
+          endDate: "2027-04-10",
+          description: "Real-world experience through an internship.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-402",
+          name: "Advanced Web Applications",
+          startDate: "2027-01-10",
+          endDate: "2027-04-10",
+          description: "Creating complex web applications.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-403",
+          name: "Professional Development",
+          startDate: "2027-01-10",
+          endDate: "2027-04-10",
+          description: "Skills for career advancement in the tech industry.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
+      "Term 5": [
+        {
+          courseCode: "SDA-501",
+          name: "Data Management",
+          startDate: "2027-09-05",
+          endDate: "2027-11-30",
+          description: "Principles of managing data and databases.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-502",
+          name: "Software Maintenance",
+          startDate: "2027-09-05",
+          endDate: "2027-11-30",
+          description: "Understanding software maintenance and updates.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-503",
+          name: "Emerging Technologies",
+          startDate: "2027-09-05",
+          endDate: "2027-11-30",
+          availability: "Fall/Winter/Spring/Summer",
+          description: "Overview of emerging technologies in the industry.",
+        },
+      ],
+      "Term 6": [
+        {
+          courseCode: "SDA-601",
+          name: "Final Project",
+          startDate: "2028-01-10",
+          endDate: "2028-04-10",
+          description: "Capstone project demonstrating all acquired skills.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-602",
+          name: "Team Collaboration",
+          startDate: "2028-01-10",
+          endDate: "2028-04-10",
+          description: "Working effectively in a team environment.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+        {
+          courseCode: "SDA-603",
+          name: "Career Planning",
+          startDate: "2028-01-10",
+          endDate: "2028-04-10",
+          description: "Planning for a successful career in technology.",
+          availability: "Fall/Winter/Spring/Summer",
+        },
+      ],
+    },
+  },
+};
+
+export default courses;

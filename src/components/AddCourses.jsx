@@ -12,33 +12,23 @@ export default function AddCourses({ loggedUser }) {
   const terms = getTerms();
   const [selectedTerm, setSelectedTerm] = useState(terms[0]);
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [coursesInBasket, setCoursesInBasket] = useState([]);
   const [qtRemainingCourses, setQtRemainingCourses] = useState(getQtRemainingCourses(loggedUser))
   const allCourses = getRemainingCourses(loggedUser);
+  console.log(allCourses)
 
   useEffect(() => {
     setQtRemainingCourses(getQtRemainingCourses(loggedUser))
-  }, [coursesInBasket, loggedUser, selectedCourses]);
+  }, [
+    loggedUser, selectedCourses]);
 
   const handleOnChangeSelection = (e) => {
     const tempSelectedTerm = terms.filter(
       (t) => t.termId === Number(e.target.value)
     )[0];
     setSelectedTerm(tempSelectedTerm);
-    setCoursesInBasket([]);
   };
 
   const handleOnClickCourse = (e) => {
-    // Checking if user is already registered for the clicked course
-    if (
-      getMyCoursesCodeByTerm(loggedUser.userId, selectedTerm.termId).includes(
-        e.target.id.split("_")[0]
-      )
-    ) {
-      alert("You are already enrolled for this Course");
-      return;
-    }
-
     //Toggle select / deselect course when it is clicked
     // Uptading status selectedCourses
     if (!selectedCourses.includes(e.target.id.split("_")[0])) {
@@ -124,7 +114,7 @@ export default function AddCourses({ loggedUser }) {
                   className="text-center text-sm"
                   id={course.courseCode + "_courseDescription"}
                 >
-                  {course.courseDescription}
+                  {course.name}
                 </div>
               </div>
             ))

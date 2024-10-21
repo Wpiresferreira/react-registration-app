@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getLoggedUser, getProgramDescription } from "../data/util";
+import { getCoursesByProgram, getLoggedUser, getProgramDescription } from "../data/util";
 import MyCourses from "../components/MyCourses";
 import AddCourses from "../components/AddCourses";
 
@@ -25,8 +25,11 @@ export default function Registration() {
   useEffect(()=>{
     const tempProgramName = getProgramDescription(loggedUser.program)
     if(loggedUser) {
-      setProgramName(tempProgramName)}
+      setProgramName(tempProgramName)
+      getCoursesByProgram(loggedUser.program)
+    }
   },[loggedUser])
+
 
   const [selectedTab, setSetectedTab] = useState("My Courses");
 
@@ -43,7 +46,7 @@ export default function Registration() {
     "
       >
       <div className="font-bold m-4 text-2xl">
-        {programName}
+        {'Student: '+ loggedUser.firstName+ " " + loggedUser.lastName +" / " + programName}
       </div>
         <div className="w-[90vw] min-h-[70vh]">
           <div className="flex">

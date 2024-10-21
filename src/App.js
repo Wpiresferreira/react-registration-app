@@ -1,5 +1,6 @@
 import { users, messagesSample } from './data/data';
 import { terms } from './data/terms';
+import coursesData from './data/courses';
 import {courses} from './data/courses1';
 import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
@@ -19,7 +20,7 @@ import Logout from './pages/Logout';
 import Test from './pages/NotFound';
 import Courses from './pages/Courses';
 import { enrolments } from './data/enrolments';
-import programs from './data/programs1';
+import programs from './data/programs';
 import NotFound from './pages/NotFound';
 
 
@@ -38,6 +39,9 @@ export default function App() {
 
     if(!localStorage.getItem("courses")){
       localStorage.setItem("courses", JSON.stringify(courses))
+    }
+    if(!localStorage.getItem("coursesData")){
+      localStorage.setItem("coursesData", JSON.stringify(coursesData))
     }
     if(!localStorage.getItem("enrolments")){
       localStorage.setItem("enrolments", JSON.stringify(enrolments))
