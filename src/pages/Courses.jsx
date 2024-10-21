@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { getLoggedUser } from "../data/util";
 import courses from "../data/courses"; // Ensure this path is correct
 // import { users } from '../data/data'; // Ensure this path is correct
+import programsData from "../data/programs";
 
 const Courses = () => {
   const { programCode } = useParams();
@@ -12,21 +13,30 @@ const Courses = () => {
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
   const [coursesData, setCoursesData] = useState(() => {
     // Initialize courses data from local storage
-    const storedCourses = localStorage.getItem('coursesData');
+    const storedCourses = localStorage.getItem("coursesData");
     return storedCourses ? JSON.parse(storedCourses) : courses;
   }); // Local state to manage course deletion
   const [isAdmin, setIsAdmin] = useState(false); // State for admin check
   const [isAddingCourse, setIsAddingCourse] = useState(false); // State for showing the add course form
-  const [newCourse, setNewCourse] = useState({ // State for new course details
-    courseCode: '',
-    name: '',
-    description: '',
-    startDate: '',
-    endDate: '',
+  const [newCourse, setNewCourse] = useState({
+    // State for new course details
+    courseCode: "",
+    name: "",
+    description: "",
+    startDate: "",
+    endDate: "",
   });
-  const [isEditingCourse, setIsEditingCourse] = useState(false); // State for showing the edit course form
-  const [courseToEdit, setCourseToEdit] = useState(null); // State to hold the course being edited
 
+  // const [programsData, setProgramsData] = useState(() => {
+  //   const storedPrograms = localStorage.getItem("programsData");
+  //   return storedPrograms ? JSON.parse(storedPrograms) : [];
+  // });
+  const selectedProgram = programsData.find(
+    (program) => program.programCode === programCode);
+    const [isEditingCourse, setIsEditingCourse] = useState(false); // State for showing the edit course form
+    const [courseToEdit, setCourseToEdit] = useState(null); // State to hold the course being edited
+  
+    console.log(selectedProgram);
   useEffect(() => {
     const sessionId = JSON.parse(
       sessionStorage.getItem("sessionId")
@@ -39,11 +49,12 @@ const Courses = () => {
 
   // Update local storage whenever coursesData changes
   useEffect(() => {
-    localStorage.setItem('coursesData', JSON.stringify(coursesData));
+    localStorage.setItem("coursesData", JSON.stringify(coursesData));
   }, [coursesData]);
 
   if (!programCourses) {
-    return <div className="text-red-500 text-center">Program not found!</div>;
+    return <div className="text-red-500 text-center">{`Courses are not yet added in ${programCode} program.`}
+    </div>;
   }
 
   // Filter courses by course name or course code
@@ -67,9 +78,9 @@ const Courses = () => {
       const updatedCourses = { ...coursesData };
 
       // Find and remove the course in the specific term
-      updatedCourses[programCode].terms[term] = updatedCourses[programCode].terms[term].filter(
-        (course) => course.courseCode !== courseCode
-      );
+      updatedCourses[programCode].terms[term] = updatedCourses[
+        programCode
+      ].terms[term].filter((course) => course.courseCode !== courseCode);
 
       // Update the state with the updated courses
       setCoursesData(updatedCourses);
@@ -97,7 +108,7 @@ const Courses = () => {
       description: course.description,
       startDate: course.startDate, // Autofill start date
       endDate: course.endDate, // Autofill end date
-  });
+    });
     setIsEditingCourse(true); // Show the edit course form
   };
 
@@ -114,7 +125,9 @@ const Courses = () => {
       if (isEditingCourse) {
         // Update existing course
         const termCourses = updatedCourses[programCode].terms[term];
-        const courseIndex = termCourses.findIndex(c => c.courseCode === newCourse.courseCode);
+        const courseIndex = termCourses.findIndex(
+          (c) => c.courseCode === newCourse.courseCode
+        );
         if (courseIndex !== -1) {
           termCourses[courseIndex] = newCourse; // Update the course details
         }
@@ -143,7 +156,13 @@ const Courses = () => {
   };
 
   const resetForm = () => {
-    setNewCourse({ courseCode: '', name: '', description: '', startDate: '', endDate: '' });
+    setNewCourse({
+      courseCode: "",
+      name: "",
+      description: "",
+      startDate: "",
+      endDate: "",
+    });
     setIsAddingCourse(false);
     setIsEditingCourse(false);
     setCourseToEdit(null);
@@ -195,7 +214,11 @@ const Courses = () => {
           <form
             onSubmit={(e) => {
               e.preventDefault();
-              handleSubmit(Object.keys(filteredCourses[0].courses).length ? filteredCourses[0].term : '');
+              handleSubmit(
+                Object.keys(filteredCourses[0].courses).length
+                  ? filteredCourses[0].term
+                  : ""
+              );
             }}
           >
             <div className="mb-4">
@@ -252,7 +275,10 @@ const Courses = () => {
                 required
               />
             </div>
-            <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300">
+            <button
+              type="submit"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-800 transition-colors duration-300"
+            >
               {isEditingCourse ? "Update Course" : "Add Course"}
             </button>
             <button
@@ -269,19 +295,36 @@ const Courses = () => {
       {/* Courses List */}
       {filteredCourses.length > 0 ? (
         filteredCourses.map(({ term, courses }, index) => (
-          <div key={index} className="bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow-lg">
-            <h2 className="text-2xl font-semibold text-blue-600 mb-2">{term}</h2>
+          <div
+            key={index}
+            className="bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow-lg"
+          >
+            <h2 className="text-2xl font-semibold text-blue-600 mb-2">
+              {term}
+            </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {courses.map((course) => (
-                <div key={course.courseCode} className="border border-gray-200 rounded-lg p-4 bg-gray-50">
-                  <h3 className="font-bold text-lg">{course.name} ({course.courseCode})</h3>
+                <div
+                  key={course.courseCode}
+                  className="border border-gray-200 rounded-lg p-4 bg-gray-50"
+                >
+                  <h3 className="font-bold text-lg">
+                    {course.name} ({course.courseCode})
+                  </h3>
                   <p className="text-gray-600">{course.description}</p>
-                  <p className="text-gray-600">Start Date: {new Date(course.startDate).toLocaleDateString()}</p>
-                  <p className="text-gray-600">End Date: {new Date(course.endDate).toLocaleDateString()}</p>
+                  <p className="text-gray-600">
+                    Start Date:{" "}
+                    {new Date(course.startDate).toLocaleDateString()}
+                  </p>
+                  <p className="text-gray-600">
+                    End Date: {new Date(course.endDate).toLocaleDateString()}
+                  </p>
                   {isAdmin && (
                     <div className="mt-4">
                       <button
-                        onClick={() => handleDeleteCourse(term, course.courseCode)}
+                        onClick={() =>
+                          handleDeleteCourse(term, course.courseCode)
+                        }
                         className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-800 transition-colors duration-300 mr-2"
                       >
                         Delete
@@ -308,7 +351,31 @@ const Courses = () => {
           </div>
         ))
       ) : (
-        <div className="text-gray-600 text-center">No courses available for this program.</div>
+        <>
+          <div className="text-gray-600 text-center">
+            No courses available for this program.
+          </div>
+          {filteredCourses.map(({ term, courses }, index) => (
+          <div
+            key={index}
+            className="bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow-lg"
+          >
+            <h2 className="text-2xl font-semibold text-blue-600 mb-2">
+              {term}
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+            {isAdmin && (
+              <button
+                onClick={() => handleAddCourse(term)}
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-800 transition-colors duration-300 mt-4"
+              >
+                Add Course
+              </button>
+            )}
+          </div></div>
+        ))};
+        </>
       )}
     </div>
   );
