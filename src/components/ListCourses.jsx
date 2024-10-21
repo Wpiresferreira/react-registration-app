@@ -29,7 +29,7 @@ export default function ListCourses({ studentObj }) {
           <div key={termId} className="font-bold p-2">
             {getTermDescription(termId)}
             <div className="flex flex-wrap flex-[0_0_18%]">
-              {getMyCoursesByTerm(studentObj.userId, termId).map(
+              {getMyCoursesByTerm(studentObj, termId).map(
                 (course, index) => (
                   <div
                     key={course.courseCode}
@@ -46,7 +46,7 @@ export default function ListCourses({ studentObj }) {
                       className="text-center text-sm"
                       id={course.courseCode + "_courseDescription"}
                     >
-                      {course.courseDescription}
+                      {course.name}
                     </div>
                   </div>
                 )
