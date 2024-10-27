@@ -11,6 +11,7 @@ import Programs from './pages/Programs';
 import EditPrograms from './pages/EditPrograms';
 import Registration from './pages/Registration';
 import Contact from './pages/Contact';
+import Fetch from './pages/Fetch';
 import Students from './pages/Students';
 import StudentsDetails from './pages/StudentsDetails';
 import Login from './pages/Login';
@@ -29,9 +30,9 @@ export default function App() {
 
   useEffect (()=>{
 
-    if(!localStorage.getItem("users")){
-      localStorage.setItem("users",JSON.stringify(users))
-    }
+    // if(!localStorage.getItem("users")){
+    //   localStorage.setItem("users",JSON.stringify(users))
+    // }
 
     if(!localStorage.getItem("messages")){
       localStorage.setItem("messages",JSON.stringify(messagesSample))
@@ -73,6 +74,7 @@ export default function App() {
           <Route path="profile" element={<Profile />} />
           <Route path="test" element={<Test />} />
           <Route path="logout" element={<Logout />} />
+          <Route path="fetch" element={<Fetch />} />
           <Route path="students-details" element={<StudentsDetails />} />
           <Route path="/students-details/:studentId" element={<StudentsDetails />} />
           <Route path="*" element={<NotFound />} />

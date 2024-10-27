@@ -1,6 +1,15 @@
 import { v4 as uuidv4 } from "uuid";
 import { users } from "./data"; // Importing user data from the data.js file
 
+export function formatDate(date) {
+  const newDate = new Date(Date.parse(date));
+  var year = newDate.getFullYear();
+  var month = ("0" + (newDate.getMonth() + 1)).slice(-2);
+  var day = ("0" + newDate.getDate()).slice(-2);
+
+  return `${year}-${month}-${day}`;
+}
+
 export function getLoggedUser(sessionId) {
   if (!localStorage.getItem("sessions")) {
     return;

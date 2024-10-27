@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import programsData from "../data/programs";
-import { getLoggedUser } from "../data/util";
-import courses from "../data/courses";
+import { getLoggedUser, getPrograms } from "../data/api";
 
 const Program = () => {
   const navigate = useNavigate();
   const [selectedProgramDuration, setSelectedProgramDuration] = useState(null); //used to display terms in courses component
   const [isAdmin, setIsAdmin] = useState(false);
+  const[loggedUser,setLoggedUser] = useState();
+  
+  const [isLoading, setIsLoading] = useState()
+  const [allPrograms, setAllPrograms] = useState()
   const [programs, setPrograms] = useState(() => {
     const storedPrograms = localStorage.getItem("programs");
     return storedPrograms ? JSON.parse(storedPrograms) : programsData;
@@ -42,6 +45,29 @@ const Program = () => {
   const [selectedProgram, setSelectedProgram] = useState(null);
   
 
+useEffect(()=>{
+
+
+
+
+    async function getData() {
+      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
+      console.log(user)
+      setLoggedUser(user);
+      const allPrograms = await getPrograms(searchTerm);
+      setAllPrograms(allPrograms)
+      setIsLoading(false);
+    }
+    getData();
+  
+
+
+
+
+},[])
+
+
+  
   useEffect(() => {
     const storedCourses = localStorage.getItem("courses");
     if (storedCourses) {
@@ -50,25 +76,33 @@ const Program = () => {
   }, []);
 
   useEffect(() => {
-    const sessionId = JSON.parse(
-      sessionStorage.getItem("sessionId")
-    )?.sessionId;
-    if (sessionId) {
-      const loggedInUser = getLoggedUser(sessionId);
-      setIsAdmin(loggedInUser?.isAdmin || false);
-    }
+
+    const getData = async () => {
+      const result = await getLoggedUser(sessionStorage.getItem("sessionId"));
+      setIsAdmin(result?result.isadmin:false);
+    };
+    getData();
+
+
+    // const sessionId = 
+    //   sessionStorage.getItem("sessionId")
+    // ?.sessionId;
+    // if (sessionId) {
+    //   const loggedInUser = getLoggedUser(sessionId);
+    //   setIsAdmin(loggedInUser?.isadmin || false);
+    // }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("programs", JSON.stringify(programs));
-  }, [programs]);
+  // useEffect(() => {
+  //   localStorage.setItem("programs", JSON.stringify(programs));
+  // }, [programs]);
 
   const handleEditProgram = (programCode) => {
-    const programToEdit = programs.find((p) => p.programCode === programCode);
-    setProgramForm({ ...programToEdit });
-    setFormVisible(true);
-    setProgramListVisibility(false);
-    setEditMode(true);
+    // const programToEdit = programs.find((p) => p.programCode === programCode);
+    // setProgramForm({ ...programToEdit });
+    // setFormVisible(true);
+    // setProgramListVisibility(false);
+    // setEditMode(true);
   };
 
   const handleProgramClick = (programCode) => {
@@ -169,7 +203,7 @@ const Program = () => {
         Available Programs
       </h1>
 
-      {isAdmin && (
+      {!loggedUser?null: loggedUser.isadmin && (
         <div className="text-center mb-4">
           <button
             onClick={handleAddProgram}

@@ -50,34 +50,33 @@ export default function MyCourses({ loggedUser }) {
         <div key={termId} className="font-bold p-2">
           {getTermDescription(termId)}
           <div className="flex flex-wrap flex-[0_0_18%]">
-            {!getMyCoursesByTerm(loggedUser, termId)?null:
-            getMyCoursesByTerm(loggedUser, termId).map(
-              (course, index) => (
-                <div
-                  key={course.courseCode}
-                  id={course.courseCode + "_container"}
-                  onClick={handleOnClickCourse}
-                  className={` ${
-                    selectedCourses.includes(course.courseCode)
-                      ? "bg-red-400"
-                      : "bg-white"
-                  } m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
-                >
+            {!getMyCoursesByTerm(loggedUser, termId)
+              ? null
+              : getMyCoursesByTerm(loggedUser, termId).map((course, index) => (
                   <div
-                    id={course.courseCode + "_courseCode"}
-                    className="p-2 text-center font-bold"
+                    key={course.courseCode}
+                    id={course.courseCode + "_container"}
+                    onClick={handleOnClickCourse}
+                    className={` ${
+                      selectedCourses.includes(course.courseCode)
+                        ? "bg-red-400"
+                        : "bg-white"
+                    } m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
                   >
-                    {course.courseCode}
+                    <div
+                      id={course.courseCode + "_courseCode"}
+                      className="p-2 text-center font-bold"
+                    >
+                      {course.courseCode}
+                    </div>
+                    <div
+                      className="text-center text-sm"
+                      id={course.courseCode + "_courseDescription"}
+                    >
+                      {course.name}
+                    </div>
                   </div>
-                  <div
-                    className="text-center text-sm"
-                    id={course.courseCode + "_courseDescription"}
-                  >
-                    {course.name}
-                  </div>
-                </div>
-              )
-            )}
+                ))}
           </div>
         </div>
       ))}
