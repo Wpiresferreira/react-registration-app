@@ -1,22 +1,42 @@
 import { useEffect, useState } from "react";
-import { getLoggedUser, saveProfile } from "../data/util";
+import { saveProfile } from "../data/util";
+import { getLoggedUser } from "../data/api";
+import { useMask } from "@react-input/mask";
+import Alert from "../components/Alert";
 
 const Home = () => {
-  const [loggedUser, setLoggedUser] = useState("");
-  const [phone, setPhone] = useState(loggedUser.phone);
+
+  const inputRef = useMask({
+    mask: '+_ (___) ___-____',
+    replacement: { _: /\d/ },
+  });
+
+
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [showAlertMessage, setShowAlertMessage] = useState(false);
+  const [typeAlert, setTypeAlert] = useState("")
+  const [showMessage, setShowMessage] = useState(false);
+
+  const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    setLoggedUser(
-      getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
-    );
+    // Retrieve user information using the sessionId
+    async function getData() {
+      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
+      console.log(user);
+      setLoggedUser(user);
+      setIsLoading(false);
+    }
+    getData();
   }, []);
 
   useEffect(() => {
-    setPhone(loggedUser.phone);
+    if (loggedUser) {
+      setPhone(loggedUser.phone);
+    }
   }, [loggedUser]);
 
   function handleSave() {
@@ -27,14 +47,16 @@ const Home = () => {
       newPassword === ""
     ) {
       setAlertMessage("No changes were made");
-      setShowAlertMessage(true);
+      setTypeAlert("alert")
+      setShowMessage(true);
       return;
     } else if (
       (password.length > 0 || newPassword.length > 0) &&
       password !== newPassword
     ) {
       setAlertMessage("New Password and Retyped new Password doesn't match");
-      setShowAlertMessage(true);
+      setTypeAlert("alert");
+      setShowMessage(true);
       return;
     } else {
       const tempUser = loggedUser;
@@ -48,41 +70,30 @@ const Home = () => {
 
       saveProfile(loggedUser);
       setAlertMessage("Changes saved");
-      setShowAlertMessage(true);
-      setPassword("")
-      setNewPassword("")
+      setTypeAlert("alert")
+      setShowMessage(true);
+      setPassword("");
+      setNewPassword("");
     }
   }
-
-  const closeAlertMessage = () => {
-    setShowAlertMessage(false);
+  const hideMessage = () => {
+    setShowMessage(false);
   };
 
+  if (isLoading) return <div> Loading . . .</div>;
   return (
     <div>
+          
       <div className="flex flex-col justify-start items-center">
-        <div
-          className={` rounded-2xl ${
-            showAlertMessage ? null : "hidden"
-          } z-10 flex flex-col justify-around items-center w-[50vw] h-[50vh] fixed bg-red-300`}
-        >
-          <div>{alertMessage}</div>
-          <button
-            onClick={closeAlertMessage}
-            className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
-          >
-            Close
-          </button>
-        </div>
-        <h1> Welcome {loggedUser.firstName}, </h1>
+        
+        <h1> Welcome {loggedUser.first_name}, </h1>
 
         <div className="w-[600px] min-h-[300px] rounded-2xl items-center m-6 flex flex-col justify-around bg-[var(--color2)]">
           <div>Profile</div>
           <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
             <input
               disabled
-              value={loggedUser.firstName}
-              // onChange={(e) => setFirstName(e.target.value)}
+              value={loggedUser.first_name}
               className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
               type="text"
             ></input>
@@ -91,7 +102,7 @@ const Home = () => {
           <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
             <input
               disabled
-              value={loggedUser.lastName}
+              value={loggedUser.last_name}
               // onChange={(e) => setLastName(e.target.value)}
               className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
               type="text"
@@ -110,6 +121,7 @@ const Home = () => {
           </div>
           <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
             <input
+            ref={inputRef} 
               defaultValue={loggedUser.phone}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -184,6 +196,14 @@ const Home = () => {
           </div>
         </div>
       </div>
+      {showMessage ? (
+        <Alert  
+          showMessage={showMessage}
+          message={alertMessage}
+          onClick={hideMessage}
+          type={typeAlert}
+        />
+      ) : null}
     </div>
   );
 };

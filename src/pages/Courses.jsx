@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getLoggedUser } from "../data/util";
 import courses from "../data/courses"; // Ensure this path is correct
-// import { users } from '../data/data'; // Ensure this path is correct
 import programsData from "../data/programs";
 
 const Courses = () => {
@@ -38,9 +37,8 @@ const Courses = () => {
   
     console.log(selectedProgram);
   useEffect(() => {
-    const sessionId = JSON.parse(
-      sessionStorage.getItem("sessionId")
-    )?.sessionId;
+    const sessionId = 
+      sessionStorage.getItem("sessionId");
     if (sessionId) {
       const loggedInUser = getLoggedUser(sessionId);
       setIsAdmin(loggedInUser?.isAdmin || false);

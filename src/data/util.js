@@ -463,3 +463,41 @@ export function getCoursesByProgram(programCode) {
   console.log(myProgramCourses);
   return myProgramCourses;
 }
+
+export function sortBy(array, criteria, ascDesc) {
+  const temp = [...array];
+  if (criteria === "first_name" && ascDesc === 'asc') {
+    temp.sort((a, b) => {
+      return a.first_name.toUpperCase() < b.first_name.toUpperCase()
+        ? -1
+        : a.first_name.toUpperCase() < b.first_name.toUpperCase()
+        ? 1
+        : 0;
+    });
+  }else if (criteria === "first_name" && ascDesc === 'desc') {
+    temp.sort((a, b) => {
+      return a.first_name.toUpperCase() > b.first_name.toUpperCase()
+        ? -1
+        : a.first_name.toUpperCase() > b.first_name.toUpperCase()
+        ? 1
+        : 0;
+    });
+  } else if (criteria === "birthday" && ascDesc === 'asc') {
+    temp.sort((a, b) => {
+      return a.birthday.toUpperCase() < b.birthday.toUpperCase()
+        ? -1
+        : a.birthday.toUpperCase() < b.birthday.toUpperCase()
+        ? 1
+        : 0;
+    });
+  }else if (criteria === "birthday" && ascDesc === 'desc') {
+    temp.sort((a, b) => {
+      return a.birthday.toUpperCase() > b.birthday.toUpperCase()
+        ? -1
+        : a.birthday.toUpperCase() > b.birthday.toUpperCase()
+        ? 1
+        : 0;
+    });
+  }
+  return temp;
+}
