@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import programsData from "../data/programs";
-import { getLoggedUser } from "../data/util";
-import courses from "../data/courses";
+import { getLoggedUser, getPrograms } from "../data/api";
+import CardProgram from "../components/CardProgram";
 
-const Program = () => {
+export default function Programs() {
   const navigate = useNavigate();
   const [selectedProgramDuration, setSelectedProgramDuration] = useState(null); //used to display terms in courses component
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [programs, setPrograms] = useState(() => {
-    const storedPrograms = localStorage.getItem("programs");
-    return storedPrograms ? JSON.parse(storedPrograms) : programsData;
-  });
+
+  const [loggedUser, setLoggedUser] = useState();
+  const [isLoading, setIsLoading] = useState(true);
+  const [allPrograms, setAllPrograms] = useState();
   const [formVisible, setFormVisible] = useState(false);
   const [programListVisible, setProgramListVisibility] = useState(true);
   const [editMode, setEditMode] = useState(false);
@@ -36,11 +34,26 @@ const Program = () => {
             name: "",
             startDate: "",
             endDate: "",
-            description: ""
-          }]}
-  }});
+            description: "",
+          },
+        ],
+      },
+    },
+  });
   const [selectedProgram, setSelectedProgram] = useState(null);
-  
+
+  useEffect(() => {
+    async function getData() {
+      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
+      console.log(user);
+      setLoggedUser(user);
+      const allPrograms = await getPrograms(searchTerm);
+      console.log(allPrograms);
+      setAllPrograms(allPrograms);
+      setIsLoading(false);
+    }
+    getData();
+  }, []);
 
   useEffect(() => {
     const storedCourses = localStorage.getItem("courses");
@@ -50,118 +63,122 @@ const Program = () => {
   }, []);
 
   useEffect(() => {
-    const sessionId = JSON.parse(
-      sessionStorage.getItem("sessionId")
-    )?.sessionId;
-    if (sessionId) {
-      const loggedInUser = getLoggedUser(sessionId);
-      setIsAdmin(loggedInUser?.isAdmin || false);
-    }
+    const getData = async () => {
+      console.log(loggedUser)
+      const result = await getLoggedUser(sessionStorage.getItem("sessionId"));
+      // setIsAdmin(result?result.isadmin:false);
+    };
+    getData();
+
+    // const sessionId =
+    //   sessionStorage.getItem("sessionId")
+    // ?.sessionId;
+    // if (sessionId) {
+    //   const loggedInUser = getLoggedUser(sessionId);
+    //   setIsAdmin(loggedInUser?.isadmin || false);
+    // }
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("programs", JSON.stringify(programs));
-  }, [programs]);
+  // useEffect(() => {
+  //   localStorage.setItem("programs", JSON.stringify(programs));
+  // }, [programs]);
 
   const handleEditProgram = (programCode) => {
-    const programToEdit = programs.find((p) => p.programCode === programCode);
-    setProgramForm({ ...programToEdit });
-    setFormVisible(true);
-    setProgramListVisibility(false);
-    setEditMode(true);
+    // const programToEdit = programs.find((p) => p.programCode === programCode);
+    // setProgramForm({ ...programToEdit });
+    // setFormVisible(true);
+    // setProgramListVisibility(false);
+    // setEditMode(true);
   };
 
   const handleProgramClick = (programCode) => {
-    navigate(`/courses/${programCode}`);
-    setSelectedProgram(programs.find(program => program.programCode === programCode));
+     navigate(`/courses/${programCode}`);
+    // setSelectedProgram(programs.find(program => program.programCode === programCode));
   };
 
   const handleAddProgram = () => {
-    setFormVisible(true);
-    setProgramListVisibility(false);
-    setEditMode(false);
-    setProgramForm({
-      programCode: "",
-      programName: "",
-      description: "",
-      duration: "",
-      fees: { domestic: 0, international: 0 },
-      startDate: "",
-      endDate: "",
-      term: "",
-    });
+    // setFormVisible(true);
+    // setProgramListVisibility(false);
+    // setEditMode(false);
+    // setProgramForm({
+    //   programCode: "",
+    //   programName: "",
+    //   description: "",
+    //   duration: "",
+    //   fees: { domestic: 0, international: 0 },
+    //   startDate: "",
+    //   endDate: "",
+    //   term: "",
+    // });
   };
 
   const handleDeleteProgram = (programCode) => {
-    if (
-      window.confirm(`Are you sure you want to delete program ${programCode}?`)
-    ) {
-      const updatedPrograms = programs.filter(
-        (p) => p.programCode !== programCode
-      );
-      setPrograms(updatedPrograms);
-      alert(`Program ${programCode} deleted successfully!`);
-    }
+    // if (
+    //   window.confirm(`Are you sure you want to delete program ${programCode}?`)
+    // ) {
+    //   const updatedPrograms = programs.filter(
+    //     (p) => p.programCode !== programCode
+    //   );
+    //   setPrograms(updatedPrograms);
+    //   alert(`Program ${programCode} deleted successfully!`);
+    // }
   };
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
-
-    if (editMode) {
-        const updatedPrograms = programs.map((p) =>
-            p.programCode === programForm.programCode ? { ...programForm } : p
-        );
-
-        setPrograms(updatedPrograms);
-        alert("Program updated successfully!");
-    } else {
-        // Initialize terms and courses based on duration
-        const terms = Array.from({ length: programForm.duration }, (_, index) => ({
-            term: `Term ${index + 1}`,
-            courses: [] // Add course objects if you have a specific structure for courses
-        }));
-
-        const newProgram = {
-            ...programForm,
-            terms, // Assign initialized terms
-        };
-
-        setPrograms([...programs, newProgram]);
-        alert("Program and courses added successfully!");
-    }
-
-    setFormVisible(false);
-    setProgramListVisibility(true);
-};
+    // e.preventDefault();
+    // if (editMode) {
+    //     const updatedPrograms = programs.map((p) =>
+    //         p.programCode === programForm.programCode ? { ...programForm } : p
+    //     );
+    //     setPrograms(updatedPrograms);
+    //     alert("Program updated successfully!");
+    // } else {
+    //     // Initialize terms and courses based on duration
+    //     const terms = Array.from({ length: programForm.duration }, (_, index) => ({
+    //         term: `Term ${index + 1}`,
+    //         courses: [] // Add course objects if you have a specific structure for courses
+    //     }));
+    //     const newProgram = {
+    //         ...programForm,
+    //         terms, // Assign initialized terms
+    //     };
+    //     setPrograms([...programs, newProgram]);
+    //     alert("Program and courses added successfully!");
+    // }
+    // setFormVisible(false);
+    // setProgramListVisibility(true);
+  };
 
   const handleCancel = () => {
-    setFormVisible(false);
-    setProgramListVisibility(true);
+    // setFormVisible(false);
+    // setProgramListVisibility(true);
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    if (name.includes("fees")) {
-      setProgramForm((prevState) => ({
-        ...prevState,
-        fees: {
-          ...prevState.fees,
-          [name.split(".")[1]]: parseFloat(value),
-        },
-      }));
-    } else {
-      setProgramForm({
-        ...programForm,
-        [name]: value,
-      });
-    }
+    // const { name, value } = e.target;
+    // if (name.includes("fees")) {
+    //   setProgramForm((prevState) => ({
+    //     ...prevState,
+    //     fees: {
+    //       ...prevState.fees,
+    //       [name.split(".")[1]]: parseFloat(value),
+    //     },
+    //   }));
+    // } else {
+    //   setProgramForm({
+    //     ...programForm,
+    //     [name]: value,
+    //   });
+    // }
   };
 
-  const filteredPrograms = programs.filter(
-    (program) =>
-      program.programName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      program.programCode.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // const filteredPrograms = programs.filter(
+  //   (program) =>
+  //     program.programName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  //     program.programCode.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
+  if (isLoading) return <div> Loading . . . </div>;
 
   return (
     <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
@@ -169,16 +186,18 @@ const Program = () => {
         Available Programs
       </h1>
 
-      {isAdmin && (
-        <div className="text-center mb-4">
-          <button
-            onClick={handleAddProgram}
-            className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
-          >
-            Add Program
-          </button>
-        </div>
-      )}
+      {!loggedUser
+        ? null
+        : loggedUser.isadmin && (
+            <div className="text-center mb-4">
+              <button
+                onClick={handleAddProgram}
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+              >
+                Add Program
+              </button>
+            </div>
+          )}
 
       <div className="mb-4">
         <input
@@ -335,66 +354,20 @@ const Program = () => {
       )}
 
       <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {programListVisible &&
-          filteredPrograms.map((program) => (
-            <li
-              key={program.programCode}
-              onClick={() => handleProgramClick(program.programCode)}
-              className="bg-white border border-gray-300 rounded-lg p-6 shadow-2xl hover:shadow-xl transition-shadow duration-300 transform cursor-pointer"
-            >
-              <h2 className="text-2xl font-bold text-blue-1000 mb-2">
-                {program.programName}
-              </h2>
-              <p className="text-gray-700 italic">{program.description}</p>
-              <p className="text-gray-700">
-                <strong>Program Code:</strong> {program.programCode}
-              </p>
-              <p className="text-gray-700">
-                <strong>Duration:</strong> {program.duration} Terms
-              </p>
-              <p className="text-gray-700">
-                <strong>Term:</strong> {program.term}
-              </p>
-              <p className="text-gray-700">
-                <strong>Start Date:</strong> {program.startDate}
-              </p>
-              <p className="text-gray-700">
-                <strong>End Date:</strong> {program.endDate}
-              </p>
-              <p className="text-gray-700">
-                <strong>Domestic Fees (CAD): </strong> {Number(program.fees.domestic).toLocaleString()}
-              </p>
-              <p className="text-gray-700">
-                <strong>International Fees (CAD): </strong> {Number(program.fees.international).toLocaleString()}
-              </p>
-
-              {isAdmin && (
-                <div className="flex justify-between mt-4">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleEditProgram(program.programCode);
-                    }}
-                    className="bg-yellow-500 text-white px-2 py-1 rounded-lg hover:bg-yellow-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteProgram(program.programCode);
-                    }}
-                    className="bg-red-500 text-white px-2 py-1 rounded-lg hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </li>
+        {!isLoading &&
+          programListVisible &&
+          allPrograms.map((program) => (
+            <CardProgram
+              isadmin={!loggedUser? false: loggedUser.isadmin}
+              program={program}
+              handleProgramClick={handleProgramClick}
+              handleDeleteProgram={handleDeleteProgram}
+              handleEditProgram={handleEditProgram}
+            />
           ))}
       </ul>
     </div>
   );
 };
 
-export default Program;
+;

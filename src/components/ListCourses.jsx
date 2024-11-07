@@ -25,7 +25,8 @@ export default function ListCourses({ studentObj }) {
         <div className="m-3 p-3 font-bold">{!studentObj ? null : "Student : " +
         studentObj.firstName +" "+
         studentObj.lastName }</div>
-        {!studentTerms|| studentTerms.length === 0 ?<div className="p-3 m-3">No courses registered</div> :studentTerms.map((termId, index) => (
+        {!studentTerms|| studentTerms.length === 0 ?<div className="p-3 m-3">No courses registered</div> :
+        studentTerms.map((termId, index) => (
           <div key={termId} className="font-bold p-2">
             {getTermDescription(termId)}
             <div className="flex flex-wrap flex-[0_0_18%]">

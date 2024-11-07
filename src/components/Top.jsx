@@ -2,36 +2,30 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../images/Logo.svg";
 import logoMobile from "../images/Logo_Mobile.svg";
 import { useEffect, useState } from "react";
-import { getLoggedUser } from "../data/util";
+import { getLoggedUser } from "../data/api";
 
 export default function Top() {
   const navigate = useNavigate();
-
-  // Control State of the session
-  const [roleLoggedUser, setRoleLoggedUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
+  const [isLoading, setIsLoading] = useState(true); // control state loading bar
 
   useEffect(() => {
-    if (!sessionStorage.getItem("sessionId")) {
-      return;
+    async function getData() {
+      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
+      setLoggedUser(user);
+      setIsLoading(false);
     }
-
-    let result = getLoggedUser(
-      JSON.parse(sessionStorage.getItem("sessionId")).sessionId
-    );
-
-    if (!result) {
-      setRoleLoggedUser(null);
-    } else if (!result.isAdmin) {
-      setRoleLoggedUser("student");
-    } else if (result.isAdmin) {
-      setRoleLoggedUser("admin");
-    }
-  }, [navigate, roleLoggedUser]);
+    getData();
+  }, [navigate]);
 
   function handleLogoff() {
     sessionStorage.clear();
     navigate("/logout");
-    setRoleLoggedUser(null);
+    setLoggedUser(null);
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -58,7 +52,7 @@ export default function Top() {
         <button
           onClick={() => navigate("/signup")} // Redirect to SignUp page
           className={`${
-            roleLoggedUser ? "hidden" : null
+            loggedUser ? "hidden" : null
           } text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
         >
           Sign up
@@ -66,7 +60,7 @@ export default function Top() {
         <button
           onClick={() => navigate("/login")}
           className={`${
-            roleLoggedUser ? "hidden" : null
+            loggedUser ? "hidden" : null
           } text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
         >
           Login
@@ -74,13 +68,13 @@ export default function Top() {
         <button
           onClick={() => navigate("/profile")}
           className={`${
-            roleLoggedUser ? null : "hidden"
+            loggedUser ? null : "hidden"
           } fa  fa-user text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
         ></button>
         <button
           onClick={handleLogoff}
           className={`${
-            roleLoggedUser ? null : "hidden"
+            loggedUser ? null : "hidden"
           } fa  fa-power-off text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
         ></button>
       </div>
@@ -102,7 +96,7 @@ export default function Top() {
           </li>
           <li
             className={`${
-              roleLoggedUser !== "student" ? "hidden" : null
+              !loggedUser || loggedUser.isadmin ? "hidden" : null
             } relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
           >
             <Link className="block py-3" to="/registration">
@@ -111,7 +105,7 @@ export default function Top() {
           </li>
           <li
             className={`${
-              roleLoggedUser === "admin" ? null : "hidden"
+              loggedUser && loggedUser.isadmin ? null : "hidden"
             } relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
           >
             <Link className="block py-3" to="/students">
@@ -120,7 +114,7 @@ export default function Top() {
           </li>
           <li
             className={`${
-              !roleLoggedUser ? "hidden" : null
+              !loggedUser ? "hidden" : null
             } relative inline-block grow text-white text-center bg-[var(--color1)] hover:bg-[var(--color2)]`}
           >
             <Link className="block py-3" to="/contact">

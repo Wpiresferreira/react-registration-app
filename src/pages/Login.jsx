@@ -1,27 +1,37 @@
 import { useState } from "react";
-import { doLogin } from "../data/util";
+import { doLogin } from "../data/api";
 import { useNavigate } from "react-router-dom";
+import Alert from "../components/Alert";
 
 export default function Login() {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [typeAlert, setTypeAlert] = useState("")
+  const [showMessage, setShowMessage] = useState(false);
 
-  function handleSubmit() {
-    if (doLogin(username, password)) {
-      navigate("/");
-    } else {
-      alert("Incorrect Credentials!");
+  async function handleSubmit() {
+    const result = await doLogin(username, password);
+    console.log('result.message')
+    console.log(result)
+    if (result.message) {
+      setPassword("");
+      setAlertMessage(result.message);
+      setTypeAlert(result.type)
+      setShowMessage(true);
+    }else if(result.sessionid){
+      sessionStorage.setItem("sessionId", result.sessionid)
+      navigate("/")
     }
   }
+  const hideMessage = () => {
+    setShowMessage(false);
+  };
 
-  // function handleForgotPassword() {
-  //   //ToDo
-    
-  //   alert('Not implemented yet')
-  // }
   return (
     <div className="flex justify-center w-[100vw]">
+      
       <div className="w-[70vw] min-h-[55vh] max-w-[600px] rounded-2xl items-center m-6 flex flex-col justify-around bg-gray-80 shadow-balanced">
         <div>Login</div>
         <div className="h-10 w-[300px] bg-white rounded-2xl mb-2">
@@ -55,6 +65,12 @@ export default function Login() {
         >Forgot your password ?
         </button> */}
       </div>
+      {showMessage?<Alert
+        showMessage={showMessage}
+        message={alertMessage}
+        onClick={hideMessage}
+        type={typeAlert}
+      />: null }
     </div>
   );
 }
