@@ -8,6 +8,7 @@ export default function  Home(){
   useEffect(() => {
     //Check if there is Session
     if(!sessionStorage.getItem("sessionId")){
+      setIsLoading(false);
       return
     }
     // Retrieve user information using the sessionId
@@ -16,6 +17,7 @@ export default function  Home(){
       setLoggedUser(user);
       setIsLoading(false);
     }
+
     getData();
   }, []);
 
