@@ -48,7 +48,6 @@ export default function Programs() {
       console.log(user);
       setLoggedUser(user);
       const allPrograms = await getPrograms(searchTerm);
-      console.log(allPrograms);
       setAllPrograms(allPrograms);
       setIsLoading(false);
     }
@@ -64,9 +63,7 @@ export default function Programs() {
 
   useEffect(() => {
     const getData = async () => {
-      console.log(loggedUser)
       const result = await getLoggedUser(sessionStorage.getItem("sessionId"));
-      // setIsAdmin(result?result.isadmin:false);
     };
     getData();
 
