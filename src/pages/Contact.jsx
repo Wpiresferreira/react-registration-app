@@ -88,11 +88,13 @@ const Contact = () => {
   };
 
   const handleOnClickReadButton = (e) => {
-
+    
+    console.log(e.target.innerText)
     if(e.target.innerText === "Archive"){
       setmessagereadstatus(e.target.parentElement.id, true)
-    }else if (e.target.innerText === "Mark as unread"){
+    }else if (e.target.innerText === "Mark as Unread"){
       setmessagereadstatus(e.target.parentElement.id, false)
+      console.log('Mark as Unread')
     }
 
 

@@ -2,14 +2,17 @@ import { useEffect, useState } from "react";
 import { getLoggedUser } from "../data/api";
 import Dashboard from "../components/Dashboard";
 
-const Home = () => {
+export default function  Home(){
   const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
+    //Check if there is Session
+    if(!sessionStorage.getItem("sessionId")){
+      return
+    }
     // Retrieve user information using the sessionId
     async function getData() {
       const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
-      console.log(user)
       setLoggedUser(user);
       setIsLoading(false);
     }
@@ -42,5 +45,3 @@ const Home = () => {
     <Dashboard loggedUser={loggedUser} />
   );
 };
-
-export default Home;

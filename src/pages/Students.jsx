@@ -47,7 +47,7 @@ export default function Students() {
           student.program === programSelected
       )
     );
-  }, [searchUser, programSelected]);
+  }, [searchUser, programSelected, allStudents]);
 
   function handleChangeSearch(e) {
     setSearchUser(e.target.value);

@@ -1,5 +1,9 @@
+const url = 'https://express-omega-coral.vercel.app/'
+// const url = 'http://localhost:5000'
+
+
 export async function fecthUsers() {
-  await fetch("http://localhost:5000/listusers").then((res) => {
+  await fetch("https://express-omega-coral.vercel.app/listusers").then((res) => {
     return res.json();
   });
 }
@@ -9,7 +13,7 @@ export async function doLogin(user, pass) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/login", {
+  const req = new Request("https://express-omega-coral.vercel.app/login", {
     method: "POST",
     body: JSON.stringify({ username: user, password: pass }),
     headers: myHeaders,
@@ -31,7 +35,7 @@ export async function updateUser(user) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/updateuser", {
+  const req = new Request("https://express-omega-coral.vercel.app/updateuser", {
     method: "PUT",
     body: JSON.stringify(user),
     headers: myHeaders,
@@ -55,7 +59,7 @@ export async function getLoggedUser(sessionId) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/getloggeduser", {
+  const req = new Request("https://express-omega-coral.vercel.app/getloggeduser", {
     method: "POST",
     body: JSON.stringify({ sessionid: sessionId }),
     headers: myHeaders,
@@ -65,10 +69,8 @@ export async function getLoggedUser(sessionId) {
     const result = await fetch(req).then((res) => {
       return res.json();
     });
-    console.log(result);
     return await result;
   } catch (e) {
-    console.log(e);
     return null;
   }
 }
@@ -78,7 +80,7 @@ export async function signup(user) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/signup", {
+  const req = new Request("https://express-omega-coral.vercel.app/signup", {
     method: "POST",
     body: JSON.stringify(user),
     headers: myHeaders,
@@ -94,7 +96,7 @@ export async function getPrograms(searchTerm) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/getprograms", {
+  const req = new Request("https://express-omega-coral.vercel.app/getprograms", {
     method: "GET",
     headers: myHeaders,
   });
@@ -115,7 +117,7 @@ export async function getMessages(sessionId) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/getmessages", {
+  const req = new Request("https://express-omega-coral.vercel.app/getmessages", {
     method: "POST",
     body: JSON.stringify({ sessionid: sessionId }),
     headers: myHeaders,
@@ -139,7 +141,7 @@ export async function getStudents(sessionId) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/getstudents", {
+  const req = new Request("https://express-omega-coral.vercel.app/getstudents", {
     method: "POST",
     body: JSON.stringify({ sessionid: sessionId }),
     headers: myHeaders,
@@ -161,7 +163,7 @@ export async function sendMessage(message) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/sendmessage", {
+  const req = new Request("https://express-omega-coral.vercel.app/sendmessage", {
     method: "POST",
     body: JSON.stringify(message),
     headers: myHeaders,
@@ -185,7 +187,7 @@ export async function setmessagereadstatus(messageid,wasread) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("http://localhost:5000/setmessagereadstatus", {
+  const req = new Request("https://express-omega-coral.vercel.app/setmessagereadstatus", {
     method: "PATCH",
     body: JSON.stringify({
       messageid: messageid,

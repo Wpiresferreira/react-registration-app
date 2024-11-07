@@ -13,9 +13,7 @@ export default function Login() {
 
   async function handleSubmit() {
     const result = await doLogin(username, password);
-    console.log('result.message')
-    console.log(result)
-    if (result.message) {
+      if (result.message) {
       setPassword("");
       setAlertMessage(result.message);
       setTypeAlert(result.type)
