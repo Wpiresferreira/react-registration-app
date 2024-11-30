@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { getAllprograms, sortBy } from "../data/util";
+import { sortBy } from "../data/util";
 import { useNavigate } from "react-router-dom";
-import { getLoggedUser, getStudents } from "../data/api";
+import { getLoggedUser, getPrograms, getStudents } from "../data/api";
 
 export default function Students() {
   const navigate = useNavigate();
   const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
   const [allStudents, setAllStudents] = useState();
+  const [allPrograms, setAllPrograms] = useState();
   const [students, setStudents] = useState();
   const [programSelected, setProgramSelected] = useState();
-  const [ascDescCriteriaSort, setAscDescCriteriaSort] = useState('asc');
+  const [ascDescCriteriaSort, setAscDescCriteriaSort] = useState("asc");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -21,6 +22,8 @@ export default function Students() {
         setAllStudents(await getStudents(sessionStorage.getItem("sessionId")));
       }
       setProgramSelected("SDD-001");
+      setAllPrograms(await getPrograms(""));
+      setIsLoading(false);
     }
     getData();
     setIsLoading(false);
@@ -30,23 +33,44 @@ export default function Students() {
 
   useEffect(() => {
     if (!allStudents) return;
-    setStudents(
-      allStudents.filter(
-        (student) =>
-          (student.first_name
-            .toLowerCase()
-            .includes(searchUser.toLowerCase()) ||
+    console.log("programSelected");
+    console.log(programSelected);
+    if (programSelected === "*") {
+      setStudents(
+        allStudents.filter(
+          (student) =>
+            student.first_name
+              .toLowerCase()
+              .includes(searchUser.toLowerCase()) ||
             student.last_name
               .toLowerCase()
               .includes(searchUser.toLowerCase()) ||
             student.birthday.toLowerCase().includes(searchUser.toLowerCase()) ||
             student.phone.toLowerCase().includes(searchUser.toLowerCase()) ||
-            student.username
+            student.username.toLowerCase().includes(searchUser.toLowerCase())
+        )
+      );
+    } else {
+      setStudents(
+        allStudents.filter(
+          (student) =>
+            (student.first_name
               .toLowerCase()
-              .includes(searchUser.toLowerCase())) &&
-          student.program === programSelected
-      )
-    );
+              .includes(searchUser.toLowerCase()) ||
+              student.last_name
+                .toLowerCase()
+                .includes(searchUser.toLowerCase()) ||
+              student.birthday
+                .toLowerCase()
+                .includes(searchUser.toLowerCase()) ||
+              student.phone.toLowerCase().includes(searchUser.toLowerCase()) ||
+              student.username
+                .toLowerCase()
+                .includes(searchUser.toLowerCase())) &&
+            student.program === programSelected
+        )
+      );
+    }
   }, [searchUser, programSelected, allStudents]);
 
   function handleChangeSearch(e) {
@@ -54,24 +78,26 @@ export default function Students() {
   }
 
   function sortByFirstName() {
-    setStudents(sortBy(students,'first_name', ascDescCriteriaSort))
-    setAllStudents(sortBy(allStudents,'first_name', ascDescCriteriaSort))
-    ascDescCriteriaSort === 'asc' ? setAscDescCriteriaSort('desc'):  setAscDescCriteriaSort('asc')
+    setStudents(sortBy(students, "first_name", ascDescCriteriaSort));
+    setAllStudents(sortBy(allStudents, "first_name", ascDescCriteriaSort));
+    ascDescCriteriaSort === "asc"
+      ? setAscDescCriteriaSort("desc")
+      : setAscDescCriteriaSort("asc");
   }
 
   function sortByBirthday() {
-    setStudents(sortBy(students,'birthday', ascDescCriteriaSort))
-    setAllStudents(sortBy(allStudents,'birthday', ascDescCriteriaSort))
-    ascDescCriteriaSort === 'asc' ? setAscDescCriteriaSort('desc'):  setAscDescCriteriaSort('asc')
+    setStudents(sortBy(students, "birthday", ascDescCriteriaSort));
+    setAllStudents(sortBy(allStudents, "birthday", ascDescCriteriaSort));
+    ascDescCriteriaSort === "asc"
+      ? setAscDescCriteriaSort("desc")
+      : setAscDescCriteriaSort("asc");
   }
 
   function handleChangeCombo(e) {
-    if (e.target.value === "*") {
-      setStudents(allStudents);
-    } else {
-      setProgramSelected(e.target.value);
-    }
+    setProgramSelected(e.target.value);
   }
+
+  if (isLoading) return <h1>Loading. . .</h1>;
 
   return (
     <div className="flex flex-col items-center">
@@ -83,14 +109,16 @@ export default function Students() {
             name="program"
             onChange={handleChangeCombo}
           >
-            {[
-              ...getAllprograms(),
-              { programCode: "*", programName: "All Programs" },
-            ].map((program) => (
-              <option key={program.programCode} value={program.programCode}>
-                {program.programName}
-              </option>
-            ))}
+            {!allPrograms
+              ? null
+              : [
+                  ...allPrograms,
+                  { programcode: "*", programname: "All Programs" },
+                ].map((program) => (
+                  <option key={program.programcode} value={program.programcode}>
+                    {program.programname}
+                  </option>
+                ))}
           </select>
         </label>
         <label className="m-3 p-2">
@@ -102,7 +130,7 @@ export default function Students() {
           ></input>
         </label>
       </div>
-      <div className="m-8 grid grid-cols-[auto_auto_auto_auto_auto_auto]">
+      <div className="m-8 grid grid-cols-[130px_280px_130px_155px_196px_180px]">
         <div
           onClick={sortByFirstName}
           className={` bg-[--color1] py-4 px-4 text-white text-center font-bold border-b-2 border-t-2`}
@@ -115,7 +143,7 @@ export default function Students() {
           Email<br></br>Phone
         </div>
         <div
-        onClick={sortByBirthday}
+          onClick={sortByBirthday}
           className={` bg-[--color1] py-4 px-4 text-white text-center font-bold border-b-2 border-t-2`}
         >
           Birthday

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
-import { getLoggedUser, getMessages, sendMessage, setmessagereadstatus } from "../data/api";
+import {
+  deleteMessage,
+  getLoggedUser,
+  getMessages,
+  sendMessage,
+  setmessagereadstatus,
+} from "../data/api";
 import Alert from "../components/Alert";
+import { TrashIcon } from "@heroicons/react/16/solid";
 
 const Contact = () => {
   const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
@@ -8,7 +15,7 @@ const Contact = () => {
   const [alertMessage, setAlertMessage] = useState("");
   const [typeAlert, setTypeAlert] = useState("");
   const [showMessage, setShowMessage] = useState(false);
-  const [allMessages, setAllMessages] = useState();
+  const [allMessages, setAllMessages] = useState([]);
   const [selectedTab, setSelectedTab] = useState("Unread");
   const [qtUnreadMessages, setQtUnreadMessages] = useState();
   const [qtArchivedMessages, setQtArchivedMessages] = useState();
@@ -16,46 +23,51 @@ const Contact = () => {
   const [subject, setSubject] = useState("");
   const [bodyMessage, setBodyMessage] = useState("");
 
-
-  const updateAllMessages = async () => {
-    setAllMessages(await getMessages(sessionStorage.getItem("sessionId")));
-    
-  }
-      
   useEffect(() => {
-    // Retrieve user information using the sessionId
+    // Retrieve user information using the cookie
     async function getData() {
-      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
-      setLoggedUser(user);
-      if (user.isadmin) {
-      setAllMessages(await getMessages(sessionStorage.getItem("sessionId")));
+      const res = await getLoggedUser();
+      if (res.status > 201) {
+        return;
       }
-
+      setLoggedUser(res.response);
     }
     getData();
     setIsLoading(false);
   }, []);
 
-
+  useEffect(() => {
+    if (!loggedUser || !loggedUser.isadmin) return;
+    async function getData() {
+      setAllMessages((await getMessages()).response);
+    }
+    getData();
+  }, [loggedUser]);
 
   useEffect(() => {
-    if (allMessages) {
-      setQtArchivedMessages(
-        allMessages.reduce((acum, cur) => {
-          if (cur.wasread) return acum + 1;
-          else return acum;
-        }, 0)
-      );
-      setQtUnreadMessages(
-        allMessages.reduce((acum, cur) => {
-          if (!cur.wasread) return acum + 1;
-          else return acum;
-        }, 0)
-      );
+    if (loggedUser && loggedUser.isadmin) {
+      if (allMessages) {
+        setQtArchivedMessages(
+          !allMessages
+            ? null
+            : allMessages.reduce((acum, cur) => {
+                if (cur.wasread) return acum + 1;
+                else return acum;
+              }, 0)
+        );
+        setQtUnreadMessages(
+          !allMessages
+            ? null
+            : allMessages.reduce((acum, cur) => {
+                if (!cur.wasread) return acum + 1;
+                else return acum;
+              }, 0)
+        );
+      }
     }
-  }, [allMessages]);
+  }, [allMessages, loggedUser]);
 
-  //variable to control state (unread ou archivied messages TAB)
+  //variable to control state (unread ou archived TAB)
   const handleOnClickTab = (e) => {
     setSelectedTab(e.target.innerText.split(" ")[0]);
   };
@@ -67,11 +79,13 @@ const Contact = () => {
     if (subject.length < 1) {
       setAlertMessage("Invalid Title");
       setShowMessage(true);
+      setTypeAlert("alert");
       return;
     }
     if (bodyMessage.length < 1) {
       setAlertMessage("Invalid Message");
       setShowMessage(true);
+      setTypeAlert("alert");
       return;
     }
 
@@ -81,33 +95,42 @@ const Contact = () => {
       message: bodyMessage,
     });
 
-    console.log( result)
+    setAlertMessage(result.response.message);
+    setShowMessage(true);
+    if (result.status >= 200 && result.status < 400) {
+      setTypeAlert("sucess");
+    } else {
+      setTypeAlert("alert");
+    }
+    console.log(result);
 
     setBodyMessage("");
     setSubject("");
   };
+  async function handleDeleteMessage(e) {
+    const result = deleteMessage(e.target.closest("button").id.split("_")[1]);
+    console.log(await result);
 
-  const handleOnClickReadButton = (e) => {
-    
-    console.log(e.target.innerText)
-    if(e.target.innerText === "Archive"){
-      setmessagereadstatus(e.target.parentElement.id, true)
-    }else if (e.target.innerText === "Mark as Unread"){
-      setmessagereadstatus(e.target.parentElement.id, false)
-      console.log('Mark as Unread')
+    const tempMessages = allMessages.filter(msg => msg.messageid !==Number(e.target.closest("button").id.split("_")[1]));
+    setAllMessages(tempMessages);
+  }
+
+  function handleOnClickReadButton(e) {
+    if (e.target.closest("button").innerText === "Archive") {
+      setmessagereadstatus(e.target.closest("button").id.split("_")[1], true);
+    } else if (e.target.closest("button").innerText === "Mark as Unread") {
+      setmessagereadstatus(e.target.closest("button").id.split("_")[1], false);
     }
 
+    const tempMessages = [...allMessages];
 
-    const tempMessages = [...allMessages]
-
-    for(let i = 0; i < tempMessages.length;i++){
-
-      if(tempMessages[i].messageid === Number(e.target.parentElement.id)){
-        tempMessages[i].wasread = !tempMessages[i].wasread
+    for (let i = 0; i < tempMessages.length; i++) {
+      if (tempMessages[i].messageid === Number(e.target.closest("button").id.split("_")[1])) {
+        tempMessages[i].wasread = !tempMessages[i].wasread;
       }
     }
     setAllMessages(tempMessages);
-  };
+  }
 
   if (isLoading) return <div>Loading...</div>;
 
@@ -162,13 +185,25 @@ const Contact = () => {
                       <b>Message: </b>
                       {m.message}
                     </p>
-                    <button
-                      className="self-end text-center mx-5 border-solid border-[1px] w-28 rounded-xl text-white bg-red-800 border-black"
-                      id={"btn_" + m.messageid}
-                      onClick={handleOnClickReadButton}
-                    >
-                      {m.wasread ? "Mark as Unread" : "Archive"}
-                    </button>
+                    <div className="self-end flex">
+                      <button
+                        className="self-end text-center mx-2 border-solid border-[1px] w-28 h-14 rounded-xl text-white bg-red-800 border-black"
+                        id={"btn_" + m.messageid}
+                        onClick={handleOnClickReadButton}
+                      >
+                        {m.wasread ? "Mark as Unread" : "Archive"}
+                      </button>
+                      <button
+                        className="self-end text-center mx-2 border-solid border-[1px] w-14 h-14 rounded-xl text-white bg-red-800 border-black"
+                        id={"btnDelete_" + m.messageid}
+                        onClick={handleDeleteMessage}
+                      >
+                        <TrashIcon
+                          id={"icon_" + m.messageid}
+                          className="size-4 justify-self-center fill-white"
+                        />
+                      </button>
+                    </div>
                     <br></br>
                   </div>
                 ))}

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCoursesByProgram, getLoggedUser, getProgramDescription } from "../data/util";
+// import { getCoursesByProgram, getLoggedUser, getProgramDescription } from "../data/util";
 import MyCourses from "../components/MyCourses";
 import AddCourses from "../components/AddCourses";
 
@@ -14,19 +14,19 @@ export default function Registration() {
     if (!sessionStorage.getItem("sessionId")) {
       return;
     }
-    const tempLoggedUserId = getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
+    // const tempLoggedUserId = getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
     
     setLoggedUser(
-      tempLoggedUserId
+      // tempLoggedUserId
     );
   }, [navigate]);
 
 
   useEffect(()=>{
-    const tempProgramName = getProgramDescription(loggedUser.program)
+    // const tempProgramName = getProgramDescription(loggedUser.program)
     if(loggedUser) {
-      setProgramName(tempProgramName)
-      getCoursesByProgram(loggedUser.program)
+      // setProgramName(tempProgramName)
+      // getCoursesByProgram(loggedUser.program)
     }
   },[loggedUser])
 

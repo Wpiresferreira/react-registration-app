@@ -1,14 +1,8 @@
-import { users, messagesSample } from './data/data';
-import { terms } from './data/terms';
-import coursesData from './data/courses';
-import {courses} from './data/courses1';
-import { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './App.css';
 import Layout from './Layout';
 import Home from './pages/Home';
 import Programs from './pages/Programs';
-import EditPrograms from './pages/EditPrograms';
 import Registration from './pages/Registration';
 import Contact from './pages/Contact';
 import Students from './pages/Students';
@@ -19,50 +13,17 @@ import Profile from './pages/Profile';
 import Logout from './pages/Logout';  
 import Test from './pages/NotFound';
 import Courses from './pages/Courses';
-import { enrolments } from './data/enrolments';
-import programs from './data/programs';
 import NotFound from './pages/NotFound';
 
 
 
 export default function App() {
-
-  useEffect (()=>{
-
-    // if(!localStorage.getItem("users")){
-    //   localStorage.setItem("users",JSON.stringify(users))
-    // }
-
-    if(!localStorage.getItem("messages")){
-      localStorage.setItem("messages",JSON.stringify(messagesSample))
-    }
-
-    if(!localStorage.getItem("courses")){
-      localStorage.setItem("courses", JSON.stringify(courses))
-    }
-    if(!localStorage.getItem("coursesData")){
-      localStorage.setItem("coursesData", JSON.stringify(coursesData))
-    }
-    if(!localStorage.getItem("enrolments")){
-      localStorage.setItem("enrolments", JSON.stringify(enrolments))
-    }
-    if(!localStorage.getItem("programs")){
-      localStorage.setItem("programs", JSON.stringify(programs))
-    }
-    if(!localStorage.getItem("terms")){
-      localStorage.setItem("terms", JSON.stringify(terms))
-    }
-
-  },[])
-
-  
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<Home />} />
           <Route path="programs" element={<Programs />} />
-          <Route path="edit-programs/:programCode" element={<EditPrograms />} />
           <Route path="courses" element={<Courses />} />
           <Route path="/courses/:programCode" element={<Courses />} />
           <Route path="login" element={<Login />} />
@@ -77,6 +38,7 @@ export default function App() {
           <Route path="/students-details/:studentId" element={<StudentsDetails />} />
           <Route path="*" element={<NotFound />} />
         </Route>
+       
       </Routes>
     </BrowserRouter>
   );

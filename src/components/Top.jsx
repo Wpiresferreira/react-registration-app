@@ -2,26 +2,41 @@ import { Link, useNavigate } from "react-router-dom";
 import logo from "../images/Logo.svg";
 import logoMobile from "../images/Logo_Mobile.svg";
 import { useEffect, useState } from "react";
-import { getLoggedUser } from "../data/api";
+import { doLogout, getLoggedUser } from "../data/api";
+import Cookies from "js-cookie";
 
 export default function Top() {
   const navigate = useNavigate();
   const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
-  const [isLoading, setIsLoading] = useState(true); // control state loading bar
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // Retrieve user information using the cookie
     async function getData() {
-      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
-      setLoggedUser(user);
+      const res = await getLoggedUser();
+      if (res.status > 201) {
+        setIsLoading(false);
+        return;
+      }
       setIsLoading(false);
+      setLoggedUser(res.response);
     }
     getData();
   }, [navigate]);
 
-  function handleLogoff() {
-    sessionStorage.clear();
-    navigate("/logout");
+  async function handleLogoff() {
+    // Clear all React cookies
+    Object.keys(Cookies.get()).forEach((cookie) => {
+      Cookies.remove(cookie);
+    });
     setLoggedUser(null);
+
+    const result = doLogout();
+    if (result) {
+      console.log(result);
+    }
+
+    navigate("/logout");
   }
 
   if (isLoading) {
