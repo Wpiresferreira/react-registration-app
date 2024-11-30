@@ -8,19 +8,25 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [typeAlert, setTypeAlert] = useState("")
+  const [typeAlert, setTypeAlert] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
   async function handleSubmit() {
     const result = await doLogin(username, password);
-      if (result.message) {
+    if (result.status) {
       setPassword("");
-      setAlertMessage(result.message);
-      setTypeAlert(result.type)
+      setAlertMessage(result.response.message);
+      console.log(result)
+
+      if (result.status < 300) {
+        setTypeAlert("sucess")
+        setTimeout(() => {
+          navigate("/");
+        }, 1000);
+      } else {
+        setTypeAlert("alert")
+      }
       setShowMessage(true);
-    }else if(result.sessionid){
-      sessionStorage.setItem("sessionId", result.sessionid)
-      navigate("/")
     }
   }
   const hideMessage = () => {
@@ -29,7 +35,6 @@ export default function Login() {
 
   return (
     <div className="flex justify-center w-[100vw]">
-      
       <div className="w-[70vw] min-h-[55vh] max-w-[600px] rounded-2xl items-center m-6 flex flex-col justify-around bg-gray-80 shadow-balanced">
         <div>Login</div>
         <div className="h-10 w-[300px] bg-white rounded-2xl mb-2">
@@ -58,17 +63,17 @@ export default function Login() {
             Login
           </button>
         </div>
-        {/* <button  onClick={handleForgotPassword}
-         className= "hover:text-blue-400"
-        >Forgot your password ?
-        </button> */}
       </div>
-      {showMessage?<Alert
-        showMessage={showMessage}
-        message={alertMessage}
-        onClick={hideMessage}
-        type={typeAlert}
-      />: null }
+      {showMessage ? (
+        <>
+        <Alert
+          showMessage={showMessage}
+          message={alertMessage}
+          onClick={hideMessage}
+          type={typeAlert}
+          />
+          </>)
+      : null}
     </div>
   );
 }

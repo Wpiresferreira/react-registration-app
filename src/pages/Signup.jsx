@@ -9,6 +9,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [retypePassword, setRetypePassword] = useState("");
   const [phone, setPhone] = useState("");
   const [birthday, setBirthday] = useState("");
   const [selectedProgram, setSelectedProgram] = useState("");
@@ -46,13 +47,26 @@ const SignUp = () => {
       department: "SD Department", // Fixed department
       program : selectedProgram, // Program selected by the user
       username,
-      password
+      password,
+      retypePassword
     };
 
     signup(newStudent).then((result) => {
-      setAlertMessage(result.message);
-      setTypeAlert(result.type)
+      setAlertMessage(result.response.message);
+      if (result.status < 300) {
+        setTypeAlert("sucess")
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
+      } else {
+        setTypeAlert("alert")
+      }
       setShowMessage(true);
+
+
+      // setAlertMessage(result.message);
+      // setTypeAlert(result.type)
+      // setShowMessage(true);
       console.log(result);
 
       if(result.type === 'sucess'){
@@ -180,6 +194,18 @@ const SignUp = () => {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
+              style={styles.input}
+            />
+          </div>
+
+          <div style={styles.formGroup}>
+            <label>Re-type Password:</label>
+            <input
+              type="password"
+              placeholder="Retype Password"
+              value={retypePassword}
+              onChange={(e) => setRetypePassword(e.target.value)}
               required
               style={styles.input}
             />

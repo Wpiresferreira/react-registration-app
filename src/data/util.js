@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
-import { users } from "./data"; // Importing user data from the data.js file
+
 
 export function formatDate(date) {
   const newDate = new Date(Date.parse(date));
@@ -10,32 +10,32 @@ export function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
-export function getLoggedUser(sessionId) {
-  if (!localStorage.getItem("sessions")) {
-    return;
-  }
-  const sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
-    (session) => session.sessionId === sessionId
-  );
-  const allUsers = JSON.parse(localStorage.getItem("users"));
-  const loggedUser = allUsers.filter(
-    (user) => user.userId === sessionUserId[0].userId
-  );
-  return loggedUser ? loggedUser[0] : null;
-}
+// export function getLoggedUser(sessionId) {
+//   if (!localStorage.getItem("sessions")) {
+//     return;
+//   }
+//   const sessionUserId = JSON.parse(localStorage.getItem("sessions")).filter(
+//     (session) => session.sessionId === sessionId
+//   );
+//   const allUsers = JSON.parse(localStorage.getItem("users"));
+//   const loggedUser = allUsers.filter(
+//     (user) => user.userId === sessionUserId[0].userId
+//   );
+//   return loggedUser ? loggedUser[0] : null;
+// }
 
-export function getMessages() {
-  let result;
-  result = JSON.parse(localStorage.getItem("messages"));
-  for (let i = 0; i < result.length; i++) {
-    let userMsg = users.filter((user) => {
-      return user.userId === result[i].userId;
-    });
-    result[i].firstName = userMsg[0].firstName;
-    result[i].lastName = userMsg[0].lastName;
-  }
-  return result;
-}
+// export function getMessages() {
+//   let result;
+//   result = JSON.parse(localStorage.getItem("messages"));
+//   for (let i = 0; i < result.length; i++) {
+//     let userMsg = users.filter((user) => {
+//       return user.userId === result[i].userId;
+//     });
+//     result[i].firstName = userMsg[0].firstName;
+//     result[i].lastName = userMsg[0].lastName;
+//   }
+//   return result;
+// }
 export function getEnrolments() {
   let result;
   result = JSON.parse(localStorage.getItem("enrolments"));
@@ -100,17 +100,17 @@ export function getTerms() {
   return result;
 }
 
-export function sendMessage(newMessage) {
-  try {
-    const allMessages = getMessages();
-    const newAllMessages = [...allMessages, newMessage];
-    localStorage.setItem("messages", JSON.stringify(newAllMessages));
-    return true;
-  } catch (e) {
-    console.log(e.message);
-    return false;
-  }
-}
+// export function sendMessage(newMessage) {
+//   try {
+//     const allMessages = getMessages();
+//     const newAllMessages = [...allMessages, newMessage];
+//     localStorage.setItem("messages", JSON.stringify(newAllMessages));
+//     return true;
+//   } catch (e) {
+//     console.log(e.message);
+//     return false;
+//   }
+// }
 
 export function updateAllMessages(messages) {
   localStorage.setItem("messages", JSON.stringify(messages));
@@ -414,9 +414,9 @@ export function getStudents() {
   );
 }
 
-export function getAllprograms() {
-  return JSON.parse(localStorage.getItem("programs"));
-}
+// export function getAllprograms() {
+//   return JSON.parse(localStorage.getItem("programs"));
+// }
 
 export function getProgramByProgramCode(programCode) {
   return JSON.parse(localStorage.getItem("programs")).filter(
@@ -500,4 +500,10 @@ export function sortBy(array, criteria, ascDesc) {
     });
   }
   return temp;
+}
+
+export function ParseNumber(string){
+  return !string? null: Number(string.replace(/[^0-9.-]+/g, "")
+  )
+
 }
