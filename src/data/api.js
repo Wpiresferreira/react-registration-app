@@ -50,7 +50,7 @@ export async function getLoggedUser() {
   myHeaders.append("Accept", "*/*");
 
   const req = new Request(url + "/getuserprofile", {
-    method: "GET",
+    method: "POST",
     headers: myHeaders,
     credentials: "include",
   });
