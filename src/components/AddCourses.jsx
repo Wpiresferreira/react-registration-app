@@ -1,19 +1,10 @@
 import { useEffect, useState } from "react";
-import { getTerms, registerCourse } from "../data/api";
+import { registerCourse } from "../data/api";
 
-export default function AddCourses({ loggedUser, allCourses, myEnrollments, allTerms, updateAllEnrollments }) {
+export default function AddCourses({ allCourses, myEnrollments, allTerms, updateAllEnrollments }) {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTerm, setSelectedTerm] = useState();
-  useEffect(() => {
-    if (!loggedUser) {
-      return;
-    }
-    async function getData() {
-      
-    }
-    getData();
-  }, [loggedUser, selectedCourses]);
 
   useEffect(() => {
     if(allTerms) {

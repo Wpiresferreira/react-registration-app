@@ -5,10 +5,10 @@ import ListCourses from "../components/ListCourses";
 
 const StudentsDetails = () => {
   const { studentId } = useParams();
-  const [studentObj, setStudentObject] = useState();
+  // const [studentObj, setStudentObject] = useState();
 
   useEffect(() => {
-    setStudentObject(getUserByUserId(studentId));
+    // setStudentObject(getUserByUserId(studentId));
   }, [studentId]);
 
   if (!studentId) {
@@ -17,7 +17,7 @@ const StudentsDetails = () => {
 
   return (
     <>
-      <ListCourses studentObj={studentObj?studentObj:null} />
+      <ListCourses studentId = {studentId}  />
     </>
   );
 };
