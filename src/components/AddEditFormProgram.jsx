@@ -59,29 +59,29 @@ export default function AddEditForm({
     });
   };
 
-  function handleCancel(){
+  function handleCancel() {
     setView("list");
-  };
+  }
 
   async function handleFormSubmit(e) {
     e.preventDefault();
     const formToSubmit = programForm;
-var result;
+    var result;
     if (view === "edit") {
-      result = await editProgram(formToSubmit)
+      result = await editProgram(formToSubmit);
     } else if (view === "add") {
       result = await addProgram(formToSubmit);
     }
     if (result.status < 300) {
       setAlertMessage(result.response.message);
-      setTypeAlert("sucess")
+      setTypeAlert("sucess");
       setTimeout(() => {
         setView("list");
-        setShowMessage(false)
+        setShowMessage(false);
       }, 1000);
     } else {
-      setTypeAlert("alert")
-      setAlertMessage(result.response.message)
+      setTypeAlert("alert");
+      setAlertMessage(result.response.message);
     }
     setShowMessage(true);
 
@@ -209,6 +209,8 @@ var result;
             name="domesticfee"
             value={programForm.domesticfee}
             onChange={handleChange}
+            step=".01"
+            min="0" lang="en"
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
             required
           />
@@ -221,6 +223,7 @@ var result;
             type="number"
             name="internationalfee"
             value={programForm.internationalfee}
+            step=".01"
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
           />

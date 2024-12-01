@@ -16,7 +16,6 @@ export default function Login() {
     if (result.status) {
       setPassword("");
       setAlertMessage(result.response.message);
-      console.log(result)
 
       if (result.status < 300) {
         setTypeAlert("sucess")
