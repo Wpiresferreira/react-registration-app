@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { deleteProgram, getLoggedUser, getPrograms } from "../data/api";
 import CardProgram from "../components/CardProgram";
-import AddEditForm from "../components/AddEditForm";
+import AddEditForm from "../components/AddEditFormProgram";
 import Alert from "../components/Alert";
 
 export default function Programs() {
@@ -23,12 +23,7 @@ export default function Programs() {
     // Retrieve user information using the cookie
     async function getData() {
       await updateAllPrograms();
-
       const res = await getLoggedUser();
-      if (res.status > 201) {
-        setIsLoading(false);
-        return;
-      }
       setLoggedUser(res.response);
       setIsLoading(false);
     }

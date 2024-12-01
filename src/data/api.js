@@ -400,3 +400,70 @@ export async function deleteProgram(program) {
     return { status: 500, response: { message: "Check connection" } };
   }
 }
+
+
+export async function addCourse(coursecode) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/addcourse", {
+    method: "POST",
+    body: JSON.stringify(coursecode),
+    headers: myHeaders,
+    credentials: "include",
+  });
+
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+
+export async function editCourse(course) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/editcourse", {
+    method: "POST",
+    body: JSON.stringify(course),
+    headers: myHeaders,
+    credentials: "include",
+  });
+
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+
+export async function deleteCourse(coursecode) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/deletecourse", {
+    method: "DELETE",
+    body: JSON.stringify({coursecode: coursecode}),
+    headers: myHeaders,
+    credentials: "include",
+  });
+
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}

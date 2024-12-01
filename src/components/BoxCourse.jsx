@@ -1,8 +1,11 @@
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/16/solid";
 
-export default function BoxCourse({ course, action, isadmin }) {
+export default function BoxCourse({ course, action, isadmin, id}) {
   return (
-    <div className="flex flex-col p-2 w-72 m-2 items-center border rounded-md bg-slate-100">
+    <li
+      id={id}
+      className="flex flex-col p-2 w-64 m-2 items-center border rounded-md bg-slate-100"
+    >
       <h1 className="text-2xl font-bold">{course.coursecode}</h1>
       <h2 className="flex justify-center items-center text-center h-20  justify-items-center-center">
         {course.coursename}
@@ -18,7 +21,7 @@ export default function BoxCourse({ course, action, isadmin }) {
       {!isadmin ? null : (
         <div className="flex h-12 w-24 self-end">
           <button
-            id={`edit-${course.coursecode}`}
+            id={`openEdit-${course.coursecode}`}
             onClick={action}
             className="border rounded-md bg-sky-500 h-[36px] w-[36px] p-2"
           >
@@ -33,6 +36,6 @@ export default function BoxCourse({ course, action, isadmin }) {
           </button>
         </div>
       )}
-    </div>
+    </li>
   );
 }

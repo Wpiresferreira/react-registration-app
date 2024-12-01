@@ -26,7 +26,6 @@ export default function Home() {
 
   return (
     <>
-    {console.log(loggedUser)}
     {loggedUser ? <Dashboard loggedUser={loggedUser}/> : <Welcome />}
     </>
   );

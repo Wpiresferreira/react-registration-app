@@ -34,11 +34,12 @@ export default function CardProgram({
         <strong>End Date:</strong> {formatDate(program.enddate)}
       </p>
       <p className="text-gray-700">
-        <strong>Domestic Fees (CAD): </strong> {program.domesticfee}
+        <strong>Domestic Fees (CAD): </strong>
+        {!program.domesticfee || (program.domesticfee==="$0.00") ?  "Not Available": program.domesticfee }
       </p>
       <p className="text-gray-700">
         <strong>International Fees (CAD): </strong>{" "}
-        {program.internationalfee ? program.internationalfee : "Not Available"}
+        {!program.internationalfee || (program.internationalfee==="$0.00") ? "Not Available": program.internationalfee }
       </p>
 
       {isadmin && (
