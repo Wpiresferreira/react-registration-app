@@ -1,5 +1,5 @@
- const url = 'https://express-omega-coral.vercel.app'
-//const url = "http://localhost:5000";
+// const url = 'https://express-omega-coral.vercel.app'
+const url = "http://localhost:5000";
 
 export async function doLogin(user, pass) {
   const myHeaders = new Headers();
@@ -70,27 +70,6 @@ export async function getLoggedUser() {
     return { status: 500, response: { message: "Check connection" } };
   }
 }
-// export async function getLoggedUser(sessionId) {
-//   if (!sessionId) return;
-//   const myHeaders = new Headers();
-//   myHeaders.append("Content-Type", "application/json");
-//   myHeaders.append("Accept", "*/*");
-
-//   const req = new Request("https://express-omega-coral.vercel.app/getloggeduser", {
-//     method: "POST",
-//     body: JSON.stringify({ sessionid: sessionId }),
-//     headers: myHeaders,
-//   });
-
-//   try {
-//     const result = await fetch(req).then((res) => {
-//       return res.json();
-//     });
-//     return await result;
-//   } catch (e) {
-//     return null;
-//   }
-// }
 
 export async function signup(user) {
   const myHeaders = new Headers();
@@ -162,15 +141,34 @@ export async function getCourses(programcode) {
   const req = new Request(url + "/getcourses/" + programcode, {
     method: "GET",
     headers: myHeaders,
+    credentials: "include", // Include cookies in the request
   });
   try {
-    const result = await fetch(req).then((res) => {
-      return res.json();
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
     });
-    return result;
   } catch (e) {
-    console.log(e);
-    return e;
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+
+export async function getTerms() {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/getterms/", {
+    method: "GET",
+    headers: myHeaders,
+  });
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
   }
 }
 
@@ -454,6 +452,74 @@ export async function deleteCourse(coursecode) {
   const req = new Request(url + "/deletecourse", {
     method: "DELETE",
     body: JSON.stringify({coursecode: coursecode}),
+    headers: myHeaders,
+    credentials: "include",
+  });
+
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+///STUDENTS
+export async function getEnrollments(studentId) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/getenrollments", {
+    method: "POST",
+    body: JSON.stringify({studentid : studentId}),
+    headers: myHeaders,
+    credentials: "include",
+  });
+
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+
+
+export async function registerCourse(termId, courseCode) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/registercourse", {
+    method: "POST",
+    body: JSON.stringify({term_id: termId, coursecode: courseCode}),
+    headers: myHeaders,
+    credentials: "include",
+  });
+
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+
+
+export async function dropCourse( courseCode) {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/dropcourse", {
+    method: "DELETE",
+    body: JSON.stringify({coursecode: courseCode}),
     headers: myHeaders,
     credentials: "include",
   });

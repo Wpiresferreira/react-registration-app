@@ -1,43 +1,53 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import { getCoursesByProgram, getLoggedUser, getProgramDescription } from "../data/util";
 import MyCourses from "../components/MyCourses";
 import AddCourses from "../components/AddCourses";
+import { getCourses, getEnrollments, getLoggedUser, getTerms } from "../data/api";
 
 export default function Registration() {
-  const navigate = useNavigate();
   const [loggedUser, setLoggedUser] = useState("");
-  const [programName, setProgramName] = useState("");
-
+  const [allCourses, setAllCourses] = useState([]);
+  const [allTerms, setAllTerms] = useState();
+  const [myEnrollments, setMyEnrollments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!sessionStorage.getItem("sessionId")) {
-      return;
+    async function getData() {
+      const tempLoggedUser = await getLoggedUser();
+      setLoggedUser(tempLoggedUser.response);
+      const tempTerms = await getTerms();
+      setAllTerms(await tempTerms.response);
+      
     }
-    // const tempLoggedUserId = getLoggedUser(JSON.parse(sessionStorage.getItem("sessionId")).sessionId)
-    
-    setLoggedUser(
-      // tempLoggedUserId
-    );
-  }, [navigate]);
+    getData();
+  }, []);
 
+  useEffect(() => {
+    if (!loggedUser) return;
 
-  useEffect(()=>{
-    // const tempProgramName = getProgramDescription(loggedUser.program)
-    if(loggedUser) {
-      // setProgramName(tempProgramName)
-      // getCoursesByProgram(loggedUser.program)
+    async function getData(){
+      const tempAllCourses = await getCourses(loggedUser.program)
+      setAllCourses(tempAllCourses.response)
+      const enrollments = await getEnrollments(loggedUser.userid);
+      setMyEnrollments(enrollments.response)
     }
-  },[loggedUser])
+    getData();
+    setIsLoading(false)
+  }, [loggedUser]);
 
+  const [selectedTab, setSetectedTab] = useState("My");
 
-  const [selectedTab, setSetectedTab] = useState("My Courses");
+  async function updateAllEnrollments() {
+    console.log('update called')
+    const enrollments = await getEnrollments(loggedUser.userid);
+    setMyEnrollments(enrollments.response)
+  }
 
   const handleOnClickTab = (e) => {
-    setSetectedTab(e.target.innerText);
+    setSetectedTab(e.target.innerText.split(" ")[0]);
   };
 
-  if(!loggedUser) return null
+  if (!loggedUser || loggedUser.isadmin) return (<div></div>);
+  if (isLoading) return <h1>Loading . . . </h1>;
 
   return (
     <>
@@ -45,36 +55,56 @@ export default function Registration() {
         className="mt-2 flex flex-col items-center justify-center
     "
       >
-      <div className="font-bold m-4 text-2xl">
-        {'Student: '+ loggedUser.firstName+ " " + loggedUser.lastName +" / " + programName}
-      </div>
+        <div className="font-bold m-4 text-2xl">
+          {"Student: " +
+            loggedUser.first_name +
+            " " +
+            loggedUser.last_name
+            +
+            " / " +
+            loggedUser.programname
+            }
+        </div>
         <div className="w-[90vw] min-h-[70vh]">
           <div className="flex">
             <button
               onClick={handleOnClickTab}
               className={` ${
-                selectedTab === "My Courses"
+                selectedTab === "My"
                   ? "bg-sky-400  font-bold"
                   : "bg-sky-200"
               } grow h-12 rounded-t-2xl`}
             >
-              My Courses
+              {`My Courses (${myEnrollments.length}/${allCourses.length})`}
             </button>
             <button
               onClick={handleOnClickTab}
               className={` ${
-                selectedTab === "Add Courses"
+                selectedTab === "Add"
                   ? "bg-sky-400 font-bold"
                   : "bg-sky-200"
               } grow h-12 rounded-t-2xl`}
             >
-              Add Courses
+              {`Add Courses (${allCourses.length -myEnrollments.length}/${allCourses.length})`}
             </button>
           </div>
-          {selectedTab === "My Courses" ? (
-            <MyCourses loggedUser={loggedUser} />
+          {selectedTab === "My" ? (
+            <MyCourses
+              loggedUser={loggedUser}
+              allCourses={allCourses}
+              myEnrollments={myEnrollments}
+              allTerms={allTerms}
+              updateAllEnrollments = {updateAllEnrollments}
+            />
           ) : (
-            <AddCourses loggedUser={loggedUser} />
+            <AddCourses
+              loggedUser={loggedUser}
+              allCourses={allCourses}
+              myEnrollments={myEnrollments}
+              allTerms={allTerms}
+              updateAllEnrollments = {updateAllEnrollments}
+
+            />
           )}
         </div>
       </div>
