@@ -1,83 +1,142 @@
 import { useEffect, useState } from "react";
-import {
-  dropCourse,
-  getMyCoursesByTerm,
-  getMyTermsId,
-  getQtCoursesRegistered,
-  getTermDescription,
-} from "../data/util";
+import { dropCourse } from "../data/api";
 
-export default function MyCourses({ loggedUser }) {
-  const [myTermsId, setMyTermsId] = useState([]);
+export default function MyCourses({
+  loggedUser,
+  allCourses,
+  myEnrollments,
+  allTerms,
+  updateAllEnrollments
+}) {
+  const [myTerms, setMyTerms] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [qtMyCourses, setQtMyCourses] = useState();
-
   useEffect(() => {
     if (!loggedUser) {
       return;
     }
-    setMyTermsId(getMyTermsId(loggedUser.userId).sort());
-    setQtMyCourses(getQtCoursesRegistered(loggedUser));
-  }, [selectedCourses, loggedUser]);
+    const tempTerms = myEnrollments.reduce((acum, cur) => {
+      if (!acum.includes(cur.term_description)) {
+        acum.push(cur.term_description);
+      }
+      return acum;
+    }, []);
+    setMyTerms(tempTerms);
+  }, [selectedCourses, loggedUser, myEnrollments]);
 
   const handleOnClickCourse = (e) => {
-    console.log(e.target.id.split("_")[0]);
-    if (!selectedCourses.includes(e.target.id.split("_")[0])) {
-      setSelectedCourses([...selectedCourses, e.target.id.split("_")[0]]);
+    console.log(e.target.closest("li").id);
+    if (!selectedCourses.includes(e.target.closest("li").id)) {
+      setSelectedCourses([...selectedCourses, e.target.closest("li").id]);
     } else {
-      const tempIndex = selectedCourses.indexOf(e.target.id.split("_")[0]);
+      const tempIndex = selectedCourses.indexOf(e.target.closest("li").id);
       const tempSelectedCourses = [...selectedCourses];
       tempSelectedCourses.splice(tempIndex, 1);
       setSelectedCourses(tempSelectedCourses);
     }
   };
 
-  const buttonDropClick = (e) => {
-    dropCourse(loggedUser.userId, selectedCourses);
+  async function buttonDropClick(e) {
+    console.log(selectedCourses);
 
-    setSelectedCourses([]);
-  };
+    var myEnrollmentsCopy = [...myEnrollments];
 
-  if (myTermsId.length === 0) {
+    selectedCourses.forEach((coursecode) => {
+      myEnrollmentsCopy = myEnrollmentsCopy.filter(
+        (enrolment) => enrolment.coursecode !== coursecode
+      );
+    });
+
+    var qtCoursesPerTerm = [];
+    allTerms.forEach((term) => {
+      var qt = myEnrollmentsCopy.reduce((acum, cur) => {
+        if (cur.term_id === term.term_id) {
+          acum++;
+        }
+        return acum;
+      }, 0);
+      qtCoursesPerTerm.push(qt);
+    });
+
+   for(let i =0; i< qtCoursesPerTerm.length; i++){
+      if (qtCoursesPerTerm[i] === 1) {
+        alert("You must be enrolled at least 2 courses each term");
+        return ;
+      }
+    }
+
+
+    selectedCourses.forEach(async (courseCode)=>{
+      await dropCourse(courseCode)
+      setSelectedCourses([]);
+      updateAllEnrollments()
+    })
+
+    // if (
+    //   selectedCourses.length +
+    //     myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length <2) {
+    //   alert("For each Term, you must be enrolled in at least 2 courses");
+    //   return;
+    // }
+
+    // else if (
+    //   selectedCourses.length +
+    //   myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length >
+    //   5
+    // ) {
+    //   alert("For each Term, you must be enrolled at maximum 5 courses");
+    //   return;
+    // }
+    //  for (let i = 0; i < selectedCourses.length; i++) {
+    //    await registerCourse(selectedTerm.term_id, selectedCourses[i]);
+    //  }
+    //  setSelectedCourses([]);
+    //  updateAllEnrollments()
+
+    // dropCourse(loggedUser.userId, selectedCourses);
+
+  }
+
+  if (myTerms.length === 0) {
     return <div>No courses enrolled yet!</div>;
   }
   return (
     <div className=" flex flex-col bg-sky-400">
-      <div className="p-4 font-bold">
-        Total Courses registered {qtMyCourses ? qtMyCourses : null}
-      </div>
-      {myTermsId.map((termId, index) => (
+      {myTerms.map((termId, index) => (
         <div key={termId} className="font-bold p-2">
-          {getTermDescription(termId)}
-          <div className="flex flex-wrap flex-[0_0_18%]">
-            {!getMyCoursesByTerm(loggedUser, termId)
+          {termId}
+          {/* {getTermDescription(termId)} */}
+          <ul className="flex flex-wrap flex-[0_0_18%]">
+            {/* {!getMyCoursesByTerm(loggedUser, termId)
               ? null
-              : getMyCoursesByTerm(loggedUser, termId).map((course, index) => (
+              :}  */}
+            {myEnrollments
+              .filter((e) => e.term_description === termId)
+              .map((course, index) => (
+                <li
+                  key={course.coursecode}
+                  id={course.coursecode}
+                  onClick={handleOnClickCourse}
+                  className={` ${
+                    selectedCourses.includes(course.coursecode)
+                      ? "bg-red-400"
+                      : "bg-white"
+                  } m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
+                >
                   <div
-                    key={course.courseCode}
-                    id={course.courseCode + "_container"}
-                    onClick={handleOnClickCourse}
-                    className={` ${
-                      selectedCourses.includes(course.courseCode)
-                        ? "bg-red-400"
-                        : "bg-white"
-                    } m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
+                    id={course.courseCode + "_courseCode"}
+                    className="p-2 text-center font-bold"
                   >
-                    <div
-                      id={course.courseCode + "_courseCode"}
-                      className="p-2 text-center font-bold"
-                    >
-                      {course.courseCode}
-                    </div>
-                    <div
-                      className="text-center text-sm"
-                      id={course.courseCode + "_courseDescription"}
-                    >
-                      {course.name}
-                    </div>
+                    {course.coursecode}
                   </div>
-                ))}
-          </div>
+                  <div
+                    className="text-center text-sm"
+                    id={course.coursecode + "_courseDescription"}
+                  >
+                    {course.coursename}
+                  </div>
+                </li>
+              ))}
+          </ul>
         </div>
       ))}
       <button

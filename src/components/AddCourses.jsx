@@ -1,125 +1,144 @@
 import { useEffect, useState } from "react";
-import {
-  enrollCourse,
-  getMyCoursesCode,
-  getMyCoursesCodeByTerm,
-  getQtRemainingCourses,
-  getRemainingCourses,
-  getTerms,
-} from "../data/util";
+import { getTerms, registerCourse } from "../data/api";
 
-export default function AddCourses({ loggedUser }) {
-  const terms = getTerms();
-  const [selectedTerm, setSelectedTerm] = useState(terms[0]);
+export default function AddCourses({ loggedUser, allCourses, myEnrollments, allTerms, updateAllEnrollments }) {
   const [selectedCourses, setSelectedCourses] = useState([]);
-  const [qtRemainingCourses, setQtRemainingCourses] = useState(getQtRemainingCourses(loggedUser))
-  const allCourses = getRemainingCourses(loggedUser);
-  console.log(allCourses)
+  const [isLoading, setIsLoading] = useState(true);
+  const [selectedTerm, setSelectedTerm] = useState();
+  useEffect(() => {
+    if (!loggedUser) {
+      return;
+    }
+    async function getData() {
+      
+    }
+    getData();
+  }, [loggedUser, selectedCourses]);
 
   useEffect(() => {
-    setQtRemainingCourses(getQtRemainingCourses(loggedUser))
-  }, [
-    loggedUser, selectedCourses]);
+    if(allTerms) {
+      setSelectedTerm(allTerms[0])
+      setIsLoading(false)}
+
+  }, [allTerms]);
+
+  function isRegistered(courseCode){
+
+    for(let i=0; i<myEnrollments.length; i++){
+      if(courseCode === myEnrollments[i].coursecode){
+        return true;
+      }
+    }
+    return false;
+  }
 
   const handleOnChangeSelection = (e) => {
-    const tempSelectedTerm = terms.filter(
-      (t) => t.termId === Number(e.target.value)
+    console.log(e.target.value)
+    console.log(allTerms)
+    const tempSelectedTerm = allTerms.filter(
+      (t) => t.term_id === Number(e.target.value)
     )[0];
     setSelectedTerm(tempSelectedTerm);
+    setSelectedCourses([])
   };
 
   const handleOnClickCourse = (e) => {
     //Toggle select / deselect course when it is clicked
     // Uptading status selectedCourses
-    if (!selectedCourses.includes(e.target.id.split("_")[0])) {
-      setSelectedCourses([...selectedCourses, e.target.id.split("_")[0]]);
+    if (!selectedCourses.includes(e.target.closest("li").id)) {
+      setSelectedCourses([...selectedCourses, e.target.closest("li").id]);
     } else {
-      const tempIndex = selectedCourses.indexOf(e.target.id.split("_")[0]);
+      const tempIndex = selectedCourses.indexOf(e.target.closest("li").id);
       const tempSelectedCourses = [...selectedCourses];
       tempSelectedCourses.splice(tempIndex, 1);
       setSelectedCourses(tempSelectedCourses);
     }
   };
 
-  const buttonAddClick = (e) => {
+  async function buttonAddClick(e){
+    console.log(selectedCourses)
+
     if (
       selectedCourses.length +
-        getMyCoursesCodeByTerm(loggedUser.userId, selectedTerm.termId).length <
-      2
-    ) {
+        myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length <2) {
       alert("For each Term, you must be enrolled in at least 2 courses");
       return;
-    } else if (
+    }
+    else if (
       selectedCourses.length +
-        getMyCoursesCodeByTerm(loggedUser.userId, selectedTerm.termId).length >
+      myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length >
       5
     ) {
       alert("For each Term, you must be enrolled at maximum 5 courses");
       return;
     }
-
-    for (let i = 0; i < selectedCourses.length; i++) {
-      enrollCourse(loggedUser.userId, selectedTerm.termId, selectedCourses[i]);
-    }
-    setSelectedCourses([]);
+     for (let i = 0; i < selectedCourses.length; i++) {
+       await registerCourse(selectedTerm.term_id, selectedCourses[i]);
+     }
+     setSelectedCourses([]);
+     updateAllEnrollments()
   };
 
+  if (isLoading) return <h1>Loading. . .</h1>;
   return (
     <div className=" flex flex-col bg-sky-400">
-      <div className="p-4 font-bold">Total Remaing Courses {qtRemainingCourses}</div>
-
       <div>
         <label htmlFor="terms">Choose a Term:</label>
 
-        <select name="terms" id="terms" onChange={handleOnChangeSelection}>
-          {terms.map((term) => (
-            <option key={term.termId} value={term.termId}>
-              {term.termSeason + " / " + term.termYear}
-            </option>
-          ))}
+        <select name="terms" id="terms" default={allTerms[0].term_season + " / " + allTerms[0].term_year} onChange={handleOnChangeSelection}>
+          {!allTerms
+            ? null
+            : allTerms.map((term) => (
+                <option key={term.term_id} value={term.term_id}>
+                  {term.term_season + " / " + term.term_year}
+                </option>
+              ))}
         </select>
       </div>
 
-      <div className="flex flex-wrap flex-[0_0_18%]">
-        {!allCourses.filter((course) =>
-          course.availability.includes(selectedTerm.termSeason)
-        ).length > 0 ? (
-          <div>No courses offered for this term<br></br>
-          Or you are already registered for all this term courses</div>
+      <ul className="flex flex-wrap flex-[0_0_18%]">
+        {allCourses.filter((course) =>
+          course.availability.includes(selectedTerm.term_season)
+        ).length === 0 ? (
+          <li>
+            No courses offered for this term<br></br>
+            Or you are already registered for all this term courses
+          </li>
         ) : (
           allCourses
             .filter((course) =>
-              course.availability.includes(selectedTerm.termSeason)
+              course.availability.includes(selectedTerm.term_season)
+            && !isRegistered(course.coursecode)
             )
-            .map((course, index) => (
-              getMyCoursesCode(loggedUser.userId).includes(course.courseCode)?
-              null :
-              <div
-                key={course.courseCode}
-                id={course.courseCode + "_container"}
-                onClick={handleOnClickCourse}
-                className={` ${
-                  selectedCourses.includes(course.courseCode)
-                    ? "bg-green-400"
-                    : "bg-white"
-                } flex flex-col  m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
-              >
-                <div
-                  id={course.courseCode + "_courseCode"}
-                  className="p-2 text-center font-bold"
+            .map((course, index) =>
+               (
+                <li
+                  key={course.coursecode}
+                  id={course.coursecode}
+                  onClick={handleOnClickCourse}
+                  className={` ${
+                    selectedCourses.includes(course.coursecode)
+                      ? "bg-green-400"
+                      : "bg-white"
+                  } flex flex-col  m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
                 >
-                  {course.courseCode}
-                </div>
-                <div
-                  className="text-center text-sm"
-                  id={course.courseCode + "_courseDescription"}
-                >
-                  {course.name}
-                </div>
-              </div>
-            ))
+                  <div
+                    id={course.courseCode + "_coursecode"}
+                    className="p-2 text-center font-bold"
+                  >
+                    {course.coursecode}
+                  </div>
+                  <div
+                    className="text-center text-sm"
+                    id={course.coursecode + "_coursename"}
+                  >
+                    {course.coursename}
+                  </div>
+                </li>
+              )
+            )
         )}
-      </div>
+      </ul>
       <button
         onClick={buttonAddClick}
         className={` self-end text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}

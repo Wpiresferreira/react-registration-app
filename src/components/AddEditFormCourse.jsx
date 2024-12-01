@@ -11,7 +11,6 @@ export default function AddEditFormCourse({
   setShowMessage,
 }) {
 
-  console.log(selectedCourse)
   const [courseForm, setCourseForm] = useState({
     programcode: "",
     term: "",

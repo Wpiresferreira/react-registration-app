@@ -31,7 +31,7 @@ export default function Courses() {
       const res = await getLoggedUser();
       setLoggedUser(res.response);
       const coursesByProgram = await getCourses(programCode);
-      setCourses(coursesByProgram);
+      setCourses(coursesByProgram.response);
       const tmpProgram = (await getPrograms()).filter(
         (p) => p.programcode === programCode
       )[0];
@@ -67,7 +67,7 @@ export default function Courses() {
 
   async function updateCourses() {
     const updatedCourses = await getCourses(programCode);
-    setCourses(updatedCourses);
+    setCourses(updatedCourses.response);
   }
 
   function handleEditCourse(e) {
@@ -76,7 +76,6 @@ export default function Courses() {
   }
 
   async function action(e) {
-    console.log(e.currentTarget.id.split("-")[0]);
     var result;
     if (e.currentTarget.id.split("-")[0] === "openEdit") {
       setView("edit");
@@ -104,7 +103,6 @@ export default function Courses() {
   if (isLoading) return <h1> Loading . . . </h1>;
   return (
     <div className="container mx-auto p-6 bg-gray-50 min-h-screen">
-      {console.log(view)}
       {view !== "list" && (
         <AddEditFormCourse
           view={view}
