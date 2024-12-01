@@ -1,5 +1,5 @@
-// const url = 'https://express-omega-coral.vercel.app'
-const url = "http://localhost:5000";
+const url = 'https://express-omega-coral.vercel.app'
+//const url = "http://localhost:5000";
 
 export async function doLogin(user, pass) {
   const myHeaders = new Headers();
@@ -221,32 +221,6 @@ export async function deleteMessage(messageId) {
   }
 }
 
-export async function getStudents(sessionId) {
-  if (!sessionId) return;
-  const myHeaders = new Headers();
-  myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Accept", "*/*");
-
-  const req = new Request(
-    "https://express-omega-coral.vercel.app/getstudents",
-    {
-      method: "POST",
-      body: JSON.stringify({ sessionid: sessionId }),
-      headers: myHeaders,
-    }
-  );
-
-  try {
-    const result = await fetch(req).then((res) => {
-      // console.log(res);
-      return res.json();
-    });
-    return await result;
-  } catch (e) {
-    console.log(e);
-    return null;
-  }
-}
 export async function sendMessage(message) {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
@@ -524,6 +498,28 @@ export async function dropCourse( courseCode) {
     credentials: "include",
   });
 
+  try {
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
+    });
+  } catch (e) {
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
+  }
+}
+
+
+
+export async function getStudents() {
+  const myHeaders = new Headers();
+  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append("Accept", "*/*");
+
+  const req = new Request(url + "/getstudents", {
+    method: "GET",
+    headers: myHeaders,
+    credentials: "include", // Include cookies in the request
+  });
   try {
     return await fetch(req).then(async (res) => {
       return { status: res.status, response: await res.json() };

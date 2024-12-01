@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { sortBy } from "../data/util";
 import { useNavigate } from "react-router-dom";
-import { getLoggedUser, getPrograms, getStudents } from "../data/api";
+import { getPrograms, getStudents } from "../data/api";
+// import { getLoggedUser, getPrograms, getStudents } from "../data/api";
 
 export default function Students() {
   const navigate = useNavigate();
-  const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
   const [allStudents, setAllStudents] = useState();
   const [allPrograms, setAllPrograms] = useState();
   const [students, setStudents] = useState();
@@ -16,14 +16,9 @@ export default function Students() {
   useEffect(() => {
     // Retrieve user information using the sessionId
     async function getData() {
-      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
-      setLoggedUser(user);
-      if (user.isadmin) {
-        setAllStudents(await getStudents(sessionStorage.getItem("sessionId")));
-      }
+        setAllStudents((await getStudents()).response);
       setProgramSelected("SDD-001");
-      setAllPrograms(await getPrograms(""));
-      setIsLoading(false);
+      setAllPrograms(await getPrograms());
     }
     getData();
     setIsLoading(false);
@@ -33,8 +28,6 @@ export default function Students() {
 
   useEffect(() => {
     if (!allStudents) return;
-    console.log("programSelected");
-    console.log(programSelected);
     if (programSelected === "*") {
       setStudents(
         allStudents.filter(
@@ -215,7 +208,7 @@ export default function Students() {
                   } py-2 px-4 border-b-2`}
                 >
                   <button
-                    id={user.userId}
+                    id={user.userid}
                     onClick={(e) => {
                       navigate(`/students-details/${e.target.id}`);
                     }}
