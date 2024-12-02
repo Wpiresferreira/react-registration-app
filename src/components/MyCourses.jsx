@@ -3,7 +3,6 @@ import { dropCourse } from "../data/api";
 
 export default function MyCourses({
   loggedUser,
-  allCourses,
   myEnrollments,
   allTerms,
   updateAllEnrollments
@@ -70,30 +69,6 @@ export default function MyCourses({
       setSelectedCourses([]);
       updateAllEnrollments()
     })
-
-    // if (
-    //   selectedCourses.length +
-    //     myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length <2) {
-    //   alert("For each Term, you must be enrolled in at least 2 courses");
-    //   return;
-    // }
-
-    // else if (
-    //   selectedCourses.length +
-    //   myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length >
-    //   5
-    // ) {
-    //   alert("For each Term, you must be enrolled at maximum 5 courses");
-    //   return;
-    // }
-    //  for (let i = 0; i < selectedCourses.length; i++) {
-    //    await registerCourse(selectedTerm.term_id, selectedCourses[i]);
-    //  }
-    //  setSelectedCourses([]);
-    //  updateAllEnrollments()
-
-    // dropCourse(loggedUser.userId, selectedCourses);
-
   }
 
   if (myTerms.length === 0) {

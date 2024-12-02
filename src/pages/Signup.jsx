@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useMask } from "@react-input/mask";
 import { getPrograms, signup } from "../data/api";
 import Alert from "../components/Alert";
 
-const SignUp = () => {
+export default function Signup(){
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -13,12 +14,17 @@ const SignUp = () => {
   const [phone, setPhone] = useState("");
   const [birthday, setBirthday] = useState("");
   const [selectedProgram, setSelectedProgram] = useState("");
-  const [error, setError] = useState(null);
   const [allPrograms, setAllPrograms] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState("");
-  const [typeAlert, setTypeAlert] = useState("")
+  const [typeAlert, setTypeAlert] = useState("");
   const [showMessage, setShowMessage] = useState(false);
+
+  const inputRef = useMask({
+    mask: "+_ (___) ___-____",
+    replacement: { _: /\d/ },
+  });
+  
 
   const navigate = useNavigate();
 
@@ -26,59 +32,43 @@ const SignUp = () => {
     async function getData() {
       const allPrograms = await getPrograms("");
       setAllPrograms(allPrograms);
-      console.log(allPrograms)
       setSelectedProgram(allPrograms[0].programcode);
       setIsLoading(false);
     }
     getData();
   }, []);
 
-
   const handleSubmit = (e) => {
     e.preventDefault();
 
     // Create a new student object
     const newStudent = {
-      first_name : firstName,
-      last_name : lastName,
+      first_name: firstName,
+      last_name: lastName,
       email,
       phone,
       birthday,
       department: "SD Department", // Fixed department
-      program : selectedProgram, // Program selected by the user
+      program: selectedProgram, // Program selected by the user
       username,
       password,
-      retypePassword
+      retypePassword,
     };
 
     signup(newStudent).then((result) => {
       setAlertMessage(result.response.message);
       if (result.status < 300) {
-        setTypeAlert("sucess")
+        setTypeAlert("sucess");
+        // Redirect to Login page after successful sign-up
         setTimeout(() => {
           navigate("/login");
-        }, 1000);
+        }, 2000);
       } else {
-        setTypeAlert("alert")
+        setTypeAlert("alert");
       }
       setShowMessage(true);
-
-
-      // setAlertMessage(result.message);
-      // setTypeAlert(result.type)
-      // setShowMessage(true);
-      console.log(result);
-
-      if(result.type === 'sucess'){
-        setTimeout(() => {
-          navigate("/login");
-          
-        }, 2000);
-      }
     });
 
-    // Redirect to Login page after successful sign-up
-    // alert("User registered successfully!");
   };
   const hideMessage = () => {
     setShowMessage(false);
@@ -95,77 +85,90 @@ const SignUp = () => {
           type={typeAlert}
         />
       ) : null}
-      <div style={styles.container}>
-        <h2 style={styles.title}>Student Sign Up</h2>
-        <form onSubmit={handleSubmit} style={styles.form}>
-          {error && <p style={styles.error}>{error}</p>}
+      <div
+      className="flex items-center flex-col container mx-auto my-2 p-5 bg-gray-50 shadow-lg min-h-[55vh] rounded-xl max-w-[400px] border border-solid border-gray-300"
+      >
+        <h2 className="text-center mb-5">Student Sign Up</h2>
+        <form onSubmit={handleSubmit} 
+        className="flex flex-col">
 
-          <div style={styles.formGroup}>
-            <label>First Name:</label>
+          <div>
+            <label>First Name</label>
             <input
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               type="text"
               placeholder="First Name"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Last Name:</label>
+          <div>
+            <label>Last Name</label>
             <input
               type="text"
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               placeholder="Last Name"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Email:</label>
+          <div>
+            <label>email</label>
             <input
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               type="email"
-              placeholder="Email"
+              placeholder="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Phone:</label>
+          <div>
+            <label>Phone</label>
             <input
+              ref={inputRef}
               type="tel"
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               placeholder="Phone"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Birthday:</label>
+          <div>
+            <label>Birthday</label>
             <input
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               type="date"
               value={birthday}
               onChange={(e) => setBirthday(e.target.value)}
+              max={new Intl.DateTimeFormat("en-CA", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }).format(new Date())}
+              min={new Intl.DateTimeFormat("en-CA", {
+                year: "numeric",
+                month: "2-digit",
+                day: "2-digit",
+              }).format(new Date()-3155760000000)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Program:</label>
+          <div>
+            <label>Program</label>
             <select
               value={selectedProgram}
               onChange={(e) => setSelectedProgram(e.target.value)}
               required
-              style={styles.input}
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
             >
               {allPrograms.map((program) => (
                 <option key={program.programcode} value={program.programcode}>
@@ -175,53 +178,56 @@ const SignUp = () => {
             </select>
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Username:</label>
+          <div>
+            <label>Username</label>
             <input
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               type="text"
               placeholder="Username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Password:</label>
+          <div>
+            <label>Password</label>
             <input
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Re-type Password:</label>
+          <div>
+            <label>Confirm Password</label>
             <input
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
               type="password"
-              placeholder="Retype Password"
+              placeholder="Confirm Password"
               value={retypePassword}
               onChange={(e) => setRetypePassword(e.target.value)}
               required
-              style={styles.input}
             />
           </div>
 
-          <div style={styles.formGroup}>
-            <label>Department:</label>
+          <div>
+            <label>Department</label>
             <input
               type="text"
               value="SD Department"
               readOnly
-              style={styles.input}
+              className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
             />
           </div>
 
-          <button type="submit" style={styles.button}>
+          <button
+            type="submit"
+            className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color1)] border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)] hover:bg-white focus:shadow-lg`}
+          >
             Sign Up
           </button>
         </form>
@@ -229,47 +235,3 @@ const SignUp = () => {
     </div>
   );
 };
-
-// Basic inline styling
-const styles = {
-  container: {
-    maxWidth: "400px",
-    margin: "50px auto",
-    padding: "20px",
-    border: "1px solid #ccc",
-    borderRadius: "10px",
-    backgroundColor: "#f9f9f9",
-  },
-  title: {
-    textAlign: "center",
-    marginBottom: "20px",
-  },
-  form: {
-    display: "flex",
-    flexDirection: "column",
-  },
-  formGroup: {
-    marginBottom: "15px",
-  },
-  input: {
-    width: "100%",
-    padding: "10px",
-    borderRadius: "5px",
-    border: "1px solid #ccc",
-  },
-  button: {
-    padding: "10px",
-    backgroundColor: "#4CAF50",
-    color: "white",
-    border: "none",
-    borderRadius: "5px",
-    cursor: "pointer",
-    textAlign: "center",
-  },
-  error: {
-    color: "red",
-    marginBottom: "15px",
-  },
-};
-
-export default SignUp;

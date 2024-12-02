@@ -1,13 +1,13 @@
 export default function Footer() {
   return (
-    <div className="flex justify-between w-[100vw] bg-[var(--color1)] text-white bottom-0 text-center">
+    <div className="flex flex-col md:flex-row justify-between w-[100vw] bg-[var(--color1)] text-white bottom-0 text-center">
       <div className="text-white p-2">
         <p className="text-white text-left">Arshdeep Singh</p>
         <p className="text-white text-left">Harsh Kullar</p>
         <p className="text-white text-left">Marcos Oshima</p>
         <p className="text-white text-left">Wagner Ferreira</p>
       </div>
-      <div className="text-white p-2">
+      <div className="text-white p-2 text-left md:text-center">
         Call Us <br></br>
         <span className="fa fa-phone text-white px-2"></span> 403-410-1400
         <br></br>

@@ -1,22 +1,19 @@
 import { useEffect, useState } from "react";
-import { saveProfile } from "../data/util";
-import { getLoggedUser } from "../data/api";
+import { getLoggedUser, updateUser } from "../data/api";
 import { useMask } from "@react-input/mask";
 import Alert from "../components/Alert";
 
-const Home = () => {
-
+export default function Profile() {
   const inputRef = useMask({
-    mask: '+_ (___) ___-____',
+    mask: "+_ (___) ___-____",
     replacement: { _: /\d/ },
   });
 
-
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
-  const [typeAlert, setTypeAlert] = useState("")
+  const [typeAlert, setTypeAlert] = useState("");
   const [showMessage, setShowMessage] = useState(false);
 
   const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
@@ -25,9 +22,8 @@ const Home = () => {
   useEffect(() => {
     // Retrieve user information using the sessionId
     async function getData() {
-      const user = await getLoggedUser(sessionStorage.getItem("sessionId"));
-      console.log(user);
-      setLoggedUser(user);
+      const user = await getLoggedUser();
+      setLoggedUser(user.response);
       setIsLoading(false);
     }
     getData();
@@ -39,7 +35,7 @@ const Home = () => {
     }
   }, [loggedUser]);
 
-  function handleSave() {
+  async function handleSave() {
     //check if password was typed and changed
     if (
       (phone === "" || phone === loggedUser.phone) &&
@@ -47,7 +43,7 @@ const Home = () => {
       newPassword === ""
     ) {
       setAlertMessage("No changes were made");
-      setTypeAlert("alert")
+      setTypeAlert("alert");
       setShowMessage(true);
       return;
     } else if (
@@ -68,9 +64,13 @@ const Home = () => {
       }
       setLoggedUser(tempUser);
 
-      saveProfile(loggedUser);
-      setAlertMessage("Changes saved");
-      setTypeAlert("alert")
+      const result = await updateUser(loggedUser);
+      if (result.status < 300) {
+        setTypeAlert("sucess");
+      } else {
+        setTypeAlert("alert");
+      }
+      setAlertMessage(result.response.message);
       setShowMessage(true);
       setPassword("");
       setNewPassword("");
@@ -83,121 +83,121 @@ const Home = () => {
   if (isLoading) return <div> Loading . . .</div>;
   return (
     <div>
-          
-      <div className="flex flex-col justify-start items-center">
-        
-        <h1> Welcome {loggedUser.first_name}, </h1>
-
-        <div className="w-[600px] min-h-[300px] rounded-2xl items-center m-6 flex flex-col justify-around bg-[var(--color2)]">
-          <div>Profile</div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              disabled
-              value={loggedUser.first_name}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="text"
-            ></input>
-            <label className="pl-3 text-sm absolute">First Name</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              disabled
-              value={loggedUser.last_name}
-              // onChange={(e) => setLastName(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="text"
-            ></input>
-            <label className="pl-3 text-sm absolute">Last Name</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              disabled
-              value={loggedUser.email}
-              // onChange={(e) => setEmail(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="email"
-            ></input>
-            <label className="pl-3 text-sm absolute">email</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
-            <input
-            ref={inputRef} 
-              defaultValue={loggedUser.phone}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="text"
-            ></input>
-            <label className="pl-3 text-sm absolute">Phone</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              value={loggedUser.birthday}
-              // onChange={(e) => setBirthday(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="date"
-            ></input>
-            <label className="pl-3 text-sm absolute">Birthday</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              disabled
-              value={loggedUser.department}
-              // onChange={(e) => setProgram(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="text"
-            ></input>
-            <label className="pl-3 text-sm absolute">Department</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              disabled
-              value={loggedUser.program}
-              // onChange={(e) => setDepartment(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="text"
-            ></input>
-            <label className="pl-3 text-sm absolute">Program</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-slate-400 rounded-2xl">
-            <input
-              value={loggedUser.username}
-              // onChange={(e) => setUsername(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="text"
-            ></input>
-            <label className="pl-3 text-sm absolute">Username</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
-            <input
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="password"
-            ></input>
-            <label className="pl-3 text-sm absolute">Password</label>
-          </div>
-          <div className="m-3 h-12 w-[300px] bg-white rounded-2xl">
-            <input
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              className="absolute w-[280px] ml-[18px] h-8 mt-4 bg-[transparent]"
-              type="password"
-            ></input>
-            <label className="pl-3 text-sm absolute">Retype Password</label>
-          </div>
-          <div>
-            <button
-              className="h-10 w-24 rounded-2xl bg-[var(--color1)] hover:bg-[var(--color2)] text-white border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)]"
-              onClick={handleSave}
-            >
-              Save
-            </button>
-          </div>
+      <div className="flex items-center flex-col container mx-auto my-2 p-5 bg-gray-50 shadow-lg min-h-[55vh] rounded-xl max-w-[400px] border border-solid border-gray-300">
+        <div>Profile</div>
+        <div className="w-full">
+          <label>First Name</label>
+          <input
+            readOnly={true}
+            value={loggedUser.first_name}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="text"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Last Name</label>
+          <input
+            readOnly={true}
+            value={loggedUser.last_name}
+            // onChange={(e) => setLastName(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="text"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>email</label>
+          <input
+            readOnly={true}
+            value={loggedUser.email}
+            // onChange={(e) => setEmail(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="email"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Phone</label>
+          <input
+            ref={inputRef}
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="text"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Birthday</label>
+          <input
+            value={new Intl.DateTimeFormat("en-CA", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }).format(Date.parse(loggedUser.birthday))}
+            readOnly={true}
+            // onChange={(e) => setBirthday(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="date"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Department</label>
+          <input
+            readOnly={true}
+            value={loggedUser.department}
+            // onChange={(e) => setProgram(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="text"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Program</label>
+          <input
+            readOnly={true}
+            value={loggedUser.program}
+            // onChange={(e) => setDepartment(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="text"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Username</label>
+          <input
+            readOnly={true}
+            value={loggedUser.username}
+            // onChange={(e) => setUsername(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="text"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Password</label>
+          <input
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="password"
+          ></input>
+        </div>
+        <div className="w-full">
+          <label>Confirm Password</label>
+          <input
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="w-full p-3 rounded-lg border border-solid border-gray-300 mb-3 focus:shadow-lg"
+            type="password"
+          ></input>
+        </div>
+        <div>
+          <button
+            className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color1)] border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)] hover:bg-white`}
+            onClick={handleSave}
+          >
+            Save
+          </button>
         </div>
       </div>
+      {/* </div> */}
       {showMessage ? (
-        <Alert  
+        <Alert
           showMessage={showMessage}
           message={alertMessage}
           onClick={hideMessage}
@@ -206,6 +206,4 @@ const Home = () => {
       ) : null}
     </div>
   );
-};
-
-export default Home;
+}

@@ -91,8 +91,8 @@ const Contact = () => {
 
     const result = await sendMessage({
       userid: loggedUser.userid,
-      title: subject,
-      message: bodyMessage,
+      titlemessage: subject,
+      bodymessage: bodyMessage,
     });
 
     setAlertMessage(result.response.message);
