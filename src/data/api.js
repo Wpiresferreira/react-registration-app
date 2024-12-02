@@ -26,21 +26,20 @@ export async function updateUser(user) {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("Accept", "*/*");
 
-  const req = new Request("https://express-omega-coral.vercel.app/updateuser", {
+  const req = new Request(url + "/updateuser", {
     method: "PUT",
     body: JSON.stringify(user),
     headers: myHeaders,
+    credentials : "include"
   });
 
   try {
-    const result = await fetch(req).then((res) => {
-      return res.json();
+    return await fetch(req).then(async (res) => {
+      return { status: res.status, response: await res.json() };
     });
-
-    return result;
   } catch (e) {
-    console.log(e);
-    return null;
+    console.error(e);
+    return { status: 500, response: { message: "Check connection" } };
   }
 }
 
@@ -275,34 +274,6 @@ export async function setmessagereadstatus(messageid, wasread) {
     console.log(e);
     return null;
   }
-}
-
-export function getMyCoursesByTerm(user, termId) {
-  const allMyEnrolments = JSON.parse(localStorage.getItem("enrolments")).filter(
-    (enrolment) =>
-      enrolment.userId === user.userId && enrolment.termId === termId
-  );
-  const allCourses = JSON.parse(localStorage.getItem("coursesData"));
-
-  const listCourses = Object.entries(allCourses[user.program].terms);
-
-  const myProgramCourses = [];
-
-  listCourses.forEach((term) => {
-    term[1].forEach((course) => {
-      myProgramCourses.push(course);
-    });
-  });
-
-  const result = [];
-  for (let i = 0; i < allMyEnrolments.length; i++) {
-    result.push(
-      myProgramCourses.filter(
-        (course) => course.courseCode === allMyEnrolments[i].courseCode
-      )[0]
-    );
-  }
-  return result;
 }
 
 /////////////////////PROGRAMS

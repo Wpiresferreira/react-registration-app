@@ -31,10 +31,7 @@ export default function Top() {
     });
     setLoggedUser(null);
 
-    const result = doLogout();
-    if (result) {
-      console.log(result);
-    }
+    await doLogout();
 
     navigate("/logout");
   }
@@ -45,7 +42,7 @@ export default function Top() {
 
   return (
     <div className="flex flex-col justify-between w-[100vw] text-center bg-white shadow-[0px_12px_12px_-6px_rgba(3,26,98,0.16)]">
-      <div className="flex justify-around items-center">
+      <div className="flex justify-around items-center md:h-24">
         <div className="hidden md:flex">
           <img
             className="ml-7 h-[80%] w-[80%] object-contain"
@@ -60,7 +57,7 @@ export default function Top() {
             alt="logo"
           />
         </div>
-        <div className="grow h-[100px] leading-[100px] text-ellipsis text-2xl font-bold">
+        <div className="grow text-ellipsis text-lg md-text-xl font-bold">
           Course Registration
         </div>
 
@@ -68,7 +65,7 @@ export default function Top() {
           onClick={() => navigate("/signup")} // Redirect to SignUp page
           className={`${
             loggedUser ? "hidden" : null
-          } text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
+          } text-sm text-white rounded-xl text-nowrap px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
         >
           Sign up
         </button>
