@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-// import { getMyCoursesByTerm, getMyTermsId, getTermDescription } from "../data/util";
 import { useNavigate } from "react-router-dom";
 import { getEnrollments } from "../data/api";
 
@@ -40,9 +39,8 @@ export default function ListCourses({ studentId, studentObj }) {
       <div className="flex items-start mb-4 w-[90vw]">
         <button
           onClick={() => navigate(-1)} // Navigate back to the previous page
-          className="bg-gray-800 text-white hover:bg-gray-700 transition-colors duration-200 px-4 py-2 rounded"
+          className={`fa fa-arrow-left text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
         >
-          Back
         </button>
       </div>
       <div className="flex flex-col w-[90vw] bg-sky-200 min-h-[50vh] rounded-2xl ">

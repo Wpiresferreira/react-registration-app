@@ -95,7 +95,7 @@ export default function Programs() {
             <div className="text-center mb-4">
               <button
                 onClick={handleAddProgram}
-                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+                className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color1)] border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)] hover:bg-white`}
               >
                 Add Program
               </button>

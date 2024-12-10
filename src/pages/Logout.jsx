@@ -5,7 +5,7 @@ export default function Logout() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="w-[600px] h-[300px] rounded-2xl items-center m-6 flex flex-col justify-around bg-sky-200">
+      <div className="flex items-center justify-evenly flex-col container mx-auto my-2 p-5 bg-gray-50 shadow-lg min-h-[55vh] rounded-xl max-w-[400px] border border-solid border-gray-300">
         <div>Your session was closed</div>
         <div>
           <button

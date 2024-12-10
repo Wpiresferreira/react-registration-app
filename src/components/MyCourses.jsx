@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { dropCourse } from "../data/api";
+import Alert from "./Alert";
 
 export default function MyCourses({
   loggedUser,
@@ -9,6 +10,11 @@ export default function MyCourses({
 }) {
   const [myTerms, setMyTerms] = useState([]);
   const [selectedCourses, setSelectedCourses] = useState([]);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [typeAlert, setTypeAlert] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
+
+
   useEffect(() => {
     if (!loggedUser) {
       return;
@@ -22,7 +28,7 @@ export default function MyCourses({
     setMyTerms(tempTerms);
   }, [selectedCourses, loggedUser, myEnrollments]);
 
-  const handleOnClickCourse = (e) => {
+  function handleOnClickCourse(e){
     console.log(e.target.closest("li").id);
     if (!selectedCourses.includes(e.target.closest("li").id)) {
       setSelectedCourses([...selectedCourses, e.target.closest("li").id]);
@@ -58,7 +64,9 @@ export default function MyCourses({
 
    for(let i =0; i< qtCoursesPerTerm.length; i++){
       if (qtCoursesPerTerm[i] === 1) {
-        alert("You must be enrolled at least 2 courses each term");
+        setAlertMessage("You must be enrolled at least 2 courses each term");
+        setTypeAlert("alert");
+        setShowMessage(true);
         return ;
       }
     }
@@ -70,6 +78,10 @@ export default function MyCourses({
       updateAllEnrollments()
     })
   }
+
+  function hideMessage(){
+    setShowMessage(false);
+  };
 
   if (myTerms.length === 0) {
     return <div>No courses enrolled yet!</div>;
@@ -120,6 +132,16 @@ export default function MyCourses({
       >
         Drop Courses
       </button>
+      {showMessage ? (
+        <>
+          <Alert
+            showMessage={showMessage}
+            message={alertMessage}
+            onClick={hideMessage}
+            type={typeAlert}
+          />
+        </>
+      ) : null}
     </div>
   );
 }
