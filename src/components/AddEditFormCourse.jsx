@@ -10,7 +10,6 @@ export default function AddEditFormCourse({
   setTypeAlert,
   setShowMessage,
 }) {
-
   const [courseForm, setCourseForm] = useState({
     programcode: "",
     term: "",
@@ -19,7 +18,7 @@ export default function AddEditFormCourse({
     credits: "",
     availability: "",
     prerequisites: "",
-    corequisites: ""
+    corequisites: "",
   });
 
   useEffect(() => {
@@ -31,13 +30,13 @@ export default function AddEditFormCourse({
         coursename: selectedCourse.coursename,
         credits: selectedCourse.credits,
         availability: selectedCourse.availability,
-        prerequisites: selectedCourse.prerequissites||"",
-        corequisites: selectedCourse.corequisites||""
+        prerequisites: selectedCourse.prerequissites || "",
+        corequisites: selectedCourse.corequisites || "",
       });
     }
   }, [selectedCourse]);
 
-  const handleChange = (e) => {
+  function handleChange (e){
     const { name, value } = e.target;
     setCourseForm({
       ...courseForm,
@@ -45,33 +44,33 @@ export default function AddEditFormCourse({
     });
   };
 
-  function handleCancel(){
+  function handleCancel() {
     setView("list");
-  };
+  }
 
   async function handleFormSubmit(e) {
     e.preventDefault();
 
-     var result;
+    var result;
     if (view === "edit") {
-      result = await editCourse(courseForm)
+      result = await editCourse(courseForm);
     } else if (view === "add") {
       result = await addCourse(courseForm);
     }
     if (result.status < 300) {
       setAlertMessage(result.response.message);
-      setTypeAlert("sucess")
+      setTypeAlert("sucess");
       setTimeout(() => {
         setView("list");
-        setShowMessage(false)
+        setShowMessage(false);
       }, 1000);
     } else {
-      setTypeAlert("alert")
-      setAlertMessage(result.response.message)
+      setTypeAlert("alert");
+      setAlertMessage(result.response.message);
     }
     setShowMessage(true);
 
-     await updateCourses();
+    await updateCourses();
   }
 
   return (
@@ -79,10 +78,8 @@ export default function AddEditFormCourse({
       {/* //   Back Button */}
       <button
         onClick={() => setView("list")}
-        className="bg-gray-800 text-white hover:bg-gray-600 transition-colors duration-300 px-4 py-2 rounded"
-      >
-        Back
-      </button>
+        className={`fa fa-arrow-left text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
+      />
       <form
         onSubmit={handleFormSubmit}
         className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
@@ -182,7 +179,6 @@ export default function AddEditFormCourse({
             value={courseForm.prerequisites}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-            
           />
         </div>
         <div className="mb-4">
@@ -195,28 +191,27 @@ export default function AddEditFormCourse({
             value={courseForm.corequisites}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
-            
           />
         </div>
-        
 
         <div className="flex justify-between">
+          
+          <button
+            type="button"
+            onClick={handleCancel}
+            className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
+          >
+            Cancel
+          </button>
           <button
             type="submit"
-            className="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600"
+            className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color1)] border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)] hover:bg-white`}
           >
             {view === "edit"
               ? "Update Course"
               : view === "add"
               ? "Add Course"
               : null}
-          </button>
-          <button
-            type="button"
-            onClick={handleCancel}
-            className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
-          >
-            Cancel
           </button>
         </div>
       </form>

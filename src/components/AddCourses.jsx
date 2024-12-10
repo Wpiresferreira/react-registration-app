@@ -1,22 +1,30 @@
 import { useEffect, useState } from "react";
 import { registerCourse } from "../data/api";
+import Alert from "./Alert";
 
-export default function AddCourses({ allCourses, myEnrollments, allTerms, updateAllEnrollments }) {
+export default function AddCourses({
+  allCourses,
+  myEnrollments,
+  allTerms,
+  updateAllEnrollments,
+}) {
   const [selectedCourses, setSelectedCourses] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTerm, setSelectedTerm] = useState();
+  const [alertMessage, setAlertMessage] = useState("");
+  const [typeAlert, setTypeAlert] = useState("");
+  const [showMessage, setShowMessage] = useState(false);
 
   useEffect(() => {
-    if(allTerms) {
-      setSelectedTerm(allTerms[0])
-      setIsLoading(false)}
-
+    if (allTerms) {
+      setSelectedTerm(allTerms[0]);
+      setIsLoading(false);
+    }
   }, [allTerms]);
 
-  function isRegistered(courseCode){
-
-    for(let i=0; i<myEnrollments.length; i++){
-      if(courseCode === myEnrollments[i].coursecode){
+  function isRegistered(courseCode) {
+    for (let i = 0; i < myEnrollments.length; i++) {
+      if (courseCode === myEnrollments[i].coursecode) {
         return true;
       }
     }
@@ -24,13 +32,13 @@ export default function AddCourses({ allCourses, myEnrollments, allTerms, update
   }
 
   const handleOnChangeSelection = (e) => {
-    console.log(e.target.value)
-    console.log(allTerms)
+    console.log(e.target.value);
+    console.log(allTerms);
     const tempSelectedTerm = allTerms.filter(
       (t) => t.term_id === Number(e.target.value)
     )[0];
     setSelectedTerm(tempSelectedTerm);
-    setSelectedCourses([])
+    setSelectedCourses([]);
   };
 
   const handleOnClickCourse = (e) => {
@@ -46,28 +54,38 @@ export default function AddCourses({ allCourses, myEnrollments, allTerms, update
     }
   };
 
-  async function buttonAddClick(e){
-    console.log(selectedCourses)
+  async function buttonAddClick(e) {
+    console.log(selectedCourses);
 
     if (
       selectedCourses.length +
-        myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length <2) {
-      alert("For each Term, you must be enrolled in at least 2 courses");
+        myEnrollments.filter((e) => e.term_id === selectedTerm.term_id).length <
+      2
+    ) {
+      setAlertMessage("For each Term, you must be enrolled in at least 2 courses");
+      setTypeAlert("alert");
+      setShowMessage(true);
       return;
-    }
-    else if (
+    } else if (
       selectedCourses.length +
-      myEnrollments.filter((e)=>e.term_id === selectedTerm.term_id).length >
+        myEnrollments.filter((e) => e.term_id === selectedTerm.term_id).length >
       5
     ) {
-      alert("For each Term, you must be enrolled at maximum 5 courses");
+      setAlertMessage(
+        "For each Term, you must be enrolled at maximum 5 courses"
+      );
+      setTypeAlert("alert");
+      setShowMessage(true);
       return;
     }
-     for (let i = 0; i < selectedCourses.length; i++) {
-       await registerCourse(selectedTerm.term_id, selectedCourses[i]);
-     }
-     setSelectedCourses([]);
-     updateAllEnrollments()
+    for (let i = 0; i < selectedCourses.length; i++) {
+      await registerCourse(selectedTerm.term_id, selectedCourses[i]);
+    }
+    setSelectedCourses([]);
+    updateAllEnrollments();
+  }
+  function hideMessage(){
+    setShowMessage(false);
   };
 
   if (isLoading) return <h1>Loading. . .</h1>;
@@ -76,7 +94,12 @@ export default function AddCourses({ allCourses, myEnrollments, allTerms, update
       <div>
         <label htmlFor="terms">Choose a Term:</label>
 
-        <select name="terms" id="terms" default={allTerms[0].term_season + " / " + allTerms[0].term_year} onChange={handleOnChangeSelection}>
+        <select
+          name="terms"
+          id="terms"
+          default={allTerms[0].term_season + " / " + allTerms[0].term_year}
+          onChange={handleOnChangeSelection}
+        >
           {!allTerms
             ? null
             : allTerms.map((term) => (
@@ -97,37 +120,36 @@ export default function AddCourses({ allCourses, myEnrollments, allTerms, update
           </li>
         ) : (
           allCourses
-            .filter((course) =>
-              course.availability.includes(selectedTerm.term_season)
-            && !isRegistered(course.coursecode)
+            .filter(
+              (course) =>
+                course.availability.includes(selectedTerm.term_season) &&
+                !isRegistered(course.coursecode)
             )
-            .map((course, index) =>
-               (
-                <li
-                  key={course.coursecode}
-                  id={course.coursecode}
-                  onClick={handleOnClickCourse}
-                  className={` ${
-                    selectedCourses.includes(course.coursecode)
-                      ? "bg-green-400"
-                      : "bg-white"
-                  } flex flex-col  m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
+            .map((course, index) => (
+              <li
+                key={course.coursecode}
+                id={course.coursecode}
+                onClick={handleOnClickCourse}
+                className={` ${
+                  selectedCourses.includes(course.coursecode)
+                    ? "bg-green-400"
+                    : "bg-white"
+                } flex flex-col  m-2 border-solid border-2 border-[--color1]  h-28 w-48 rounded-md`}
+              >
+                <div
+                  id={course.courseCode + "_coursecode"}
+                  className="p-2 text-center font-bold"
                 >
-                  <div
-                    id={course.courseCode + "_coursecode"}
-                    className="p-2 text-center font-bold"
-                  >
-                    {course.coursecode}
-                  </div>
-                  <div
-                    className="text-center text-sm"
-                    id={course.coursecode + "_coursename"}
-                  >
-                    {course.coursename}
-                  </div>
-                </li>
-              )
-            )
+                  {course.coursecode}
+                </div>
+                <div
+                  className="text-center text-sm"
+                  id={course.coursecode + "_coursename"}
+                >
+                  {course.coursename}
+                </div>
+              </li>
+            ))
         )}
       </ul>
       <button
@@ -136,6 +158,16 @@ export default function AddCourses({ allCourses, myEnrollments, allTerms, update
       >
         Add Selected Courses
       </button>
+      {showMessage ? (
+        <>
+          <Alert
+            showMessage={showMessage}
+            message={alertMessage}
+            onClick={hideMessage}
+            type={typeAlert}
+          />
+        </>
+      ) : null}
     </div>
   );
 }

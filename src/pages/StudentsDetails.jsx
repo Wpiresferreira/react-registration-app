@@ -1,9 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getUserByUserId } from "../data/util";
 import ListCourses from "../components/ListCourses";
 
-const StudentsDetails = () => {
+export default function StudentsDetails(){
   const { studentId } = useParams();
   // const [studentObj, setStudentObject] = useState();
 
@@ -22,4 +21,3 @@ const StudentsDetails = () => {
   );
 };
 
-export default StudentsDetails;

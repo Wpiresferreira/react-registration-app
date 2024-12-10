@@ -335,43 +335,43 @@ export function getMyCoursesCode(userId) {
   return result;
 }
 
-export function dropCourse(userId, selectedCourses) {
-  const allEnrolments = JSON.parse(localStorage.getItem("enrolments"));
-  const tempAllEnrolments = [];
+// export function dropCourse(userId, selectedCourses) {
+//   const allEnrolments = JSON.parse(localStorage.getItem("enrolments"));
+//   const tempAllEnrolments = [];
 
-  for (let i = 0; i < allEnrolments.length; i++) {
-    if (
-      !(
-        allEnrolments[i].userId === userId &&
-        selectedCourses.includes(allEnrolments[i].courseCode)
-      )
-    ) {
-      tempAllEnrolments.push(allEnrolments[i]);
-    }
+//   for (let i = 0; i < allEnrolments.length; i++) {
+//     if (
+//       !(
+//         allEnrolments[i].userId === userId &&
+//         selectedCourses.includes(allEnrolments[i].courseCode)
+//       )
+//     ) {
+//       tempAllEnrolments.push(allEnrolments[i]);
+//     }
 
-    // const indexTemp = allEnrolments.indexOf(
-    //   allEnrolments.filter(
-    //     (e) => e.userId === userId && e.courseCode === selectedCourses[i].courseCode
-    //   )[0]
-    // );
+//     // const indexTemp = allEnrolments.indexOf(
+//     //   allEnrolments.filter(
+//     //     (e) => e.userId === userId && e.courseCode === selectedCourses[i].courseCode
+//     //   )[0]
+//     // );
 
-    // tempAllEnrolments.splice(indexTemp, 1);
-  }
+//     // tempAllEnrolments.splice(indexTemp, 1);
+//   }
 
-  for (let i = 0; i < getMyTermsId(userId).length; i++) {
-    if (
-      tempAllEnrolments.filter(
-        (enrolment) =>
-          enrolment.userId === userId &&
-          enrolment.termId === getMyTermsId(userId)[i]
-      ).length === 1
-    ) {
-      alert("You must be enrolled at least 2 courses per term");
-      return;
-    }
-  }
-  localStorage.setItem("enrolments", JSON.stringify(tempAllEnrolments));
-}
+//   for (let i = 0; i < getMyTermsId(userId).length; i++) {
+//     if (
+//       tempAllEnrolments.filter(
+//         (enrolment) =>
+//           enrolment.userId === userId &&
+//           enrolment.termId === getMyTermsId(userId)[i]
+//       ).length === 1
+//     ) {
+//       alert("You must be enrolled at least 2 courses per term");
+//       return;
+//     }
+//   }
+//   localStorage.setItem("enrolments", JSON.stringify(tempAllEnrolments));
+// }
 export function enrollCourse(userId, termId, courseCode) {
   const allEnrolments = JSON.parse(localStorage.getItem("enrolments"));
 

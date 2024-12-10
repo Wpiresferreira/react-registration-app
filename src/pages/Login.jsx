@@ -28,7 +28,7 @@ export default function Login() {
       setShowMessage(true);
     }
   }
-  const hideMessage = () => {
+  function hideMessage(){
     setShowMessage(false);
   };
 

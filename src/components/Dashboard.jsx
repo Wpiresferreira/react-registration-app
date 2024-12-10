@@ -2,8 +2,11 @@ import { formatDate } from "../data/util";
 
 export default function Dashboard({loggedUser}){
   return (
-    <div className="w-[50vw] min-h-[55vh] flex flex-col  items-center shadow-balanced mt-10 mx-auto">
-      <div className="w-[50vw] bg-blue-100 ">
+    <div
+    className="flex items-center flex-col container mx-auto my-2 p-5 bg-gray-50 shadow-lg min-h-[55vh] rounded-xl max-w-[400px] border border-solid border-gray-300"
+// className="w-[50vw] min-h-[55vh] flex flex-col  items-center shadow-balanced mt-10 mx-auto"
+>
+      <div className="w-full bg-blue-100 ">
         <h1 className="flex flex-col items-center text-2xl text-blue-900 font-semibold  mb-4 mt-6">
           Dashboard - {loggedUser.isadmin ? "Administrator" : "Student"}
         </h1>

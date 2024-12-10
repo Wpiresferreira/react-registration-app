@@ -21,7 +21,7 @@ export default function Courses() {
   const [coursesFiltered, setCoursesFiltered] = useState();
   const [terms, setTerms] = useState();
   const [searchQuery, setSearchQuery] = useState(""); // State for search query
-  const [view, setView] = useState("list"); // Modes are 'show', edit or add
+  const [view, setView] = useState("list"); // Modes are 'add', edit or add
   const [alertMessage, setAlertMessage] = useState("");
   const [typeAlert, setTypeAlert] = useState("");
   const [showMessage, setShowMessage] = useState(false);
@@ -94,8 +94,8 @@ export default function Courses() {
       setTypeAlert(result.status < 300 ? "sucess" : "alert");
       setShowMessage(true);
       setTimeout(() => {
-         setShowMessage(false);
-        }, 2000);
+        setShowMessage(false);
+      }, 2000);
     }
     await updateCourses();
   }
@@ -120,17 +120,17 @@ export default function Courses() {
           <div className="flex items-center mb-4">
             <button
               onClick={() => navigate(-1)}
-              className="bg-gray-800 text-white hover:bg-gray-600 transition-colors duration-300 px-4 py-2 rounded"
-            >
-              Back
-            </button>
-            <button
-              onClick={action}
-              id="openAdd"
-              className="bg-sky-500 text-white hover:bg-gray-600 transition-colors duration-300 px-4 py-2 rounded"
-            >
-              Add Course
-            </button>
+              className={`fa fa-arrow-left text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
+            ></button>
+            {loggedUser && loggedUser.isadmin && (
+              <button
+                onClick={action}
+                id="openAdd"
+                className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color1)] border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)] hover:bg-white`}
+              >
+                Add Course
+              </button>
+            )}
           </div>
           <h1 className="text-4xl font-extrabold text-blue-900 mb-8 text-center">
             {`Courses for ${program ? program.programname : null}`}

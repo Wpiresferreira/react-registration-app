@@ -7,9 +7,8 @@ import {
   setmessagereadstatus,
 } from "../data/api";
 import Alert from "../components/Alert";
-import { TrashIcon } from "@heroicons/react/16/solid";
 
-const Contact = () => {
+export default function Contact(){
   const [loggedUser, setLoggedUser] = useState(null); // Initialize to null
   const [isLoading, setIsLoading] = useState(true);
   const [alertMessage, setAlertMessage] = useState("");
@@ -68,11 +67,11 @@ const Contact = () => {
   }, [allMessages, loggedUser]);
 
   //variable to control state (unread ou archived TAB)
-  const handleOnClickTab = (e) => {
+  function handleOnClickTab(e){
     setSelectedTab(e.target.innerText.split(" ")[0]);
   };
 
-  const handleSubmit = async (event) => {
+  async function handleSubmit(event){
     event.preventDefault();
 
     //Check and validate inputs
@@ -111,7 +110,10 @@ const Contact = () => {
     const result = deleteMessage(e.target.closest("button").id.split("_")[1]);
     console.log(await result);
 
-    const tempMessages = allMessages.filter(msg => msg.messageid !==Number(e.target.closest("button").id.split("_")[1]));
+    const tempMessages = allMessages.filter(
+      (msg) =>
+        msg.messageid !== Number(e.target.closest("button").id.split("_")[1])
+    );
     setAllMessages(tempMessages);
   }
 
@@ -125,7 +127,10 @@ const Contact = () => {
     const tempMessages = [...allMessages];
 
     for (let i = 0; i < tempMessages.length; i++) {
-      if (tempMessages[i].messageid === Number(e.target.closest("button").id.split("_")[1])) {
+      if (
+        tempMessages[i].messageid ===
+        Number(e.target.closest("button").id.split("_")[1])
+      ) {
         tempMessages[i].wasread = !tempMessages[i].wasread;
       }
     }
@@ -187,22 +192,17 @@ const Contact = () => {
                     </p>
                     <div className="self-end flex">
                       <button
-                        className="self-end text-center mx-2 border-solid border-[1px] w-28 h-14 rounded-xl text-white bg-red-800 border-black"
+                        className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
                         id={"btn_" + m.messageid}
                         onClick={handleOnClickReadButton}
                       >
                         {m.wasread ? "Mark as Unread" : "Archive"}
                       </button>
                       <button
-                        className="self-end text-center mx-2 border-solid border-[1px] w-14 h-14 rounded-xl text-white bg-red-800 border-black"
+                        className={` fa fa-trash-o text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color3)] border-solid border-2 border-[var(--color3)] hover:text-[var(--color3)] hover:bg-white`}
                         id={"btnDelete_" + m.messageid}
                         onClick={handleDeleteMessage}
-                      >
-                        <TrashIcon
-                          id={"icon_" + m.messageid}
-                          className="size-4 justify-self-center fill-white"
-                        />
-                      </button>
+                      ></button>
                     </div>
                     <br></br>
                   </div>
@@ -239,9 +239,13 @@ const Contact = () => {
         <textarea
           value={bodyMessage}
           onChange={(e) => setBodyMessage(e.target.value)}
-          className="mx-4 my-2 p-2 h-52 rounded-xl"
+          className="mx-4 my-2 p-2 h-52 rounded-lg"
         ></textarea>
-        <button className="m-4" type="submit" onClick={handleSubmit}>
+        <button
+          className={`text-sm text-white rounded-xl px-4 py-1 m-3 bg-[var(--color1)] border-solid border-2 border-[var(--color1)] hover:text-[var(--color1)] hover:bg-white`}
+          type="submit"
+          onClick={handleSubmit}
+        >
           Submit
         </button>
       </form>
@@ -258,5 +262,3 @@ const Contact = () => {
     </div>
   );
 };
-
-export default Contact;

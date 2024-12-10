@@ -38,7 +38,7 @@ export default function Signup(){
     getData();
   }, []);
 
-  const handleSubmit = (e) => {
+  function handleSubmit(e){
     e.preventDefault();
 
     // Create a new student object
@@ -70,7 +70,7 @@ export default function Signup(){
     });
 
   };
-  const hideMessage = () => {
+  function hideMessage(){
     setShowMessage(false);
   };
 

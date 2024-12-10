@@ -28,7 +28,11 @@
   color: #61dafb;
 }
 
-
+button{
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
 
 @keyframes App-logo-spin {
   from {

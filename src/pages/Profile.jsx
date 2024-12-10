@@ -76,7 +76,7 @@ export default function Profile() {
       setNewPassword("");
     }
   }
-  const hideMessage = () => {
+  function hideMessage(){
     setShowMessage(false);
   };
 

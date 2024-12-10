@@ -42,7 +42,7 @@ export default function Registration() {
     setMyEnrollments(enrollments.response)
   }
 
-  const handleOnClickTab = (e) => {
+  function handleOnClickTab(e){
     setSetectedTab(e.target.innerText.split(" ")[0]);
   };
 
