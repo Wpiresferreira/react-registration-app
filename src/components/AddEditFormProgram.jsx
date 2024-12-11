@@ -51,7 +51,7 @@ export default function AddEditForm({
     }
   }, [selectedProgram]);
 
-  const handleChange = (e) => {
+  function handleChange (e){
     const { name, value } = e.target;
     setProgramForm({
       ...programForm,
@@ -152,6 +152,8 @@ export default function AddEditForm({
           <input
             type="number"
             name="duration"
+            min = "1" max ="8"
+            default = "1"
             value={programForm.duration}
             onChange={handleChange}
             disabled={view === "edit"} // Program duration shouldn't be editable during edit
@@ -163,14 +165,18 @@ export default function AddEditForm({
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Term
           </label>
-          <input
+          <select
             type="text"
             name="term"
             value={programForm.term}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
             required
-          />
+          >
+            <option value={'Winter'}>Winter</option>
+            <option value={'Spring/Summer'}>Spring/Summer</option>
+            <option value={'Fall'}>Fall</option>
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -192,6 +198,7 @@ export default function AddEditForm({
           <input
             type="date"
             name="enddate"
+            min={programForm.startdate?programForm.startdate:'1990-01-01'}
             value={programForm.enddate}
             onChange={handleChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700"
