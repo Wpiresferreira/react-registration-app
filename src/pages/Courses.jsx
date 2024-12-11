@@ -133,7 +133,7 @@ export default function Courses() {
             )}
           </div>
           <h1 className="text-4xl font-extrabold text-blue-900 mb-8 text-center">
-            {`Courses for ${program ? program.programname : null}`}
+            {` ${program ?" Courses for " + program.programname : ""}`}
           </h1>
 
           {/* Search Bar */}
